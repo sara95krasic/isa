@@ -1,0 +1,4 @@
+GET: localhost:8080/search/city/Brisbane/Australia
+GET: localhost:8080/search/city/Brisbane,Australia
+GET: localhost:8080/search/city/Brisbane/Australia/summary
+GET: localhost:8080/search/reviews/Melbourne/Australia/The Langham
