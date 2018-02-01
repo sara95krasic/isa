@@ -10,55 +10,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import rs.ac.uns.ftn.informatika.jpa.domain.City;
-import rs.ac.uns.ftn.informatika.jpa.domain.Hotel;
-import rs.ac.uns.ftn.informatika.jpa.domain.Review;
-import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.HotelSummary;
-import rs.ac.uns.ftn.informatika.jpa.service.CityService;
-import rs.ac.uns.ftn.informatika.jpa.service.HotelService;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.MovieTheaterDTO;
+import rs.ac.uns.ftn.informatika.jpa.service.MovieTheaterService;
 
 @RestController
 public class SampleController {
 
 	@Autowired
-	private CityService cityService;
+	private MovieTheaterService movieTheaterService;
 	
-	@Autowired
-	private HotelService hotelService;
-
-	@RequestMapping(value = "/search/city/{name}/{country}",
+	@RequestMapping(value = "/search/movietheater/{name}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public City getCityByName(@PathVariable String name, @PathVariable String country) {
-		return this.cityService.getCity(name, country);
+	public Page<MovieTheaterDTO> getMovieTheaterByName(@PathVariable String name) {
+		return this.movieTheaterService.getMovieTheaters(name, new PageRequest(0, 10));
 	}
 	
-	@RequestMapping(value = "/search/city/{criteria}",
-					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public Page<City> getCityByCriteria(@PathVariable String criteria) {
-		return this.cityService.findCities(criteria, new PageRequest(0, 10));
-	}
-	
-	@RequestMapping(value = "/search/city/{cityname}/{country}/summary",
-					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public Page<HotelSummary> getHotelsByCity(@PathVariable String cityname, @PathVariable String country) {
-		City city = this.cityService.getCity(cityname, country);
-		return this.cityService.getHotels(city, new PageRequest(0, 10));
-	}
-	
-	
-	@RequestMapping(value = "/search/reviews/{cityname}/{country}/{name}",
-					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public Page<Review> getReview(@PathVariable String cityname, @PathVariable String country, @PathVariable String name) {
-		Hotel hotel = hotelService.getHotel(this.cityService.getCity(cityname, country), name);
-		return this.hotelService.getReviews(hotel, new PageRequest(0, 10));
-	}
 
 }

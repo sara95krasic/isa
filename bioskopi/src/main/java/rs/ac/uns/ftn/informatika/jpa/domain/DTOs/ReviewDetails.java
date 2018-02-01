@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.Rating;
-import rs.ac.uns.ftn.informatika.jpa.domain.TripType;
 /*
  * DTO - data transfer object
  */
@@ -14,13 +13,7 @@ public class ReviewDetails implements Serializable {
 
 	private Rating rating;
 
-	private Date checkInDate;
-
-	private TripType tripType;
-
-	private String title;
-
-	private String details;
+	private Date date;
 
 	public ReviewDetails() {
 		
@@ -34,35 +27,11 @@ public class ReviewDetails implements Serializable {
 		this.rating = rating;
 	}
 
-	public Date getCheckInDate() {
-		return this.checkInDate;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setCheckInDate(Date checkInDate) {
-		this.checkInDate = checkInDate;
-	}
-
-	public TripType getTripType() {
-		return this.tripType;
-	}
-
-	public void setTripType(TripType tripType) {
-		this.tripType = tripType;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDetails() {
-		return this.details;
-	}
-
-	public void setDetails(String details) {
-		this.details = details;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }
