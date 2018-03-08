@@ -28,7 +28,7 @@ public class Review implements Serializable {
 	private Long id;
 
 	@ManyToOne(optional = false)
-	private MovieTheater movieTheater;
+	private Theater theater;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.ORDINAL)
@@ -42,20 +42,20 @@ public class Review implements Serializable {
 		
 	}
 
-	public Review(MovieTheater movieTheater, ReviewDetails details) {
-		Assert.notNull(movieTheater, "Hotel ne sme biti null");
+	public Review(Theater theater, ReviewDetails details) {
+		Assert.notNull(theater, "Theater ne sme biti null");
 		Assert.notNull(details, "Detalji ne smeju biti null");
-		this.movieTheater = movieTheater;
+		this.theater = theater;
 		this.rating = details.getRating();
 		this.date = details.getDate();
 	}
 
-	public MovieTheater getMovieTheater() {
-		return movieTheater;
+	public Theater getTheater() {
+		return theater;
 	}
 
-	public void setMovieTheater(MovieTheater movieTheater) {
-		this.movieTheater = movieTheater;
+	public void setTheater(Theater theater) {
+		this.theater = theater;
 	}
 
 	public Rating getRating() {

@@ -5,37 +5,167 @@
 	<title>Bioskopi - pocetna</title>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+	
 	<script>
-	$(document).ready(function(){
-		$.ajax({
-			url: "search/movietheater/c",
-			type:"GET",
-			dataType:"json",
-			complete: function(data) {
-				page = JSON.parse(data.responseText);
-				bioskopi = page.content
-				
-				bioskopi.forEach(function (b, i) {
-					
-					ocena = "";
-					for (i = 0; i < b.averageRating; i++) { 
-					    ocena += "*";
-					}
-					
-					$('#bioskopi').append(
-						'<li>' +
-						'<span>' + b.name + '</span><br>' + 
-						'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
-						'<span style="float: right;">' + ocena + '</span></span>' +
-						'<a href="bioskop.html?bioskop=' + b.name + '">' +
-        				'<span class="link-spanner"></span>' +
-    					'</a></li>'
-						);
-				});
+		function popuniBioskope(bioskopi) {
+	
+			if (bioskopi.length == 0) {
+				$('#bioskopi').append(
+					'<li style="font-style:italic;color:grey;">nema rezulata</li>'
+					);
+				return;
 			}
-		});
-	})
+			
+			
+			bioskopi.forEach(function (b, i) {
+				
+				ocena = "";
+				for (i = 0; i < b.averageRating; i++) { 
+				    ocena += "$";
+				}
+				
+				$('#bioskopi').append(
+					'<li>' +
+					'<span>' + b.name + '</span><br>' + 
+					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
+					'<span style="float: right;">' + ocena + '</span></span>' +
+					'<a href="theater.html?bioskop=' + b.name + '">' +
+					'<span class="link-spanner"></span>' +
+					'</a></li>'
+					);
+			});
+		}
 	</script>
+	<script>
+		function popuniPozorista(pozorista) {
+	
+			if (pozorista.length == 0) {
+				$('#pozorista').append(
+					'<li style="font-style:italic;color:grey;">nema rezulata</li>'
+					);
+				return;
+			}
+			
+			
+			pozorista.forEach(function (b, i) {
+				
+				ocena = "";
+				for (i = 0; i < b.averageRating; i++) { 
+				    ocena += "$";
+				}
+				
+				$('#pozorista').append(
+					'<li>' +
+					'<span>' + b.name + '</span><br>' + 
+					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
+					'<span style="float: right;">' + ocena + '</span></span>' +
+					'<a href="theater.html?bioskop=' + b.name + '">' +
+					'<span class="link-spanner"></span>' +
+					'</a></li>'
+					);
+			});
+		}
+	</script>
+	
+    <script>
+	    function traziBioskope() {
+	    	
+			//ocisti <ul> element
+			$('#bioskopi').empty();
+	    	
+	    	search_param = $('#bioskopi-search-box').val();
+	    	
+	    	if (search_param == "") {
+	    		//kada se ocisti search box, refersuje view bioskopa
+	    		showAllMovieTheaters();
+	    		return;
+	    	}
+	    	
+	   		$.ajax({
+	   			url: "search/movietheater/" + search_param,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				page = JSON.parse(data.responseText);
+	   				bioskopi = page.content
+	
+	   				popuniBioskope(bioskopi)
+	   			}
+	   		});
+	    }
+    </script>
+    
+    <script>
+	    function traziPozorista() {
+	    	
+			//ocisti <ul> element
+			$('#pozorista').empty();
+	    	
+	    	search_param = $('#pozorista-search-box').val();
+	    	
+	    	if (search_param == "") {
+	    		//kada se ocisti search box, refersuje view bioskopa
+	    		showAllPlayTheaters();
+	    		return;
+	    	}
+	    	
+	   		$.ajax({
+	   			url: "search/playtheater/" + search_param,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				page = JSON.parse(data.responseText);
+	   				pozorista = page.content
+	
+	   				popuniPozorista(pozorista)
+	   			}
+	   		});
+	    }
+    </script>
+	
+	<!-- poziva se pri loadu strane i na prazan search -->  
+	<script>
+		function showAllMovieTheaters() {
+			$.ajax({
+				url: "allmovietheaters",
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					page = JSON.parse(data.responseText);
+					bioskopi = page.content
+					
+					popuniBioskope(bioskopi)
+				}
+			});
+		}
+	</script>   
+ 	<script>
+		function showAllPlayTheaters() {
+			$.ajax({
+				url: "allplaytheaters",
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					page = JSON.parse(data.responseText);
+					pozorista = page.content
+					
+					popuniPozorista(pozorista)
+				}
+			});
+		}
+	</script>
+	  
+	<script>
+		$(document).ready(function(){
+			showAllMovieTheaters();
+			showAllPlayTheaters();
+		})
+	</script>
+	
+	
 	
 	<style>
 	
@@ -68,13 +198,14 @@
 		}
 		
 		.bioskopi-widget {
-			width : 49%;
+		
 		}
 		
 		.bioskopi-widget .header {
 			background : #A16073;
 			color : white;
 			padding : 5px;
+			height: 35px;
 		}
 		
 		.bioskopi-widget > ul {
@@ -85,7 +216,7 @@
 		}
 		
 		.bioskopi-widget > ul > li {
-			height : 35px; /*zbog floatova*/
+			height : 45px; /*zbog floatova*/
 			padding : 5px;
 			transition: background 0.15s linear;
 			position:relative; /*zbog link-spannera*/
@@ -107,7 +238,16 @@
 		  /* edit: fixes overlap error in IE7/8, 
 		     make sure you have an empty gif 
 		  background-image: url('empty.gif');*/
-		}   
+		}
+		
+		.search-button {
+			border: 0;
+			color: #A16073;
+			box-shadow: none;
+			border-radius: 0px;
+			padding : 2px 5px;
+			background: white;
+		}
 		
 	</style>
 					
@@ -119,17 +259,30 @@
 	
 	</div>
 	
-	<div class='content'>
-		<div class='bioskopi-widget' style='float:left'>
-			<div class='header'>Bioskopi</div>
+	<div class='row content'>
+		<div class='col-sm-6 bioskopi-widget'>
+			<div class='header'>
+				Bioskopi
+				<button class='search-button' data-toggle='collapse' data-target='#b-search' style='float:right;'>Pretraga</button>
+			</div>
+			
+			<div id='b-search' class='collapse' style='padding:5px;text-align:right;'>
+				<input id='bioskopi-search-box' type='text' placeholder="Trazi bioskope..." oninput="traziBioskope()">
+			</div>
 			<ul id='bioskopi'></ul>
 		</div>
-		
-		<div class='bioskopi-widget' style='float:right'>
-			<div class='header'>Pozorista</div>
+		<div class='col-sm-6 bioskopi-widget'>
+			<div class='header'>
+				Pozorista
+				<button class='search-button' data-toggle='collapse' data-target='#p-search' style='float:right;'>Pretraga</button>
+			</div>
+			
+			<div id='p-search' class='collapse' style='padding:5px;text-align:right;'>
+				<input id='pozorista-search-box' type='text' placeholder="Trazi pozorista..." oninput="traziPozorista()">
+			</div>
 			<ul id='pozorista'></ul>
 		</div>
-	
 	</div>
+	
 </body>
 </html>
