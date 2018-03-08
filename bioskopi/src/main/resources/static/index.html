@@ -178,7 +178,7 @@
 		.top-header {
             background: white;
             min-height: 100px;
-            margin: 20px 20px -5px 15px;
+            margin: 20px 30px -5px 30px;
             text-align: center;
             
 		}
@@ -194,7 +194,7 @@
 		
 		/*centralni sadrzaj stranice*/
 		.content {
-			margin: 20px 20px -5px 15px;
+			margin: 15px 15px -5px 15px;
 		}
 		
 		.bioskopi-widget {
@@ -247,6 +247,40 @@
 			border-radius: 0px;
 			padding : 2px 5px;
 			background: white;
+			transition: background 0.1s linear;
+		}
+		.search-button:HOVER {
+			background: #ddd;
+		}
+		
+		/*onaj bar sa 'uloguj se' i 'registruj se'*/
+		.reg-log-bar {
+			background: white;
+			margin: 30px;
+			padding : 10px;
+		}
+		.reg-log-bar > div {
+			width: 40%;
+  			margin: 0 auto;
+			background: #eee;
+		}
+		.button-card {
+			padding: 15px;
+		}
+		.button-card > span {
+			color: grey;
+		}
+		.button-card > a {
+			border: 0;
+			color: white;
+			padding : 15px 15px;
+			background: #A16073;
+			display: block;
+  			text-decoration: none;
+  			transition: background 0.1s linear;
+		}
+		.button-card > a:HOVER {
+			background: #aaa;
 		}
 		
 	</style>
@@ -257,6 +291,21 @@
 		<div class='title'>Bioskopi i pozorista</div>
 		<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
 	
+	</div>
+	
+	<div class = 'reg-log-bar'>
+		<div class='row'>
+			<div class='col-sm-6 button-card'>
+				<span>Imas nalog?</span>
+				<br>
+				<a href='login.html'>Prijavi se</a>
+			</div>
+			<div class='col-sm-6 button-card '>
+				<span>Jos nemas nalog?</span>
+				<br>
+				<a href='register.html'>Registruj se</a>
+			</div>
+		</div>
 	</div>
 	
 	<div class='row content'>
