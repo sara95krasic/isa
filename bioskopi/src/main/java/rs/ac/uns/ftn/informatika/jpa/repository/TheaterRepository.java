@@ -11,7 +11,7 @@ import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
 
 public interface TheaterRepository extends Repository<Theater, Long> {
 
-	@Query("select t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+	@Query("select t.id as id, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
 			"from Theater t left outer join t.reviews r " +
 			"where INSTR(t.name, ?1) > 0 and t.theaterType = 0 " +
 			"group by t")
@@ -25,22 +25,28 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 		;
 	 */
 
-	@Query("select t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+	@Query("select t.id as id, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
 			"from Theater t left outer join t.reviews r " + 
 			"where t.theaterType = 0 " +
 			"group by t")
 	Page<TheaterDTO> getAllMovieThearers(Pageable pageable);
 
-	@Query("select t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+	@Query("select t.id as id, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
 			"from Theater t left outer join t.reviews r " +
 			"where INSTR(t.name, ?1) > 0 and t.theaterType = 1 " +
 			"group by t")
 	Page<TheaterDTO> getPlayThearersByName(String name, Pageable pageable);
 	
-	@Query("select t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+	@Query("select t.id as id, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
 			"from Theater t left outer join t.reviews r " + 
 			"where t.theaterType = 1 " +
 			"group by t")
 	Page<TheaterDTO> getAllPlayThearers(Pageable pageable);
+
+	@Query("select t.id as id, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+			"from Theater t left outer join t.reviews r " + 
+			"where t.id = ?1 " +
+			"group by t")
+	TheaterDTO getTheaterById(Long id);
 
 }

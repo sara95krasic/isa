@@ -19,6 +19,12 @@ public class SampleController {
 	@Autowired
 	private TheaterService theaterService;
 	
+	@RequestMapping(value = "/test", 
+			method = RequestMethod.GET)
+	public String showHomePage() {
+	    return "theater";
+	}
+	
 	
 	@RequestMapping(value = "/search/movietheater/{name}",
 					method = RequestMethod.GET,
@@ -52,6 +58,13 @@ public class SampleController {
 	return this.theaterService.getAllPlayTheaters(new PageRequest(0, 10));
 	}
 
+	@RequestMapping(value = "get_theater_by_id/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public TheaterDTO getTheaterById(@PathVariable Long id) {
+	return this.theaterService.getTheaterById(id);
+	}
 	
 
 

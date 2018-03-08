@@ -10,4 +10,6 @@ public interface TheaterDTO {
 	
 	float getAverageRating();
 	
+	float getId();
+	
 }

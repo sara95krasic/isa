@@ -1,6 +1,7 @@
-insert into theater(name, theater_type, address, description) values ('Arena Cineplex', 0, 'Novi Sad, kod Zare na centru', 'Dobar bioskop!')
-insert into theater(name, theater_type, address, description) values ('BIG TC Bioskop', 0, 'Kod BIGa', 'okej bioskop...')
-insert into theater(name, theater_type, address, description) values ('BSKP', 0, 'Ive Lole Ribara 32, Beograd', 'sanfsnf90nsdifnasdnfasd')
-insert into theater(name, theater_type, address, description) values ('SNP', 1, 'Kamenova 71, Novi Sad', 'Srpsko narodno pozoriste je poyoriste u novom sadu itd')
+insert into theater(name, theater_type, address, description) values ('Arena Cineplex', 0, 'Bulevar Mihajla Pupina 3, Novi Sad 21000', 'Dobar bioskop!')
+insert into theater(name, theater_type, address, description) values ('BIG TC Bioskop', 0, 'Sentandrejski put 11, BIG CEE Novi Sad, Novi Sad 21000', 'okej bioskop...')
+insert into theater(name, theater_type, address, description) values ('BSKP', 0, '170e Ustanicka, 11050, Beograd (Zvezdara), Grad Beograd', 'sanfsnf90nsdifnasdnfasd js f jsajjf asdjf sj fja fsadn fsdj fasjdfja sdjfjasd f k nan ajk njkans jdknfaj n k nan ajk njkans jdknfaj n ')
+insert into theater(name, theater_type, address, description) values ('SNP', 1, 'Pozorišni trg 1, Novi Sad 21000', 'Srpsko narodno pozoriste je poyoriste u novom sadu itd sanfsnf90nsdifnasdnfasd js f jsajjf asdjf sj fja fsadn fsdjsanfsnf90nsdifnasdnfasd js f jsajjf asdjf sj fja fsadn fsdj')
+insert into theater(name, theater_type, address, description) values ('Pozoriste Mladih', 1, 'Ignjata Pavlasa 4, Novi Sad 21000', 'Pozoriste mladih lorem ipsum masdfmamsdfnansdfjkasnddkjfnasdnf n kjansdjk nan ajk njkans jdknfaj n an anskdn fkansdjk fnakn k nan ajk njkans jdknfaj n k nan ajk njkans jdknfaj n ')
 
 insert into review(date, rating, theater_id) values ('2012-08-21', 4, 1)

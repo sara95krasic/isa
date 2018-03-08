@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.jpa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -37,5 +38,10 @@ public class TheaterServiceImpl implements TheaterService {
 	@Override
 	public Page<TheaterDTO> getAllPlayTheaters(Pageable pageable) {
 		return this.theaterRepository.getAllPlayThearers(pageable);
+	}
+
+	@Override
+	public TheaterDTO getTheaterById(Long id) {
+		return this.theaterRepository.getTheaterById(id);
 	}
 }
