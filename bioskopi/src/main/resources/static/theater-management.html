@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Bioskopi - Bioskop</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/helpers.js"></script>
+
+	<script>
+		$(document).ready(function(){
+			
+
+			var theater_id = getUrlParameter('id');
+		
+			if (theater_id == "") {
+				return;
+			}
+		
+			$.ajax({
+	   			url: "get_theater_by_id/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var theater = JSON.parse(data.responseText);
+	   				
+	   				if (theater == null) {
+	   					return;
+	   				}
+
+	   				$('#naziv-bioskopa').val(theater.name)
+	   				$('#adresa-bioskopa').val(theater.address)
+	   				$('#desc-bioskopa').html(theater.description)
+		   			theater.type == 'MOVIE_THEATER' ? $("#movie-theater-radio").attr('checked', 'checked') : $("#play-theater-radio").attr('checked', 'checked');
+	   			}
+			});
+	   				
+		})
+	</script>
+	<script>
+		function updateTheater() {
+			var theater_id = getUrlParameter('id');
+		
+			if (theater_id == "") {
+				return;
+			}
+			
+			var theater = getFormData($('#update-form'));
+			var theaterJSON = JSON.stringify(theater);
+			$.ajax({
+	   			url: "update_theater/" + theater_id,
+	   			type: "POST",
+	   			data: theaterJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == 'false') {
+	   					
+	   				} else {
+	   					alert('success!!!');
+	   				}
+				}
+			});
+		}
+	</script>
+	
+	
+	<style>
+	
+		/*header u vrhu stranice*/
+		.top-header {
+            background: white;
+            min-height: 40px;
+            margin: 20px 30px -5px 30px;
+            padding: 5px 10px;
+            
+		}
+		
+		.top-header .title {
+			color : #555;
+            font-size: 27px;
+		}
+		
+		/*centralni sadrzaj stranice*/
+		.content {
+			margin: 15px 15px 50px 15px;
+		}
+		
+		.blok {
+			height: 500px;
+			padding-bottom: 50px;
+		}
+		
+		.blok .header {
+			background : #A16073;
+			color : white;
+			padding : 5px;
+		}
+		
+		/*onaj bar sa 'uloguj se' i 'registruj se'*/
+		.reg-log-bar {
+			background: white;
+			margin: 30px;
+			padding : 10px;
+		}
+		.reg-log-bar > div {
+			width: 40%;
+  			margin: 0 auto;
+			background: #eee;
+		}
+		.button-card {
+			padding: 15px;
+		}
+		.button-card > span {
+			color: grey;
+		}
+		.button-card > a {
+			border: 0;
+			color: white;
+			padding : 15px 15px;
+			background: #A16073;
+			display: block;
+  			text-decoration: none;
+  			transition: background 0.1s linear;
+		}
+		.button-card > a:HOVER {
+			background: #aaa;
+		}
+		
+		.flat-button {
+			border: 0;
+			background: #A16073;
+			color: white;
+			padding: 10px 15px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+		}
+		
+	</style>
+					
+</head>
+<body style='background:#e1f7d5;'>
+	<div class='top-header'>
+		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
+	</div>
+	
+	<div class = 'reg-log-bar'>
+		<div class='row'>
+			<div class='col-sm-6 button-card'>
+				<span>Imas nalog?</span>
+				<br>
+				<a href='login.html'>Prijavi se</a>
+			</div>
+			<div class='col-sm-6 button-card '>
+				<span>Jos nemas nalog?</span>
+				<br>
+				<a href='register.html'>Registruj se</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class='content'>
+		<div style='padding:20px;margin:30px;'>
+			<form id='update-form' action='' style='max-width: 480px; border:5px solid white;padding:10px;margin-left:auto;margin-right:auto;'>
+				<span style='display:inline-block;width:20%;margin:5px;'>Naziv: </span><input style='width:75%;' name='name' type='text' id='naziv-bioskopa'><br>
+				<span style='display:inline-block;width:20%;margin:5px;'>Adresa: </span><input style='width:75%;' name='address' type='text' id='adresa-bioskopa'><br>
+				<span style='display:inline-block;width:20%;margin:5px;'>Tip: </span><input type="radio" name="theaterType" value="MOVIE_THEATER" id='movie-theater-radio'> Bioskop<br>
+  				<span style='display:inline-block;width:20%;margin:5px;'></span><input type="radio" name="theaterType" value="PLAY_THEATER" id='play-theater-radio'> Pozoriste<br>
+				<span style='display:inline-block;width:20%;margin:5px;'>Opis: </span><textarea name='description' rows="4" style='resize:none;width:75%' id='desc-bioskopa'></textarea><br>
+				<div style='text-align: right; margin:5px;'><input class='flat-button' type='button' onclick="updateTheater()" value='Azuriraj podatke'></div>
+			</form>
+		</div>
+	</div>
+	
+</body>
+</html>

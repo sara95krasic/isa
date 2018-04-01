@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Bioskopi - Bioskop</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/helpers.js"></script>
+
+	<script>
+		function showProjectionsForDate(date) {
+			
+			$('#repertoar').empty();
+			$('#dates-buttons>*').removeClass('fb-active');
+			$('#date-button-'+date).addClass('fb-active');
+			
+			theater_id = getUrlParameter('id');
+			
+			$.ajax({
+	   			url: "get_projections_for_theater_for_date/" + theater_id + "/" + date,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				page = JSON.parse(data.responseText);
+	   				projections = page.content;
+	   				
+	   				if (projections == null || projections.length == 0) {
+	   					return;
+	   				}
+	   				
+	   				projections.forEach(
+	   					function (p, i) {
+	   						var s = 
+	   								"<li style='border-bottom:1px solid #c18093; padding:10px; background:white; height:90px;'> " +
+										"<img src='' width='50' height='70' style='float:left; margin-right: 10px;'/>  " +
+										"<div > " +
+											"<div style='width:50%; float:left; vertical-align: top;'> " +
+												"<div style='font-weight: bold;'>"+p.title+"</div> " +
+												"<div>"+p.runtime+" min.</div> " +
+											"</div> " +
+											"<div style='width:40%; float:right; text-align:right;'> ";
+							
+							$.ajax({
+					   			url: "get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
+					   			type:"GET",
+					   			dataType:"json",
+					   			complete: function(data) {
+					   				page = JSON.parse(data.responseText);
+					   				projectionDates = page.content;
+							
+					   				if (projectionDates == null || projectionDates.length == 0)
+					   					return;
+					   				
+					   				projectionDates.forEach(
+				   						function (pd, ii) {
+				   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center;' > " +
+													"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
+													"<div style='color:white'>"+pd.time+"</div> " +
+													"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
+												"</div> ";
+				   						}
+			   						)
+									s +=		"</div> " +
+											"</div> " +
+										"</li>"
+	   								$('#repertoar').append(s);
+	   							}
+							});//ajax
+	   					}//function(p,i)
+	   				);//projections.forEach
+	   			}
+			});//ajax
+		}
+	</script>
+
+	<script>
+		$(document).ready(function(){
+			
+
+			theater_id = getUrlParameter('id');
+		
+			if (theater_id == "") {
+				return;
+			}
+		
+			$.ajax({
+	   			url: "get_theater_by_id/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				theater = JSON.parse(data.responseText);
+	   				
+	   				if (theater == null) {
+	   					return;
+	   				}
+
+	   				$('#desc-bioskopa').text(theater.description)
+	   				$('#naziv-bioskopa').text(theater.name)
+	   				$('#adresa-bioskopa').text(theater.address)
+	   				$('#gmap_canvas').attr('src', "https://maps.google.com/maps?q="+encodeURIComponent(theater.address)+"&t=&z=13&ie=UTF8&iwloc=&output=embed")
+	   			}
+			});
+	   		
+			$.ajax({
+	   			url: "get_projection_dates_for_theater/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				page = JSON.parse(data.responseText);
+	   				dates = page.content;
+	   				
+	   				if (dates == null || dates.length == 0) {
+	   					return;
+	   				}
+	   				dates.forEach(
+	   					function (date, i) {
+	   						if (i == 0) {
+		   						$('#dates-buttons').append("<button id=date-button-"+date+" class='flat-button' style='margin-right:1px;' onclick='showProjectionsForDate(\"" + date + "\")'>" + date + "</button>");
+	   							showProjectionsForDate(date);
+	   						}
+	   						else
+		   						$('#dates-buttons').append("<button id=date-button-"+date+" class='flat-button'  style='margin-right:1px;' onclick='showProjectionsForDate(\"" + date + "\")'>" + date + "</button>");
+	   						
+	   						
+	   						if (i > 3)
+	   							return; //dosta je 3 dana
+
+	   					}
+	   				);
+	   			}
+			});
+		})
+	</script>
+	
+	
+	<style>
+	
+		/*header u vrhu stranice*/
+		.top-header {
+            background: white;
+            min-height: 40px;
+            margin: 20px 30px -5px 30px;
+            padding: 5px 10px;
+            
+		}
+		
+		.top-header .title {
+			color : #555;
+            font-size: 27px;
+		}
+		
+		/*centralni sadrzaj stranice*/
+		.content {
+			padding : 10px;
+			margin: 30px 15px 50px 15px;
+		}
+		
+		.blok {
+			height: 500px;
+			padding-bottom: 50px;
+		}
+		
+		.header {
+			background : #A16073;
+			color : white;
+			padding : 5px;
+		}
+
+		.flat-button {
+			border: 0;
+			background: #c18093;
+			color: white;
+			padding: 10px 15px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+		}
+		.fb-active {
+			background: #e1f7d5;
+			color: black;
+		}
+	</style>
+					
+</head>
+<body style='background:#e1f7d5;'>
+	<div class='top-header'>
+		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
+	</div>
+	
+	<div class='content'>
+		<div class='row'>
+			<div class='col-sm-6 blok'>
+				<div class='header'>
+					<div id='naziv-bioskopa'></div>
+				</div>
+				<div style='height: 100%; background: white; '>
+					<div id='adresa-bioskopa' style='color:white; padding: 10px; background: #c18093'></div>
+					<div class='desc' id='desc-bioskopa' style='padding: 10px;'></div>
+				</div>
+			</div>
+			<div class='col-sm-6 blok'>
+				<div class='header'>
+					Mapa
+				</div>
+				
+				<div class="mapouter" style='width:100%;height:100%; overflow:hidden;'>
+					<div class="gmap_canvas" style='width:100%;height:100%;'>
+						<iframe style='width:100%;height:100%;background:none!important;' id="gmap_canvas" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		<div class='row'>
+			<div class='col-sm-12 blok'>
+				<div class='header'>Repertoar</div>
+				<div id='dates-buttons' style='background:#A16073; padding:5px;'>
+				</div>
+				<ul id='repertoar' class='repertoar-ul' style='list-style: none; margin-bottom:0px; padding-left:0px;'>
+					
+					
+<!-- 					<li style='border-bottom:1px solid #c18093; padding:10px; background:white; height:90px;'>
+						<img src='' width='50' height='70' style='float:left; margin-right: 10px;'/>
+						<div >
+							<div style='width:50%; float:left; vertical-align: top;'>
+								<div style='font-weight: bold;'>ime filma</div>
+								<div>nesto jos</div>
+							</div>
+							<div style='width:40%; float:right; text-align:right;'>
+								<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center;' >
+									<div style='color:white'>sala 2</div>
+									<div style='color:white'>18:30</div>
+									<div style='color:white; font-weight: bold;'>450 din</div>
+								</div>
+								<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center;' >
+									<div style='color:white'>sala 4a</div>
+									<div style='color:white'>15:00</div>
+									<div style='color:white; font-weight: bold;'>350 din</div>
+								</div>
+							</div>
+							
+						</div>
+					</li> -->
+					
+					
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	
+</body>
+</html>

@@ -6,12 +6,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
 
 @Entity
 public class Theater implements Serializable {
@@ -23,6 +24,7 @@ public class Theater implements Serializable {
 	private Long id;
 	
 
+    @Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private TheaterType theaterType;
 	
@@ -37,8 +39,10 @@ public class Theater implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "theater", cascade = CascadeType.ALL)
 	private Set<Review> reviews;
-
-
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "theater", cascade = CascadeType.ALL)
+	private Set<Hall> halls;
+	
 	public Theater() {
 		
 	}
@@ -75,8 +79,14 @@ public class Theater implements Serializable {
 		this.theaterType = theaterType;
 	}
 
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 
-	
 	
 }
