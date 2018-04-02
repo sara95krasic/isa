@@ -33,14 +33,14 @@
 	   				projections.forEach(
 	   					function (p, i) {
 	   						var s = 
-	   								"<li style='border-bottom:1px solid #c18093; padding:10px; background:white; height:90px;'> " +
+	   								"<li style='border-bottom:1px solid #c18093; padding:10px; background:white; min-height:90px;'> " +
 										"<img src='' width='50' height='70' style='float:left; margin-right: 10px;'/>  " +
 										"<div > " +
-											"<div style='width:50%; float:left; vertical-align: top;'> " +
+											"<div style='width:30%; float:left; vertical-align: top;'> " +
 												"<div style='font-weight: bold;'>"+p.title+"</div> " +
 												"<div>"+p.runtime+" min.</div> " +
 											"</div> " +
-											"<div style='width:40%; float:right; text-align:right;'> ";
+											"<div style='width:60%; margin-left:auto; text-align:right;'> ";
 							
 							$.ajax({
 					   			url: "get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
@@ -55,7 +55,7 @@
 					   				
 					   				projectionDates.forEach(
 				   						function (pd, ii) {
-				   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center;' > " +
+				   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center; margin-bottom: 4px;' > " +
 													"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
 													"<div style='color:white'>"+pd.time+"</div> " +
 													"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +

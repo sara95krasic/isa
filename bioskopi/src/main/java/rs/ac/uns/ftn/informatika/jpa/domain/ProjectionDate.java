@@ -11,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 @Entity
 public class ProjectionDate implements Serializable {
 
@@ -21,6 +24,8 @@ public class ProjectionDate implements Serializable {
 	Date date;
 
 	@Id
+	@JsonFormat(pattern = "HH:mm")
+	@JsonDeserialize(using = SqlTimeDeserializer.class)
 	@Column(nullable = false)
 	Time time;
 
@@ -31,11 +36,11 @@ public class ProjectionDate implements Serializable {
 	int discount;
 	
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, optional = false)
 	Projection projection;
 	
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, optional = false)
 	Hall hall;
 	
 	public ProjectionDate() {

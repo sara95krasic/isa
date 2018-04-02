@@ -31,7 +31,7 @@ public class Projection implements Serializable {
 	@Column(nullable = true)
 	private String genre;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String director;
 	
 	@Column(nullable = true)
@@ -61,6 +61,50 @@ public class Projection implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public String getDirector() {
+		return director;
+	}
+
+	public void setDirector(String director) {
+		this.director = director;
+	}
+
+	public int getRuntime() {
+		return runtime;
+	}
+
+	public void setRuntime(int runtime) {
+		this.runtime = runtime;
+	}
+
+	public Set<Actor> getActors() {
+		return actors;
+	}
+
+	public void setActors(Set<Actor> actors) {
+		this.actors = actors;
+	}
+
+	public Set<ProjectionRating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<ProjectionRating> ratings) {
+		this.ratings = ratings;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	

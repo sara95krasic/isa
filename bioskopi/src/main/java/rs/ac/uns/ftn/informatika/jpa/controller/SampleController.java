@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.Projection;
+import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
+import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
 
 @RestController
@@ -25,6 +28,8 @@ public class SampleController {
 
 	@Autowired
 	private TheaterService theaterService;
+	@Autowired
+	private ProjectionService projectionService;
 	
 	@RequestMapping(value = "/test", 
 			method = RequestMethod.GET)
@@ -96,7 +101,7 @@ public class SampleController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Page<ProjectionDTO> GetProjectionsForTheater(@PathVariable Long id, @PathVariable Date date) {
+	public Page<ProjectionDTO> getProjectionsForTheater(@PathVariable Long id, @PathVariable Date date) {
 		return this.theaterService.getProjectionsForTheaterForDate(id, date, new PageRequest(0, 10));
 	}
 	
@@ -104,11 +109,55 @@ public class SampleController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Page<ProjectionDateDTO> GetProjectionDatesForTheater(@PathVariable Long theaterId, @PathVariable Long projectionId) {
+	public Page<ProjectionDateDTO> getProjectionDatesForTheater(@PathVariable Long theaterId, @PathVariable Long projectionId) {
 		return this.theaterService.getProjectionDatesForTheaterForProjection(theaterId, projectionId, new PageRequest(0, 10));
 	}
 	
+	@RequestMapping(value = "get_projections_for_theater/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Page<ProjectionDTO> getProjectionsForTheater(@PathVariable Long id) {
+		return this.theaterService.getProjectionsForTheater(id, new PageRequest(0, 10));
+	}
 	
-	
+	@RequestMapping(value = "add_new_projection",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewProjection(@RequestBody Projection p) {
+		//TODO: validiraj da je to admin pozorista ko dodaje
+		return this.projectionService.addNewProjection(p);
+	}
 
+	
+	@RequestMapping(value = "get_all_projections",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Page<ProjectionDTO> getAllProjections() {
+		return this.projectionService.getAllProjections(new PageRequest(0, 10));
+	}
+	
+	@RequestMapping(value = "get_all_hall_labels_for_theater/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Page<String> getHallLabelsForTheater(@PathVariable Long id) {
+		return this.theaterService.getHallLabelsForTheater(id, new PageRequest(0, 10));
+	}
+
+	@RequestMapping(value = "add_new_projection_date/{theater_id}/{hall_label}/{projection_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewProjectionDate(
+			@RequestBody ProjectionDate pd, 
+			@PathVariable Long theater_id, @PathVariable String hall_label, @PathVariable Long projection_id) {
+		//TODO: validiraj da je to admin pozorista ko dodaje
+		return this.theaterService.addNewProjectionDate(pd, theater_id, hall_label, projection_id);
+	}
+	
 }
