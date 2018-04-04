@@ -10,6 +10,13 @@
     <script src="js/helpers.js"></script>
 
 	<script>
+		function setPosterFullView(title, poster) {
+			$('#poster-full-view-title').text(title);
+			$('#poster-full-view-img').attr('src', 'data:image/png;base64, '+poster)
+		}
+	</script>
+
+	<script>
 		function showProjectionsForDate(date) {
 			
 			$('#repertoar').empty();
@@ -34,7 +41,7 @@
 	   					function (p, i) {
 	   						var s = 
 	   								"<li style='border-bottom:1px solid #c18093; padding:10px; background:white; min-height:90px;'> " +
-										"<img src='' width='50' height='70' style='float:left; margin-right: 10px;'/>  " +
+	   									"<img class='small-poster' src='data:image/png;base64, "+p.poster+"' width='50' height='70' style='float:left; margin-right: 10px; padding:3px; border:1px solid #ccc;' data-toggle='modal' data-target='#poster-full-view-modal' onerror='this.src=\"images/missing.jpg\";' onclick='setPosterFullView(\""+p.title+"\", \""+p.poster+"\")'/>  " +
 										"<div > " +
 											"<div style='width:30%; float:left; vertical-align: top;'> " +
 												"<div style='font-weight: bold;'>"+p.title+"</div> " +
@@ -181,6 +188,13 @@
 			background: #e1f7d5;
 			color: black;
 		}
+		
+		.small-poster {
+			cursor: pointer;
+		}
+		.small-poster:HOVER {
+			opacity : 0.5;
+		}
 	</style>
 					
 </head>
@@ -250,6 +264,21 @@
 			</div>
 		</div>
 		
+	</div>
+	
+	<div id="poster-full-view-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" style='border-radius:0px; border:0px; max-height: 100vh;'>
+	      <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title" id='poster-full-view-title'></h4>
+	      </div>
+	      <div class="modal-body" style='text-align: center;'>
+	        <img id='poster-full-view-img' style='max-height: 80vh;' onerror='this.src="images/missing.jpg";' />
+	      </div>
+	    </div>
+	
+	  </div>
 	</div>
 	
 </body>

@@ -120,16 +120,7 @@ public class SampleController {
 	public Page<ProjectionDTO> getProjectionsForTheater(@PathVariable Long id) {
 		return this.theaterService.getProjectionsForTheater(id, new PageRequest(0, 10));
 	}
-	
-	@RequestMapping(value = "add_new_projection",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public boolean addNewProjection(@RequestBody Projection p) {
-		//TODO: validiraj da je to admin pozorista ko dodaje
-		return this.projectionService.addNewProjection(p);
-	}
+
 
 	
 	@RequestMapping(value = "get_all_projections",

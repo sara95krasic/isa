@@ -68,7 +68,7 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 	@Query("select distinct pd.date from ProjectionDate pd left outer join pd.hall h where h.theater.id = ?1")
 	Page<Date> getAllProjectionDatesForTheater(Long id, Pageable pageable);
 	
-	@Query("select distinct p.title as title, p.description as description, p.runtime as runtime, p.id as id, p.director as director " +
+	@Query("select distinct p.title as title, p.description as description, p.runtime as runtime, p.id as id, p.director as director, p.poster as poster " +
 			"from ProjectionDate pd left outer join pd.projection p left outer join pd.hall h " +
 			"where h.theater.id = ?1 and pd.date = ?2")
 	Page<ProjectionDTO> getAllProjectionsForTheaterForDate(Long id, Date date, Pageable pageable);
@@ -78,7 +78,7 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 			"where h.theater.id = ?1 and p.id = ?2")
 	Page<ProjectionDateDTO> getAllProjectionDatesForTheaterForProjection(Long theaterId, Long projectionId, Pageable pageable);
 
-	@Query("select distinct p.title as title, p.description as description, p.runtime as runtime, p.id as id, p.director as director " +
+	@Query("select distinct p.title as title, p.description as description, p.runtime as runtime, p.id as id, p.director as director, p.poster as poster " +
 			"from ProjectionDate pd left outer join pd.projection p left outer join pd.hall h " +
 			"where h.theater.id = ?1")
 	Page<ProjectionDTO> getAllProjectionsForTheater(Long id, Pageable pageable);
