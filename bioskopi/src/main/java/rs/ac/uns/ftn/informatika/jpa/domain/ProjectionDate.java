@@ -31,9 +31,6 @@ public class ProjectionDate implements Serializable {
 
 	@Column(nullable = false)
 	double price;
-
-	@Column(nullable = true)
-	int discount;
 	
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, optional = false)
@@ -71,13 +68,6 @@ public class ProjectionDate implements Serializable {
 		this.price = price;
 	}
 
-	public int getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(int discount) {
-		this.discount = discount;
-	}
 
 	public Projection getProjection() {
 		return projection;

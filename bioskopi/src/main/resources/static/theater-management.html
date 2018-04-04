@@ -69,10 +69,11 @@
 				actors[i] = actors[i].trim();
 			}
 			projection.actors = actors;
+			
 
 			var projectionJSON = JSON.stringify(projection);
 			$.ajax({
-	   			url: "add_new_projection",
+	   			url: "theater_management/add_new_projection",
 	   			type:"POST",
 	   			data: projectionJSON,
 				contentType:"application/json",
@@ -80,14 +81,53 @@
 	   			complete: function(data) {
 	   				var s = JSON.parse(data.responseText);
 	   				
-	   				if (s == null || s == 'false') {
+	   				if (s == null) {
 	   					alert('Greska!');
 	   				} else {
-	   					alert('Dodata projekcija!');
-	   					$('#dodaj-projekciju-modal').modal('hide');
+	   					
+	   					var projection = s;
+	   					//ovde je sad i id projekcije, trebace za fajl upload
+	   					//da znam od cega je slika
+	   					
+	   					//aj sad mos slati i sliku
+						var file = $('input[name="poster-file"]').get(0).files[0];
+			    		
+			    	    var formData = new FormData();
+			    	    formData.append('file', file);
+
+    		    	    $.ajax({
+    		    	        url: 'theater_management/upload_poster/' + projection.id,
+    		    	        type: 'POST',
+    		    	        data: formData,
+    		    	        cache: false,
+    		    	        contentType: false,
+    		    	        processData: false,
+    		    	        success: function(){
+    		    	        	
+    		   					alert('Dodata projekcija!');
+    		   					$('#dodaj-projekciju-modal').modal('hide');
+    		   					
+    		    	        }
+    		    	    });
+	   					
 	   				}
 	   			}
 			});
+		}
+	</script>
+
+	<script >
+	//nesto malo za preview ikonice i to
+	  function loadFile(event) {
+	    var output = document.getElementById('icon-preview');
+	    output.src = URL.createObjectURL(event.target.files[0]);
+	  }
+	</script>
+
+	<script>
+		function setPosterFullView(title, poster) {
+			$('#poster-full-view-title').text(title);
+			$('#poster-full-view-img').attr('src', 'data:image/png;base64, '+poster)
 		}
 	</script>
 
@@ -114,7 +154,7 @@
 	   					function (p, i) {
 	   						var s = 
 	   								"<li style='border-bottom:1px solid #c18093; padding:10px; background:white; min-height:90px;'> " +
-										"<img src='' width='50' height='70' style='float:left; margin-right: 10px;'/>  " +
+											"<img class='small-poster' src='data:image/png;base64, "+p.poster+"' width='50' height='70' style='float:left; margin-right: 10px; padding:3px; border:1px solid #ccc;' data-toggle='modal' data-target='#poster-full-view-modal' onerror='this.src=\"images/missing.jpg\";' onclick='setPosterFullView(\""+p.title+"\", \""+p.poster+"\")'/>  " +
 										"<div > " +
 											"<div style='width:50%; float:left; vertical-align: top;'> " +
 												"<div style='font-weight: bold;'>"+p.title+"</div> " +
@@ -316,6 +356,27 @@
 			background: #c18093;
 		}
 		
+		/*da zamenim ruzni file chooser*/
+		.file {
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+		}
+		.file-label {
+			cursor: pointer;
+			font-weight: normal !important;
+		}
+		
+		.small-poster {
+			cursor: pointer;
+		}
+		.small-poster:HOVER {
+			opacity : 0.5;
+		}
+		
 	</style>
 					
 </head>
@@ -368,13 +429,14 @@
 	      </div>
 		      <div class="modal-body">
 	        <form id='nova-projekcija-forma'>
-		        	<span style='display:inline-block;width:100px;'>Naziv</span><input type='text' name='title' style='margin-bottom: 5px;'><br>
+		        	<img id="icon-preview" src="#" onerror="this.src='images/missing.jpg';" style='float:right; max-height: 200px; max-width: 140px; overflow: hidden; border:1px solid #ccc; padding: 5px;'/></dt>
+					<span style='display:inline-block;width:100px;'>Naziv</span><input type='text' name='title' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Zanr</span><input type='text' name='genre' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Reziser</span><input type='text' name='director' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Trajanje</span><input type="number" name='runtime' style='margin-bottom: 5px;'><br>
-		        	<span style='margin-bottom: 5px;'><span style='display:inline-block;width:100px;'>Opis</span><textarea name='description' style='resize:none;' rows='5' cols='50'></textarea></span><br>
-		        	<span style='margin-bottom: 5px;'><span style='display:inline-block;width:100px;'>Glumci</span><textarea name='actors' style='resize:none;' rows='3' cols='50'></textarea></span><br>
-		     
+		        	<span style='margin-bottom: 5px;'><span style='display:inline-block;width:100px;'>Opis</span><textarea name='description' style='resize:none;' rows='5' cols='40'></textarea></span><br>
+		        	<span style='margin-bottom: 5px;'><span style='display:inline-block;width:100px;'>Glumci</span><textarea name='actors' style='resize:none;' rows='3' cols='40'></textarea></span><br>
+		     		<span style='display:inline-block;width:100px;'>Poster</span><label for="ikonica" class="flat-button file-label">Odaberite sliku postera</label><input style='display: inline-block;' type="file" name="poster-file" accept="image/*" id="ikonica" class="file" required="required" onchange="loadFile(event)">
         	</form>
         	 </div>
 	      
@@ -403,7 +465,6 @@
 		        	<span style='display:inline-block;width:100px;'>Datum</span><input type="date" name='date' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Vreme</span><input type="time" name='time' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Cena</span><input type="number" name='price' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Popust</span><input type="number" name='discount' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Sala</span><select id='sale-select' name='hall_label' style='margin-bottom: 5px;'></select><br>
 		     
         	</form>
@@ -413,6 +474,21 @@
 <!-- 		        <input type="submit" class="flat-button" data-dismiss="modal" value='Dodaj'> -->
 					<button class="flat-button" onclick='dodajTerminProjekcije()'>Dodaj termin</button>
 		      </div>
+	    </div>
+	
+	  </div>
+	</div>
+	
+	<div id="poster-full-view-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" style='border-radius:0px; border:0px; max-height: 100vh;'>
+	      <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title" id='poster-full-view-title'></h4>
+	      </div>
+	      <div class="modal-body" style='text-align: center;'>
+	        <img id='poster-full-view-img' style='max-height: 80vh;' onerror='this.src="images/missing.jpg";' />
+	      </div>
 	    </div>
 	
 	  </div>

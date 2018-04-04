@@ -10,4 +10,6 @@ public interface ProjectionDTO {
 	float getRuntime();
 	
 	float getId();
+	
+	String getPoster();
 }

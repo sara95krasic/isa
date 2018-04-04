@@ -102,8 +102,8 @@ public class TheaterServiceImpl implements TheaterService {
 
 	@Override
 	public boolean addNewProjectionDate(ProjectionDate pd, Long theater_id, String hall_label, Long projection_id) {
-		final String sql = "insert into projection_date(projection_id, hall_label, hall_theater_id, time, date, price, discount) " +
-				"values (?,?,?,?,?,?,?)";
+		final String sql = "insert into projection_date(projection_id, hall_label, hall_theater_id, time, date, price) " +
+				"values (?,?,?,?,?,?)";
         int inserted = jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -114,7 +114,6 @@ public class TheaterServiceImpl implements TheaterService {
                 ps.setTime(4, pd.getTime());
                 ps.setDate(5, pd.getDate());
                 ps.setDouble(6, pd.getPrice());
-                ps.setInt(7, pd.getDiscount());
                 return ps;
             }
         });
