@@ -42,6 +42,7 @@ public class Projection implements Serializable {
 	@Column(nullable = true, length = 1010379)
 	private String poster; //base64 zapis
 	
+	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<Actor> actors;
 	

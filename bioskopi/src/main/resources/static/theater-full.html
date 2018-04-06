@@ -62,11 +62,13 @@
 					   				
 					   				projectionDates.forEach(
 				   						function (pd, ii) {
-				   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center; margin-bottom: 4px;' > " +
-													"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
-													"<div style='color:white'>"+pd.time+"</div> " +
-													"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
-												"</div> ";
+				   							if (pd.date == date) {
+					   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center; margin-bottom: 4px;' > " +
+														"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
+														"<div style='color:white'>"+pd.time+"</div> " +
+														"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
+													"</div> ";
+				   							}
 				   						}
 			   						)
 									s +=		"</div> " +
