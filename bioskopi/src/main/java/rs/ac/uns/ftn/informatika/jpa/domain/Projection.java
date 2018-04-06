@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.loader.custom.Return;
+
 @Entity
 public class Projection implements Serializable {
 	
@@ -108,6 +110,18 @@ public class Projection implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setPoster(String poster) {
+		this.poster = poster;
+		
+	}
+	public String getPoster() {
+		return poster;
 	}
 
 	

@@ -1,12 +1,12 @@
 package rs.ac.uns.ftn.informatika.jpa.service;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
@@ -39,5 +39,7 @@ public interface TheaterService {
 	Page<String> getHallLabelsForTheater(Long id, Pageable pageable);
 
 	boolean addNewProjectionDate(ProjectionDate pd, Long theater_id, String hall_label, Long projection_id);
+
+	List<DiscountSeat> getDiscountSeatsForTheater(Long id, Pageable pageable);
 
 }

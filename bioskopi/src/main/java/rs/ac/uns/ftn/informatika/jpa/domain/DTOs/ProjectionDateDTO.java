@@ -12,4 +12,6 @@ public interface ProjectionDateDTO {
 	double getPrice();
 	
 	String getHallLabel();
+	
+	Long getId();
 }

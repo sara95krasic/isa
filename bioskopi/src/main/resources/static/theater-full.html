@@ -138,6 +138,49 @@
 	   				);
 	   			}
 			});
+			
+			
+			
+			$.ajax({
+	   			url: "get_discount_seats_for_theater/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				d_seats = JSON.parse(data.responseText); //ne vraca page, samo obicnu List<DiscountSeat>
+	   				
+	   				if (d_seats == null || d_seats.length == 0) {
+	   					return;
+	   				}
+	   				d_seats.forEach(
+	   					function (d_seat, i) {
+	   						$('#karte-na-popustu-div').append(
+   								"<div class='karta-na-popustu' style='width: 315px; height: 180px'> " +
+	   								"<div style='width: 100%;'> " +
+	   									"<div style='background: #c18093; width: 100%; height: auto; overflow: hidden;'> " +
+	   										"<div style='color: white; padding: 5px 10px; float:left;'>"+d_seat.projectionDate.projection.title+"</div> " +
+	   										"<div style='background: #e1f7d5; padding: 5px 10px; float:right;'>-"+d_seat.discount+"%</div> " +
+	   									"</div> " +
+	   									"<img src='data:image/png;base64, "+d_seat.projectionDate.projection.poster+"' onerror='this.src=\"images/missing.jpg\";' style='height:150px; float:left;'> " +
+	   									"<div style='display:inline-block; padding:10px 0px 10px 10px; width: 210px;' > " +
+	   										"<span>sala "+d_seat.seat.hall.label+"</span><br> " +
+	   										"<span>"+d_seat.projectionDate.date+"</span><br> " +
+	   										"<span>"+d_seat.projectionDate.time+"</span><br> " +
+	   										"<span>sediste "+d_seat.seat.number+"</span><br> " +
+	   										"<span style='text-decoration:line-through;'>"+d_seat.projectionDate.price+" din</span><br> " +
+	   										"<span style='color:white; background: #c18093; padding: 5px 10px; float:right;'>"+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</span><br> " +
+	   									"</div> " +
+	   								"</div> " +
+	   								"<button  class='hover-over-rezervisi' style='position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 3; text-align: center; line-height:180px;'> " +
+	   								"	REZERVISI " +
+	   								"</button> " +
+	   							"</div>"
+   							);
+
+	   					}
+   					);//forEach
+	   			}
+			});
+			
 		})
 	</script>
 	
@@ -195,6 +238,33 @@
 		.small-poster:HOVER {
 			opacity : 0.5;
 		}
+		
+		.karta-na-popustu {
+			display: inline-block;
+			background: white;
+			position: relative;
+			margin-bottom: 5px;
+			margin-right: 5px;
+		}
+		
+		.hover-over-rezervisi {
+		 	background: #c18093;
+		 	color: white;
+		 	font-size: xx-large;
+		 	
+			border: 0;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+		 	
+		 	
+			opacity : 0.0;
+			transition: opacity 0.1s ease-in-out;
+		}
+		.hover-over-rezervisi:HOVER {
+			opacity: 0.7;
+		}
+		
 	</style>
 					
 </head>
@@ -204,6 +274,7 @@
 	</div>
 	
 	<div class='content'>
+	
 		<div class='row'>
 			<div class='col-sm-6 blok'>
 				<div class='header'>
@@ -225,6 +296,37 @@
 					</div>
 				</div>
 				
+			</div>
+		</div>
+		
+		<div class='row'>
+			<div class='col-sm-12' style='margin-bottom: 20px;'>
+				<div class='header'>Karte na popustu</div>
+				<div id='karte-na-popustu-div' style='background:#A16073; padding:5px 5px 0px 5px;'>
+					
+<!-- 					<div class='karta-na-popustu' style='width: 320px; height: 180px'>
+						<div style='width: 100%;'>
+							<div style='background: #c18093; width: 100%; height: auto; overflow: hidden;'>
+								<div style='color: white; padding: 5px 10px; float:left;'>Naziv proj</div>
+								<div style='background: #e1f7d5; padding: 5px 10px; float:right;'>-20%</div>
+							</div>
+							<img src='' onerror='this.src="images/missing.jpg";' style='height:150px; float:left;'>
+							<div style='display:inline-block; padding:10px 0px 10px 10px; width: 210px;' >
+								<span>sala 1</span><br>
+								<span>20-21-2010</span><br>
+								<span>20:00</span><br>
+								<span>sediste 14</span><br>
+								<span style='text-decoration:line-through;'>400 din</span><br>
+								<span style='color:white; background: #c18093; padding: 5px 10px; float:right;'>366 din</span><br>
+							</div>
+						</div>
+						
+						<button  class='hover-over-rezervisi' style='position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 3; text-align: center; line-height:180px;'>
+							REZERVISI
+						</button>
+					</div> -->
+					
+				</div>
 			</div>
 		</div>
 		

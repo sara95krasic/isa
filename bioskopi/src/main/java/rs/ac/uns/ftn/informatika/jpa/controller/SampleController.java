@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.jpa.controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import rs.ac.uns.ftn.informatika.jpa.domain.Projection;
+import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
@@ -149,6 +150,14 @@ public class SampleController {
 			@PathVariable Long theater_id, @PathVariable String hall_label, @PathVariable Long projection_id) {
 		//TODO: validiraj da je to admin pozorista ko dodaje
 		return this.theaterService.addNewProjectionDate(pd, theater_id, hall_label, projection_id);
+	}
+	
+	@RequestMapping(value = "get_discount_seats_for_theater/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<DiscountSeat> getDiscountSeatsForTheater(@PathVariable Long id) {
+		return this.theaterService.getDiscountSeatsForTheater(id, new PageRequest(0, 10));
 	}
 	
 }

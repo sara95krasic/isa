@@ -87,6 +87,13 @@ public class Theater implements Serializable {
 		this.reviews = reviews;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Long getId() {
+		return this.id;
+	}
+
 
 	
 }
