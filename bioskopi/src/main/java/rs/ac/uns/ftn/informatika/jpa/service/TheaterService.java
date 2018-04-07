@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
@@ -41,5 +42,9 @@ public interface TheaterService {
 	boolean addNewProjectionDate(ProjectionDate pd, Long theater_id, String hall_label, Long projection_id);
 
 	List<DiscountSeat> getDiscountSeatsForTheater(Long id, Pageable pageable);
+
+	boolean addNewDiscountSeat(DiscountSeat ds);
+
+	List<DiscountSeat> getDiscountSeatsForProjectionDate(Long projection_date_id, PageRequest pageRequest);
 
 }

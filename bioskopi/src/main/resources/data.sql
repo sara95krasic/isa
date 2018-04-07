@@ -89,7 +89,7 @@ insert into hall (theater_id, label) values (5, 'Jovan Đorđević');
 
 insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (1, 1, '1', '2018-05-01', '14:00', 350);
 insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (1, 1, '2', '2018-05-01', '16:00', 350);
-insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (1, 1, '2', '2018-05-01', '18:00', 3000);
+insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (1, 1, '2', '2018-05-01', '18:00', 280);
 insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (2, 1, '2', '2018-05-01', '15:00', 400);
 insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (2, 1, '2', '2018-05-02', '15:00', 400);
 insert into projection_date (projection_id, hall_theater_id, hall_label, date, time, price) values (2, 1, '4A', '2018-05-02', '17:00', 400);

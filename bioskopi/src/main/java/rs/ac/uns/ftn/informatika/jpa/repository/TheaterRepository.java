@@ -73,7 +73,7 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 			"where h.theater.id = ?1 and pd.date = ?2")
 	Page<ProjectionDTO> getAllProjectionsForTheaterForDate(Long id, Date date, Pageable pageable);
 
-	@Query("select pd.date as date, pd.time as time, pd.price as price, h.label as hallLabel "+
+	@Query("select pd.date as date, pd.time as time, pd.price as price, h.label as hallLabel, pd.id as id "+
 			"from ProjectionDate pd left outer join pd.hall h left outer join pd.projection p " +
 			"where h.theater.id = ?1 and p.id = ?2")
 	Page<ProjectionDateDTO> getAllProjectionDatesForTheaterForProjection(Long theaterId, Long projectionId, Pageable pageable);

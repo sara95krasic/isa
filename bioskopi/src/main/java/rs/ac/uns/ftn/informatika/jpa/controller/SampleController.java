@@ -160,4 +160,22 @@ public class SampleController {
 		return this.theaterService.getDiscountSeatsForTheater(id, new PageRequest(0, 10));
 	}
 	
+	@RequestMapping(value = "add_new_discount_seat",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewDiscountSeat(@RequestBody DiscountSeat ds) {
+		//TODO: validiraj da je to admin pozorista ko dodaje
+		return this.theaterService.addNewDiscountSeat(ds);
+	}
+	
+	
+	@RequestMapping(value = "get_discount_seats_for_projection_date/{projection_date_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<DiscountSeat> getDiscountSeatsForProjectionDate(@PathVariable Long projection_date_id) {
+		return this.theaterService.getDiscountSeatsForProjectionDate(projection_date_id, new PageRequest(0, 10));
+	}
 }

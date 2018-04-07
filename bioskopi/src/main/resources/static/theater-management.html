@@ -176,11 +176,12 @@
 					   				projectionDates.forEach(
 				   						function (pd, ii) {
  				   							s += "<div style='display: inline-block; background:#A16073; padding:5px 5px; text-align: center; margin-bottom:4px;' > " +
-											"<div style='color:black; background:#e1f7d5; padding: 2px 5px;'>"+pd.date+"</div> " +
-											"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
-													"<div style='color:white'>"+pd.time+"</div> " +
-													"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
-												"</div> ";
+												"<div style='color:black; background:#e1f7d5; padding: 2px 5px;'>"+pd.date+"</div> " +
+												"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
+												"<div style='color:white'>"+pd.time+"</div> " +
+												"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
+												"<button class='flat-button-2' style='color:white; font-weight: bold; padding: 2px 5px;' data-toggle='modal' data-target='#karte-na-popustu-modal' onclick='setupKarteNaPopustuModal("+pd.id+", \""+p.title+"\", \""+pd.date+"\", \""+pd.time+"\", \""+pd.hallLabel+"\")'>karte na popustu</button> " +
+											"</div> ";
 				   						}
 			   						)
 									s +=		
@@ -197,6 +198,47 @@
 	   				);//projections.forEach
 	   			}
 			});//ajax
+		}
+	</script>
+
+	<script>
+		function setupKarteNaPopustuModal(projectionDateId, projectionTitle, projectionDateDate, projectionDateTime, projectionDateHallLabel) {
+			$.ajax({
+	   			url: "get_discount_seats_for_projection_date/" + projectionDateId,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				d_seats = JSON.parse(data.responseText); //ne vraca page, samo obicnu List<DiscountSeat>
+	   				
+	   				if (d_seats == null) {
+	   					return;
+	   				}
+
+					$('#karte-na-popustu-modal-title').text(projectionTitle);
+					$('#karte-na-popustu-modal-date').text(projectionDateDate);
+					$('#karte-na-popustu-modal-time').text(projectionDateTime);
+					$('#karte-na-popustu-modal-hall-label').text(projectionDateHallLabel);
+					
+					$('#projection-date-id-hidden-input').attr('value', projectionDateId); //stavlja id projectionDatea u skriveno polje u formi za dodavanje novog sedista na popustu
+					$('#hall-label-hidden-input').attr('value', projectionDateHallLabel);
+					
+					$('#karte-na-popustu-lista').empty();
+	   				
+	   				d_seats.forEach(
+	   					function (d_seat, i) {
+	   						$('#karte-na-popustu-lista').append(
+   					      		"<li style='padding:5px 10px; background:#c18093; color: white; margin-bottom: 2px;'> " + 
+	   				      			"<div style='display: inline-block;'>Sediste "+d_seat.seat.number+", popust "+d_seat.discount+"%</div> " +
+	   				      			"<div style='display: inline-block; text-align: right; float:right;'><span style='text-decoration: line-through;'>"+d_seat.projectionDate.price+" din</span> "+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+"</div> " +
+	   				      			"<div style='width: 100%; text-align: right;'><button class='flat-button' style='padding:2px 5px;'>Obrisi</button></div> " +
+	   				      		"</li>"
+   							);
+
+	   					}
+   					);//forEach
+	   			}
+			});
+			
 		}
 	</script>
 
@@ -308,6 +350,39 @@
 		}
 	</script>
 	
+	<script>
+		function dodajKartuNaPopustu() {
+			var discountSeat = {}
+			discountSeat.seat = {}
+			discountSeat.seat.number = $('#karta-na-popustu-forma>input[name="seat-number"]').val();
+			discountSeat.seat.hall = {}
+			discountSeat.seat.hall.label = $('#karta-na-popustu-forma>input[name="hall-label"]').val();
+			discountSeat.seat.hall.theater = {}
+			discountSeat.seat.hall.theater.id = getUrlParameter('id');
+			discountSeat.discount = $('#karta-na-popustu-forma>input[name="discount"]').val();
+			discountSeat.projectionDate = {}
+			discountSeat.projectionDate.id = $('#karta-na-popustu-forma>input[name="projection-date-id"]').val();
+
+			var discountSeatJSON = JSON.stringify(discountSeat);
+			$.ajax({
+	   			url: "add_new_discount_seat",
+	   			type:"POST",
+	   			data: discountSeatJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == false) {
+	   					alert('Greska!');
+	   				} else {
+	   					alert('Uspesno dodata karta na popustu!')
+	   				}
+	   			}
+			});			
+		}
+	</script>
+	
 	
 	<style>
 	
@@ -354,6 +429,20 @@
 		}
 		.flat-button:HOVER {
 			background: #c18093;
+		}
+		
+		.flat-button-2 {
+			border: 0;
+			background: #c18093;
+			color: white;
+			padding: 10px 15px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+			transition: background 0.1s linear;
+		}
+		.flat-button-2:HOVER {
+			background: #e1a0b3;
 		}
 		
 		/*da zamenim ruzni file chooser*/
@@ -493,6 +582,60 @@
 	
 	  </div>
 	</div>
+	
+	<div id="karte-na-popustu-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" >
+	
+	    <div class="modal-content" style='border-radius:0px; border:0px;'>
+	      <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title" >Karte na popustu - <span id='karte-na-popustu-modal-title'>Ready Player One</span></h4>
+	      </div>
+		      <div class="modal-body">
+		      	<div style='margin-bottom: 5px;'><span id='karte-na-popustu-modal-date'>2014-20-20</span>, <span id='karte-na-popustu-modal-time'>02:20:00</span>, sala <span id='karte-na-popustu-modal-hall-label'>2</span></div>
+		      	<ul style='list-style: none; padding-left:0px; margin-bottom: 2px;' id='karte-na-popustu-lista'>
+<!-- 		      		<li style='padding:5px 10px; background:#c18093; color: white; margin-bottom: 2px;'>
+		      			<div style='display: inline-block;'>Sediste 14, popust 20%</div>
+		      			<div style='display: inline-block; text-align: right; float:right;'><span style='text-decoration: line-through;'>300 din</span> 240 din</div>
+		      			<div style='width: 100%; text-align: right;'><button class='flat-button' style='padding:2px 5px;'>Obrisi</button></div>
+		      		</li> -->
+		      	</ul>
+		      	<div style='text-align: right;'>
+					<button class='flat-button' data-toggle='modal' data-target='#dodaj-kartu-na-popustu-modal'>Dodaj kartu</button>
+				</div>
+        	 </div>
+	      
+		      <div class="modal-footer">
+ 		        <button class="flat-button" data-dismiss="modal">Okej</button>
+		      </div>
+	    </div>
+	
+	  </div>
+	</div>
+	
+	<div id="dodaj-kartu-na-popustu-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" style='border-radius:0px; border:0px; max-height: 100vh;'>
+	     <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        Dodaj kartu
+	      </div>
+	      <div class="modal-body" style='text-align: center;'>
+		        <form id='karta-na-popustu-forma'>
+			        	<span style='display:inline-block;width:100px;'>Broj sedista</span><input type="number" name='seat-number' style='margin-bottom: 5px;'><br>
+			        	<span style='display:inline-block;width:100px;'>Popust (%)</span><input type="number" name='discount' style='margin-bottom: 5px;'><br>
+			        	<input type="hidden" name='projection-date-id' id='projection-date-id-hidden-input' value="">
+			        	<input type="hidden" name='hall-label' id='hall-label-hidden-input' value="">
+	        	</form>
+	      </div>
+      
+	      <div class="modal-footer">
+		        <button class="flat-button" data-dismiss="modal" onclick='dodajKartuNaPopustu()'>Dodaj</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 	
 </body>
 </html>
