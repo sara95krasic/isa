@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Bioskopi - Uloguj se</title>
+	<title>Bioskopi - Registruj se</title>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
@@ -66,13 +66,18 @@
 	<div class='row content'>
 		<div class='col-sm-6 blok'>
 			<div class='header'>
-				<div>Login forma</div>
+				<div>Registracija</div>
 			</div>
 			<div style='background: white; padding: 10px 15px;'>
 				<form method='post'>
+					<span style='display:inline-block;width:100px;'>Ime:</span><input type="text" name='ime' id='ime' style='margin-bottom: 5px;'><br>
+					<span style='display:inline-block;width:100px;'>Prezime:</span><input type="text" name='prezime' id='prezime' style='margin-bottom: 5px;'><br>
+					<span style='display:inline-block;width:100px;'>Grad:</span><input type="text" name='grad' id='grad' style='margin-bottom: 5px;'><br>
+					<span style='display:inline-block;width:100px;'>Broj telefona:</span><input type="text" name='brTel' id='brTel' style='margin-bottom: 5px;'><br>
 		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='password' id='password' style='margin-bottom: 5px;'><br>
-		        	<div style='text-align: right;'><button type="submit" class='flat-button'>Uloguj se</button></div>
+		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="lozinka" name='lozinka' id='lozinka' style='margin-bottom: 5px;'><br>
+		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="potvrdi" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;'><br>
+		        	<div style='text-align: right;'><button type="submit" class='flat-button'>Registruj se</button></div>
 				</form>
 			</div>
 		</div>
