@@ -36,7 +36,7 @@
 			
 			var projectionDateJSON = JSON.stringify(projectionDate);
 			$.ajax({
-	   			url: "add_new_projection_date/" + theater_id + "/" + hall_label + "/" + projection_id,
+	   			url: "/theater_management/add_new_projection_date/" + theater_id + "/" + hall_label + "/" + projection_id,
 	   			type:"POST",
 	   			data: projectionDateJSON,
 				contentType:"application/json",
@@ -139,7 +139,7 @@
 			theater_id = getUrlParameter('id');
 			
 			$.ajax({
-	   			url: "get_projections_for_theater/" + theater_id,
+	   			url: "registered/get_projections_for_theater/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -163,7 +163,7 @@
 											"<div style='width:40%; margin-left:auto; text-align:right;'> ";
 							
 							$.ajax({
-					   			url: "get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
+					   			url: "registered/get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
 					   			type:"GET",
 					   			dataType:"json",
 					   			complete: function(data) {
@@ -204,7 +204,7 @@
 	<script>
 		function setupKarteNaPopustuModal(projectionDateId, projectionTitle, projectionDateDate, projectionDateTime, projectionDateHallLabel) {
 			$.ajax({
-	   			url: "get_discount_seats_for_projection_date/" + projectionDateId,
+	   			url: "registered/get_discount_seats_for_projection_date/" + projectionDateId,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -245,7 +245,7 @@
 	<script>
 		function popuniIzborProjekcijaUModalu() {
 			$.ajax({
-	   			url: "get_all_projections",
+	   			url: "registered/get_all_projections",
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -266,7 +266,7 @@
 		function popuniIzborSalaUModalu() {
 			var theater_id = getUrlParameter('id');
 			$.ajax({
-	   			url: "get_all_hall_labels_for_theater/" + theater_id,
+	   			url: "registered/get_all_hall_labels_for_theater/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -295,7 +295,7 @@
 			}
 		
 			$.ajax({
-	   			url: "get_theater_by_id/" + theater_id,
+	   			url: "public/get_theater_by_id/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -332,7 +332,7 @@
 			var theater = getFormData($('#update-form'));
 			var theaterJSON = JSON.stringify(theater);
 			$.ajax({
-	   			url: "update_theater/" + theater_id,
+	   			url: "theater_management/update_theater/" + theater_id,
 	   			type: "POST",
 	   			data: theaterJSON,
 				contentType:"application/json",
@@ -365,7 +365,7 @@
 
 			var discountSeatJSON = JSON.stringify(discountSeat);
 			$.ajax({
-	   			url: "add_new_discount_seat",
+	   			url: "theater_management/add_new_discount_seat",
 	   			type:"POST",
 	   			data: discountSeatJSON,
 				contentType:"application/json",

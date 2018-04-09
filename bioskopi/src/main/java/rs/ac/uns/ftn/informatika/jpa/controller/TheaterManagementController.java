@@ -1,8 +1,5 @@
 package rs.ac.uns.ftn.informatika.jpa.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,8 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Projection;
-import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
+import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
+import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
 
@@ -29,7 +28,14 @@ public class TheaterManagementController {
 	@Autowired
 	private ProjectionService projectionService;
 	
-	
+	@RequestMapping(value = "update_theater/{id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean UpdateTheater(@PathVariable Long id, @RequestBody Theater t) {
+		return this.theaterService.updateTheater(id, t);
+	}
 	
 	@RequestMapping(value = "add_new_projection",
 			method = RequestMethod.POST,
@@ -57,4 +63,28 @@ public class TheaterManagementController {
             return false;
         }
     }
+	
+
+	@RequestMapping(value = "add_new_projection_date/{theater_id}/{hall_label}/{projection_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewProjectionDate(
+			@RequestBody ProjectionDate pd, 
+			@PathVariable Long theater_id, @PathVariable String hall_label, @PathVariable Long projection_id) {
+		return this.theaterService.addNewProjectionDate(pd, theater_id, hall_label, projection_id);
+	}
+	
+	@RequestMapping(value = "add_new_discount_seat",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewDiscountSeat(@RequestBody DiscountSeat ds) {
+		//TODO: validiraj da je to admin pozorista ko dodaje
+		return this.theaterService.addNewDiscountSeat(ds);
+	}
+	
+	
 }
