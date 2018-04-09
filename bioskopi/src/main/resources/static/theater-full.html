@@ -26,7 +26,7 @@
 			theater_id = getUrlParameter('id');
 			
 			$.ajax({
-	   			url: "get_projections_for_theater_for_date/" + theater_id + "/" + date,
+	   			url: "registered/get_projections_for_theater_for_date/" + theater_id + "/" + date,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -50,7 +50,7 @@
 											"<div style='width:60%; margin-left:auto; text-align:right;'> ";
 							
 							$.ajax({
-					   			url: "get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
+					   			url: "registered/get_projectiondates_for_theater_for_projection/" + theater_id + "/" + p.id,
 					   			type:"GET",
 					   			dataType:"json",
 					   			complete: function(data) {
@@ -95,7 +95,7 @@
 			}
 		
 			$.ajax({
-	   			url: "get_theater_by_id/" + theater_id,
+	   			url: "public/get_theater_by_id/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -113,7 +113,7 @@
 			});
 	   		
 			$.ajax({
-	   			url: "get_projection_dates_for_theater/" + theater_id,
+	   			url: "registered/get_projection_dates_for_theater/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -144,7 +144,7 @@
 			
 			
 			$.ajax({
-	   			url: "get_discount_seats_for_theater/" + theater_id,
+	   			url: "registered/get_discount_seats_for_theater/" + theater_id,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
@@ -229,6 +229,10 @@
 			border-radius: 0px;
 			-webkit-appearance: none;
 		}
+		.flat-button:HOVER {
+			background: #c18093;
+		}
+		
 		.fb-active {
 			background: #e1f7d5;
 			color: black;
