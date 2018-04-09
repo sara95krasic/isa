@@ -29,12 +29,13 @@
 				
 				$('#bioskopi').append(
 					'<li>' +
+					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<span>' + b.name + '</span><br>' + 
 					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
-					'<span style="float: right;">' + ocena + '</span></span>' +
-					'<a href="theater-basic.html?id=' + b.id + '">' +
+					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
-					'</a></li>'
+					'</a>' +
+					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')
 					);
 			});
 		}
@@ -64,7 +65,8 @@
 					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<a href="theater-basic.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
-					'</a></li>'
+					'</a>' +
+					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')
 					);
 			});
 		}
@@ -160,14 +162,58 @@
 	  
 	<script>
 		$(document).ready(function(){
-			showAllMovieTheaters();
-			showAllPlayTheaters();
+			
+			$.ajax({
+				url: "public/get_current_user",
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					
+					//pripremi trenutno ulogovanog usera, da bude dostupan svima na stranici
+					var user;
+					if (data.responseText == "")
+						//nista, nije ulogovan
+						user = null;
+					else
+						user = JSON.parse(data.responseText);
+					
+					window.currentUser = user;	//cuvamo ga globalno, da ove funckcije sto treba da prikazu sve bioskope
+												//mogu malo da koriguju prikaz za ulogovane korisnike
+					//to je to
+					
+					
+					
+					
+					
+					if (window.currentUser != null) {
+						//ako je ulogovan
+						
+						$('#reg-log-bar').hide();
+					
+						if (window.currentUser.role == "ADMIN_THEATER") {
+							//huh...nista posebno
+						}
+						
+					} else {
+						//ako nije ulogovan
+						
+						$('#izloguj-se-a').hide();
+					}
+					
+												
+					showAllMovieTheaters();
+					showAllPlayTheaters();
+				}
+			});
+			
 		})
 	</script>
 	
 	
 	
 	<style>
+		a {color:#A16073;}
+		a:HOVER {color:#A16073;}
 	
 		@font-face {
 		    font-family: LoveloBold;
@@ -194,7 +240,7 @@
 		
 		/*centralni sadrzaj stranice*/
 		.content {
-			margin: 15px 15px 50px 15px;
+			margin: 25px 30px 50px 30px;
 		}
 		
 		.bioskopi-widget {
@@ -229,7 +275,7 @@
 		
 		.link-spanner{
 			position:absolute; 
-			width:100%;
+			width:80%;
 			height:100%;
 			top:0;
 			left: 0;
@@ -254,11 +300,6 @@
 		}
 		
 		/*onaj bar sa 'uloguj se' i 'registruj se'*/
-		.reg-log-bar {
-			background: white;
-			margin: 30px;
-			padding : 10px;
-		}
 		.reg-log-bar > div {
 			width: 40%;
   			margin: 0 auto;
@@ -287,51 +328,59 @@
 					
 </head>
 <body style='background:#e1f7d5;'>
-	<div class='top-header'>
-		<div class='title'>Bioskopi i pozorista</div>
-		<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
-	
+	<div class='row top-header'>
+		<div class='col-sm-12'>
+			<a style='float:right; margin-top:5px;' href='logout' id='izloguj-se-a'>Izloguj se</a>
+			<div class='title'>Bioskopi i pozorista</div>
+			<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
+		</div>
 	</div>
 	
-	<div class = 'reg-log-bar'>
+	
+	<div class='content'>
+	
+		<div class = 'row' id='reg-log-bar' style='background:white; margin-bottom:20px; margin-left:0px; margin-right:0px;'>
+			<div style='width: 50%; margin-left:auto; margin-right:auto'>
+				<div class='col-sm-6 button-card' >
+					<span>Imas nalog?</span>
+					<br>
+					<a href='login.html'>Prijavi se</a>
+				</div>
+				<div class='col-sm-6 button-card '>
+					<span>Jos nemas nalog?</span>
+					<br>
+					<a href='register.html'>Registruj se</a>
+				</div>
+			</div>
+		</div>
+	
 		<div class='row'>
-			<div class='col-sm-6 button-card'>
-				<span>Imas nalog?</span>
-				<br>
-				<a href='login.html'>Prijavi se</a>
+			<div class='col-sm-6 bioskopi-widget'>
+				<div class='header'>
+					Bioskopi
+					<button class='search-button' data-toggle='collapse' data-target='#b-search' style='float:right;'>Pretraga</button>
+				</div>
+				
+				<div id='b-search' class='collapse' style='padding:5px;text-align:right;'>
+					<input id='bioskopi-search-box' type='text' placeholder="Trazi bioskope..." oninput="traziBioskope()">
+				</div>
+				<ul id='bioskopi'></ul>
 			</div>
-			<div class='col-sm-6 button-card '>
-				<span>Jos nemas nalog?</span>
-				<br>
-				<a href='register.html'>Registruj se</a>
+			<div class='col-sm-6 bioskopi-widget'>
+				<div class='header'>
+					Pozorista
+					<button class='search-button' data-toggle='collapse' data-target='#p-search' style='float:right;'>Pretraga</button>
+				</div>
+				
+				<div id='p-search' class='collapse' style='padding:5px;text-align:right;'>
+					<input id='pozorista-search-box' type='text' placeholder="Trazi pozorista..." oninput="traziPozorista()">
+				</div>
+				<ul id='pozorista'></ul>
 			</div>
 		</div>
-	</div>
-	
-	<div class='row content'>
-		<div class='col-sm-6 bioskopi-widget'>
-			<div class='header'>
-				Bioskopi
-				<button class='search-button' data-toggle='collapse' data-target='#b-search' style='float:right;'>Pretraga</button>
-			</div>
-			
-			<div id='b-search' class='collapse' style='padding:5px;text-align:right;'>
-				<input id='bioskopi-search-box' type='text' placeholder="Trazi bioskope..." oninput="traziBioskope()">
-			</div>
-			<ul id='bioskopi'></ul>
-		</div>
-		<div class='col-sm-6 bioskopi-widget'>
-			<div class='header'>
-				Pozorista
-				<button class='search-button' data-toggle='collapse' data-target='#p-search' style='float:right;'>Pretraga</button>
-			</div>
-			
-			<div id='p-search' class='collapse' style='padding:5px;text-align:right;'>
-				<input id='pozorista-search-box' type='text' placeholder="Trazi pozorista..." oninput="traziPozorista()">
-			</div>
-			<ul id='pozorista'></ul>
-		</div>
-	</div>
+		
+		
+	</div> <!-- content -->
 	
 </body>
 </html>
