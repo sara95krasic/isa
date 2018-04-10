@@ -6,6 +6,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class SeatId implements Serializable{
-	private Hall hall;
+	private Segment segment;
 	private int number;
+	private int row;
 }

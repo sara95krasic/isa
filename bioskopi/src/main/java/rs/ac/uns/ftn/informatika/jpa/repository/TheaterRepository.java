@@ -86,4 +86,5 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 	@Query("select h.label from Hall h right outer join h.theater t where t.id = ?1")
 	Page<String> getAllHallLabelsForTheater(Long id, Pageable pageable);
 
+
 }

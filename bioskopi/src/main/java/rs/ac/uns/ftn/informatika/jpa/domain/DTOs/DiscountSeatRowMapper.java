@@ -20,8 +20,10 @@ public class DiscountSeatRowMapper implements RowMapper<DiscountSeat> {
 		DiscountSeat ds = new DiscountSeat();
 		ds.setDiscount(rs.getInt("discount"));
 		ds.getSeat().setNumber(rs.getInt("number"));
-		ds.getSeat().getHall().setLabel(rs.getString("seat_hall_label"));
-		//ds.getSeat().getHall().getTheater().setId(rs.getLong("theater_id")); a vec trazis po id-u, ne treba ti ovo
+		ds.getSeat().setRow(rs.getInt("row"));
+		ds.getSeat().getSegment().setLabel(rs.getString("seat_segment_label"));
+		ds.getSeat().getSegment().getHall().setLabel(rs.getString("seat_segment_hall_label"));
+		//ds.getSeat().getHall().getTheater().setId(rs.getLong("theater_id")); a vec trazis po id-u, ne treba ti ovo (i sad sa segmentima svejedno nece raditi)
 		ds.getProjectionDate().setPrice(rs.getDouble("price"));
 		ds.getProjectionDate().setDate(rs.getDate("date"));
 		ds.getProjectionDate().setTime(rs.getTime("time"));

@@ -164,10 +164,10 @@
 	   									"</div> " +
 	   									"<img src='data:image/png;base64, "+d_seat.projectionDate.projection.poster+"' onerror='this.src=\"images/missing.jpg\";' style='height:150px; float:left;'> " +
 	   									"<div style='display:inline-block; padding:10px 0px 10px 10px; width: 210px;' > " +
-	   										"<span>sala "+d_seat.seat.hall.label+"</span><br> " +
+	   										"<span>sala "+d_seat.seat.segment.hall.label+", <span style='color:#aaa;'>segment "+d_seat.seat.segment.label+"</span></span><br> " +
 	   										"<span>"+d_seat.projectionDate.date+"</span><br> " +
 	   										"<span>"+d_seat.projectionDate.time+"</span><br> " +
-	   										"<span>sediste "+d_seat.seat.number+"</span><br> " +
+	   										"<span>red "+d_seat.seat.row+", sediste "+d_seat.seat.number+"</span><br> " +
 	   										"<span style='text-decoration:line-through;'>"+d_seat.projectionDate.price+" din</span><br> " +
 	   										"<span style='color:white; background: #c18093; padding: 5px 10px; float:right;'>"+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</span><br> " +
 	   									"</div> " +

@@ -13,22 +13,26 @@ public class Seat {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Hall hall;
+	private Segment segment;
 	
 	@Id
 	@Column
 	private int number;
 	
+	@Id
+	@Column
+	private int row;
+	
 	public Seat() {
-		hall = new Hall();
+		segment = new Segment();
 	}
 
-	public Hall getHall() {
-		return hall;
+	public Segment getSegment() {
+		return segment;
 	}
 
-	public void setHall(Hall hall) {
-		this.hall = hall;
+	public void setSegment(Segment segment) {
+		this.segment = segment;
 	}
 
 	public int getNumber() {
@@ -38,6 +42,15 @@ public class Seat {
 	public void setNumber(int number) {
 		this.number = number;
 	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
 	
 	
 }
