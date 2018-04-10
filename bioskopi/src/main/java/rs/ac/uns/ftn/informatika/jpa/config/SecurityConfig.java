@@ -26,13 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-	                .antMatchers("/", "/bootstrap/**", "/images/**", "/js/**", "/theater-basic.html", "/public/**", "/test/**").permitAll()
+	                .antMatchers("/", "/bootstrap/**", "/images/**", "/js/**", "/theater-basic.html", "/registration.html", "/public/**", "/test/**").permitAll()
 	                .antMatchers("/theater-management.html", "/theater_management/**").hasAuthority("ADMIN_THEATER")
 	                .anyRequest().fullyAuthenticated()
                 .and()
 	                .formLogin()
 	                .loginPage("/login.html")
-	                .failureUrl("/registration.html")
+	                .failureUrl("/login.html")
 	                .defaultSuccessUrl("/", true)
 	                .usernameParameter("email")
 	                .passwordParameter("password")

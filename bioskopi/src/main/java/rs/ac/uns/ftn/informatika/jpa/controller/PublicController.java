@@ -6,6 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +54,24 @@ public class PublicController {
 		return new ResponseEntity<UserDTO>(userdto, HttpStatus.CREATED);
 	}
 	
+	
+	/**
+	 * Vraca trenutno ulogovanog korisnika (sve podatke sem passworda)
+	 * (mozda ograniciti sa '@PreAuthorize("@currentUserServiceImpl.canAccessUser(principal, #id)")') ???
+	 * @return
+	 */
+	@RequestMapping(value="/get_current_user",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public User getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User u = userService.getUserByEmail(email).orElse(null);
+		if (u != null)
+			u.setPasswordHash(""); //...
+		return u;
+	}
 	
 	/**
 	 * Pronalazi sve bioskope koji u imenu sadrze 'name'

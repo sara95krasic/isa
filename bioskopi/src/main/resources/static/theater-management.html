@@ -228,8 +228,8 @@
 	   					function (d_seat, i) {
 	   						$('#karte-na-popustu-lista').append(
    					      		"<li style='padding:5px 10px; background:#c18093; color: white; margin-bottom: 2px;'> " + 
-	   				      			"<div style='display: inline-block;'>Sediste "+d_seat.seat.number+", popust "+d_seat.discount+"%</div> " +
-	   				      			"<div style='display: inline-block; text-align: right; float:right;'><span style='text-decoration: line-through;'>"+d_seat.projectionDate.price+" din</span> "+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+"</div> " +
+	   				      			"<div style='display: inline-block;'>Red "+d_seat.seat.row+", Sediste "+d_seat.seat.number+", segment "+d_seat.seat.segment.label+", popust "+d_seat.discount+"%</div> " +
+	   				      			"<div style='display: inline-block; text-align: right; float:right;'><span style='text-decoration: line-through;'>"+d_seat.projectionDate.price+" din</span> "+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</div> " +
 	   				      			"<div style='width: 100%; text-align: right;'><button class='flat-button' style='padding:2px 5px;'>Obrisi</button></div> " +
 	   				      		"</li>"
    							);
@@ -285,6 +285,32 @@
 	</script>
 
 	<script>
+		//a u principu skoro isto kao ova gore, al aj bolje da imamo 2 ako treba menjati nesto
+		function popuniSelectZaPregledSala() {
+			var theater_id = getUrlParameter('id');
+			$.ajax({
+	   			url: "registered/get_all_hall_labels_for_theater/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				page = JSON.parse(data.responseText);
+	   				halls = page.content;
+
+   					$('#sale-pregled-select').empty();
+   					
+	   				if (halls == null || halls.length == 0) {
+	   					return;
+	   				}
+	   				halls.forEach(function(h, i) {
+	   					$('#sale-pregled-select').append("<option value="+h+">"+h+"</option>");
+	   					namestiSelectSaSegmentimaZaSalu();
+	   				});
+				}
+			});
+		}
+	</script>
+	
+	<script>
 		$(document).ready(function(){
 			
 
@@ -318,6 +344,8 @@
 			
 			popuniIzborProjekcijaUModalu();
 			popuniIzborSalaUModalu();
+			
+			popuniSelectZaPregledSala();
 	   				
 		})
 	</script>
@@ -355,10 +383,13 @@
 			var discountSeat = {}
 			discountSeat.seat = {}
 			discountSeat.seat.number = $('#karta-na-popustu-forma>input[name="seat-number"]').val();
-			discountSeat.seat.hall = {}
-			discountSeat.seat.hall.label = $('#karta-na-popustu-forma>input[name="hall-label"]').val();
-			discountSeat.seat.hall.theater = {}
-			discountSeat.seat.hall.theater.id = getUrlParameter('id');
+			discountSeat.seat.row = $('#karta-na-popustu-forma>input[name="seat-row"]').val();
+			discountSeat.seat.segment = {}
+			discountSeat.seat.segment.label = $('#karta-na-popustu-forma>input[name="segment"]').val();
+			discountSeat.seat.segment.hall = {}
+			discountSeat.seat.segment.hall.label = $('#karta-na-popustu-forma>input[name="hall-label"]').val();
+			discountSeat.seat.segment.hall.theater = {}
+			discountSeat.seat.segment.hall.theater.id = getUrlParameter('id');
 			discountSeat.discount = $('#karta-na-popustu-forma>input[name="discount"]').val();
 			discountSeat.projectionDate = {}
 			discountSeat.projectionDate.id = $('#karta-na-popustu-forma>input[name="projection-date-id"]').val();
@@ -380,6 +411,251 @@
 	   				}
 	   			}
 			});			
+		}
+	</script>
+	
+	<script>
+		//prima red i broj sedista kao parametre
+		function toggleSediste(r, s) {
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#sale-pregled-select').val();
+			var segment_label = $('#segmenti-pregled-select').val();
+			
+			if (hall_label == null || segment_label == null) {
+				return; //nesto nije selektovan, nema u cega da doda sediste
+			}
+
+			var seat = {}
+			seat.number = s;
+			seat.row = r;
+			seat.segment = {};
+			seat.segment.label = segment_label;
+			seat.segment.hall = {};
+			seat.segment.hall.label = hall_label
+			seat.segment.hall.theater = {};
+			seat.segment.hall.theater.id = theater_id;
+			var seatJSON = JSON.stringify(seat);
+			
+			if ($('#seat-'+r+'-'+s).hasClass('empty')) {
+				//dodaj
+				$.ajax({
+		   			url: "theater_management/add_new_seat",
+		   			type:"POST",
+		   			data: seatJSON,
+					contentType:"application/json",
+		   			dataType:"json",
+		   			complete: function(data) {
+		   				var resp = JSON.parse(data.responseText);
+		   				
+		   				if (resp == null || resp == false) {
+		   					//greska
+		   				} else {
+		   					//prosao
+		   					$('#seat-'+r+'-'+s).removeClass('empty');
+		   				}
+		   			}
+				});
+			} else {
+				//obrisi
+				$.ajax({
+		   			url: "theater_management/remove_seat",
+		   			type:"POST",
+		   			data: seatJSON,
+					contentType:"application/json",
+		   			dataType:"json",
+		   			complete: function(data) {
+		   				var resp = JSON.parse(data.responseText);
+		   				
+		   				if (resp == null || resp == false) {
+		   					//greska
+		   				} else {
+		   					//prosao
+		   					$('#seat-'+r+'-'+s).addClass('empty');
+		   				}
+		   			}
+				});
+			}
+			
+		}
+	</script>
+	
+	<script>
+		function prikaziDetaljeSegmenta() {
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#sale-pregled-select').val();
+			var segment_label = $('#segmenti-pregled-select').val();
+			
+			$.ajax({
+	   			url: "registered/get_segment_by_label_for_hall_for_theater/" + segment_label + "/" + theater_id + "/" + hall_label,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				segment = JSON.parse(data.responseText);
+	   				
+					if (segment.segmentType == 'STANDARD')
+						$('#tip-segmenta-span').text('(standardni)');
+					else if (segment.segmentType == 'BALCONY')
+						$('#tip-segmenta-span').text('(balkon)');
+					else if (segment.segmentType == 'VIP')
+						$('#tip-segmenta-span').text('(VIP)');
+					
+					//sad treba namestiti sedista...
+					$('#seats-div').empty();
+					for (var r = 1; r <= 10; r++) {
+						var row = "<div style='display:inline-block; width: 25px;'>"+r + " </div>";
+						for (var s = 1; s <= 20; s++) {
+							row += "<button class='seat empty' id='seat-"+r+"-"+s+"' onclick='toggleSediste("+r+", "+s+")'>"+s+"</button>";
+						}
+						row += "<br>"
+						$('#seats-div').append(row)
+					}
+					//okej to je prikaz generalno, sad treba oznaciti mesta koja postoje
+					
+					for (var s in segment.seats) {
+						var row_num = segment.seats[s].row;
+						var seat_num = segment.seats[s].number;
+						$('#seat-'+row_num+"-"+seat_num).removeClass('empty');
+					}
+					
+	   			}
+			});
+		}
+	</script>
+	<script>
+		function namestiSelectSaSegmentimaZaSalu() {
+			
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#sale-pregled-select').val();
+			
+			$.ajax({
+	   			url: "registered/get_all_segments_for_hall_for_theater/" + theater_id + "/" + hall_label,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				segs = JSON.parse(data.responseText);
+	   				//segs = page.content;
+	   				
+   					$('#segmenti-pregled-select').empty();
+   					
+	   				if (segs == null) {
+	   					return;
+	   				}
+	   				
+	   				segs.forEach(function(s, i) {
+	   					$('#segmenti-pregled-select').append("<option value='"+s.label+"'>"+s.label+"</option>");
+	   				});
+	   				prikaziDetaljeSegmenta();
+				}
+			});
+		}
+	</script>
+	
+	<script>
+		function dodajSalu() {
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#oznaka-nove-sale').val();
+			$.ajax({
+	   			url: "theater_management/add_new_hall_for_theater/" + theater_id + "/" + hall_label,
+	   			type:"POST",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				r = JSON.parse(data.responseText);
+	   				
+	   				if (r == null || r == false) {
+	   					alert('Neuspesno dodavanje sale!');
+	   				} else {
+	   					alert('Uspesno dodana sala!');
+	   					$('#dodaj-salu-modal').modal('hide');
+	   					popuniSelectZaPregledSala();
+	   					$('#sale-pregled-select').val(hall_label); //da je odmah i selektuje u onom prikazu
+	   				}
+	   				
+	   				
+				}
+			});
+		}
+	</script>
+	
+	<script>
+		function obrisiSalu() {
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#sale-pregled-select').val();
+			
+			$.ajax({
+	   			url: "theater_management/delete_hall/" + theater_id + "/" + hall_label,
+	   			type:"DELETE",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				r = JSON.parse(data.responseText);
+	   				
+	   				if (r == null || r == false) {
+	   					alert('Neuspesno brisanje sale!');
+	   				} else {
+	   					alert('Uspesno obrisana sala!');
+	   					popuniSelectZaPregledSala();
+	   				}
+	   				
+	   				
+				}
+			});
+		}
+	</script>
+	
+	<script>
+		function dodajSegment() {
+			var segment = {}
+			segment.segmentType = $('#dodaj-segment-forma>select[name="segment-type"]').val();
+			segment.label = $('#dodaj-segment-forma>input[name="label"]').val();
+			segment.hall = {}
+			segment.hall.label = $('#sale-pregled-select').val();
+			segment.hall.theater = {}
+			segment.hall.theater.id = getUrlParameter('id');
+
+			var segmentJSON = JSON.stringify(segment);
+			$.ajax({
+	   			url: "theater_management/add_new_segment",
+	   			type:"POST",
+	   			data: segmentJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == false) {
+	   					alert('Greska!');
+	   				} else {
+	   					alert('Uspesno dodat segment!');
+	   					namestiSelectSaSegmentimaZaSalu();
+	   					$('#segment-pregled-select').val(segment.label); //i selektuj ga odmah
+	   				}
+	   			}
+			});			
+		}
+	</script>
+	
+	<script>
+		function obrisiSegment() {
+			var theater_id = getUrlParameter('id');
+			var hall_label = $('#sale-pregled-select').val();
+			var segment_label = $('#segmenti-pregled-select').val();
+			
+			$.ajax({
+	   			url: "theater_management/delete_segment/" + theater_id + "/" + hall_label + "/" + segment_label,
+	   			type:"DELETE",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				r = JSON.parse(data.responseText);
+	   				
+	   				if (r == null || r == false) {
+	   					alert('Neuspesno brisanje segmenta!');
+	   				} else {
+	   					alert('Uspesno obrisan segment!');
+	   					namestiSelectSaSegmentimaZaSalu();
+	   				}
+	   				
+	   				
+				}
+			});
 		}
 	</script>
 	
@@ -466,6 +742,26 @@
 			opacity : 0.5;
 		}
 		
+		
+		.seat {
+			border: 0;
+			background: #c18093;
+			color: white;
+			width: 20px;
+			height: 20px;
+			padding:0px;
+			margin: 2px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+			transition: background 0.1s linear;
+		}
+		.empty {
+			background: #e1f7d5;
+		}
+		.seat:HOVER {
+			background: #e1a0b3;
+		}
 	</style>
 					
 </head>
@@ -475,16 +771,43 @@
 	</div>
 	
 	<div class='content'>
-		<div style='padding-bottom:20px; max-width: 480px;'>
-			<div class='header'>Osnovni podaci</div>
-			<form id='update-form' action='' style='background:white; padding:10px;'>
-				<span style='display:inline-block;width:20%;margin:5px;'>Naziv: </span><input style='width:75%;' name='name' type='text' id='naziv-bioskopa'><br>
-				<span style='display:inline-block;width:20%;margin:5px;'>Adresa: </span><input style='width:75%;' name='address' type='text' id='adresa-bioskopa'><br>
-				<span style='display:inline-block;width:20%;margin:5px;'>Tip: </span><input type="radio" name="theaterType" value="MOVIE_THEATER" id='movie-theater-radio'> Bioskop<br>
-  				<span style='display:inline-block;width:20%;margin:5px;'></span><input type="radio" name="theaterType" value="PLAY_THEATER" id='play-theater-radio'> Pozoriste<br>
-				<span style='display:inline-block;width:20%;margin:5px;'>Opis: </span><textarea name='description' rows="4" style='resize:none;width:75%' id='desc-bioskopa'></textarea><br>
-				<div style='text-align: right; margin:5px;'><input class='flat-button' type='button' onclick="updateTheater()" value='Azuriraj podatke'></div>
-			</form>
+		<div class='row' style='padding-bottom:20px;  margin-right: 0px;'>
+			<div class='col-sm-6' style=''>
+				<div class='header'>Osnovni podaci</div>
+				<form id='update-form' action='' style='background:white; padding:10px;'>
+					<span style='display:inline-block;width:20%;margin:5px;'>Naziv: </span><input style='width:75%;' name='name' type='text' id='naziv-bioskopa'><br>
+					<span style='display:inline-block;width:20%;margin:5px;'>Adresa: </span><input style='width:75%;' name='address' type='text' id='adresa-bioskopa'><br>
+					<span style='display:inline-block;width:20%;margin:5px;'>Tip: </span><input type="radio" name="theaterType" value="MOVIE_THEATER" id='movie-theater-radio'> Bioskop<br>
+		 				<span style='display:inline-block;width:20%;margin:5px;'></span><input type="radio" name="theaterType" value="PLAY_THEATER" id='play-theater-radio'> Pozoriste<br>
+					<span style='display:inline-block;width:20%;margin:5px;'>Opis: </span><textarea name='description' rows="4" style='resize:none;width:75%' id='desc-bioskopa'></textarea><br>
+					<div style='text-align: right; margin:5px;'><input class='flat-button' type='button' onclick="updateTheater()" value='Azuriraj podatke'></div>
+				</form>
+			</div>
+			<div class='col-sm-6' style='background:white; padding:0px;'>
+				<div class='header' style=''>Sale</div>
+				<div style='padding:10px 15px;'>
+					<select id='sale-pregled-select' style='margin-bottom:10px; min-width: 150px;' onchange='namestiSelectSaSegmentimaZaSalu()'>
+					</select>
+					<div style='text-align: right;'>
+						<button class='flat-button' onclick="obrisiSalu()" id='obrisi-salu-button'>Obrisi ovu salu</button>
+						<button class='flat-button'   data-toggle='modal' data-target='#dodaj-salu-modal'>Dodaj salu</button>
+					</div>
+				</div>
+				<div class='header' style='margin:0px 10px;'>Segmenti</div>
+				<div style='padding:10px 15px;'>
+					<select id='segmenti-pregled-select' style='margin-bottom:10px; min-width: 150px;' onchange="prikaziDetaljeSegmenta()">
+					</select>
+					<span style='color:#aaa;' id='tip-segmenta-span'></span>
+					<div id='seats-div' style='padding-bottom: 10px;'>
+					
+					</div>
+					<div style='color:#aaa; margin-bottom:10px;'>(kliknite na sedise da ga dodate ili izbrisete iz segmenta)</div>
+					<div style='text-align: right;'>
+						<button class='flat-button' onclick='obrisiSegment()'>Obrisi ovaj segment</button>
+						<button class='flat-button'   data-toggle='modal' data-target='#dodaj-segment-modal'>Dodaj segment</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	
 		<div class='row' >
@@ -500,11 +823,54 @@
 					<div style='width: 100%; border-bottom: #c18093 solid 1px;'></div>
 				</div>
 				<div style='text-align:right; padding: 5px;'>
-					<button class='flat-button'  data-toggle='modal' data-target='#dodaj-projekciju-modal'>Dodaj projekciju</button>
+					<button class='flat-button' data-toggle='modal' data-target='#dodaj-projekciju-modal'>Dodaj projekciju</button>
 				</div>
 			</div>
 		</div>
 		
+	</div>
+	
+	<div id="dodaj-segment-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" >
+	    <div class="modal-content" style='border-radius:0px; border:0px;'>
+	      <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Dodaj segment</h4>
+	      </div>
+		      <div class="modal-body">
+	        	<form id='dodaj-segment-forma'>
+		        	<span style='display:inline-block;width:100px;'>Oznaka</span><input type='text' name='label' style='margin-bottom: 5px;'><br>
+		        	<span style='display:inline-block;width:100px;'>Tip</span><select name='segment-type' style='margin-bottom: 5px;'>
+		        		<option value="STANDARD">Standardni</option>
+		        		<option value="BALCONY">Balkon</option>
+		        		<option value="VIP">VIP</option>
+		        	</select><br>
+  	        	</form>
+        	 </div>
+		      <div class="modal-footer">
+					<button class="flat-button" onclick='dodajSegment()'>Dodaj</button>
+		      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div id="dodaj-salu-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" >
+	    <div class="modal-content" style='border-radius:0px; border:0px;'>
+	      <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Dodaj salu</h4>
+	      </div>
+		      <div class="modal-body">
+	        	<form id='nova-sala-forma'>
+		        	<span style='display:inline-block;width:100px;'>Oznaka</span><input type='text' name='label' id='oznaka-nove-sale' style='margin-bottom: 5px;'><br>
+  	        	</form>
+        	 </div>
+		      <div class="modal-footer">
+					<button class="flat-button" onclick='dodajSalu()'>Dodaj</button>
+		      </div>
+	    </div>
+	  </div>
 	</div>
 	
 	<div id="dodaj-projekciju-modal" class="modal fade" role="dialog">
@@ -622,7 +988,9 @@
 	      </div>
 	      <div class="modal-body" style='text-align: center;'>
 		        <form id='karta-na-popustu-forma'>
+			        	<span style='display:inline-block;width:100px;'>Segment</span><input type="text" name='segment' style='margin-bottom: 5px;'><br>
 			        	<span style='display:inline-block;width:100px;'>Broj sedista</span><input type="number" name='seat-number' style='margin-bottom: 5px;'><br>
+			        	<span style='display:inline-block;width:100px;'>Red sedista</span><input type="number" name='seat-row' style='margin-bottom: 5px;'><br>
 			        	<span style='display:inline-block;width:100px;'>Popust (%)</span><input type="number" name='discount' style='margin-bottom: 5px;'><br>
 			        	<input type="hidden" name='projection-date-id' id='projection-date-id-hidden-input' value="">
 			        	<input type="hidden" name='hall-label' id='hall-label-hidden-input' value="">

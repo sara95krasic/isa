@@ -27,10 +27,10 @@
 					data: paramToJson,
 					success : function(data) {
 						$('#registracija_form').empty();
-						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="index.html">Return to homepage</a></i>`);
+						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="/">Return to homepage</a></i>`);
 					},
-					error : function(XMLHttpRequest, textStatus, errorThrown) {
-					alert("AJAX ERROR: " + textStatus);
+ 					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("AJAX ERROR: " + textStatus);
 					}
 				});
 			}else{
@@ -111,8 +111,9 @@
 		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;' required><br>
 		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='passwordHash' id='passwordHash' style='margin-bottom: 5px;' required><br>
 		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="password" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;' required><br>
-		        	<div style='text-align: right;'><button type="submit" onclick='registrujKorisnika()' class='flat-button'>Registruj se</button></div>
 				</form>
+	        	<div style='text-align: right;'><button onclick='registrujKorisnika()' class='flat-button'>Registruj se</button></div>
+
 			</div>
 		</div>
 	</div>

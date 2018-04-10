@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Hall;
 import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
+import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.DiscountSeatRowMapper;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
@@ -33,8 +35,6 @@ public class TheaterServiceImpl implements TheaterService {
 	
 	@Autowired
 	private TheaterRepository theaterRepository;
-	@Autowired
-	private HallRepository hallRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -122,19 +122,21 @@ public class TheaterServiceImpl implements TheaterService {
 	@Override
 	public List<DiscountSeat> getDiscountSeatsForTheater(Long id, Pageable pageable) {
 		
-		String sql = "select ds.discount, ds.projection_date_id, ds.seat_hall_label, t.name, s.number, p.id, pd.price, pd.date, pd.time, p.title, p.poster " +
-					"from discount_seat ds, seat s, hall h, theater t, projection_date pd, projection p " +
-					"where t.id = ? and " +
-						"ds.seat_number = s.number and ds.seat_hall_label = s.hall_label and ds.seat_hall_theater_id = s.hall_theater_id " +
-					    "and " +
-					    "s.hall_label = h.label and s.hall_theater_id = h.theater_id " +
-					    "and " +
-					    "h.theater_id = t.id " +
-					    "and " +
-					    "pd.id = ds.projection_date_id " +
-					    "and " +
-					    "pd.projection_id = p.id " +
-					"order by ds.seat_number;";
+		String sql = "select ds.discount, ds.projection_date_id, ds.seat_segment_hall_label, ds.seat_segment_label, t.name, s.number, p.id, pd.price, pd.date, pd.time, p.title, p.poster, s.row " +
+				"from discount_seat ds, seat s, segment seg, hall h, theater t, projection_date pd, projection p " +
+				"where t.id = ? and " +
+					"ds.seat_number = s.number and ds.seat_row = s.row and ds.seat_segment_label = s.segment_label and ds.seat_segment_hall_label = s.segment_hall_label and ds.seat_segment_hall_theater_id = s.segment_hall_theater_id " +
+				    "and " +
+				    "s.segment_label = seg.label and s.segment_hall_label = seg.hall_label and s.segment_hall_theater_id = seg.hall_theater_id " +
+				    "and " +
+					"seg.hall_label = h.label and seg.hall_theater_id = h.theater_id " +
+				    "and " +
+					"h.theater_id = t.id " +
+				    "and " +
+				    "pd.id = ds.projection_date_id " +
+				    "and " +
+				    "pd.projection_id = p.id " +
+				"order by ds.seat_number ";
 		List<DiscountSeat> dss = jdbcTemplate.query(sql, new Object[] {id}, new DiscountSeatRowMapper());
 		
 		return dss;
@@ -142,17 +144,19 @@ public class TheaterServiceImpl implements TheaterService {
 
 	@Override
 	public boolean addNewDiscountSeat(DiscountSeat ds) {
-		final String sql = "insert into discount_seat (projection_date_id, seat_hall_theater_id, seat_hall_label, seat_number, discount) " +
-				"values (?,?,?,?,?)";
+		final String sql = "insert into discount_seat (projection_date_id, seat_segment_hall_theater_id, seat_segment_hall_label, seat_segment_label, seat_number, seat_row, discount) " +
+				"values (?,?,?,?,?,?,?)";
         int inserted = jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setLong(1, ds.getProjectionDate().getId());
-                ps.setLong(2, ds.getSeat().getHall().getTheater().getId());
-                ps.setString(3, ds.getSeat().getHall().getLabel());
-                ps.setInt(4, ds.getSeat().getNumber());
-                ps.setInt(5, ds.getDiscount());
+                ps.setLong(2, ds.getSeat().getSegment().getHall().getTheater().getId());
+                ps.setString(3, ds.getSeat().getSegment().getHall().getLabel());
+                ps.setString(4, ds.getSeat().getSegment().getLabel());
+                ps.setInt(5, ds.getSeat().getNumber());
+                ps.setInt(6, ds.getSeat().getRow());
+                ps.setInt(7, ds.getDiscount());
                 return ps;
             }
         });
@@ -162,21 +166,40 @@ public class TheaterServiceImpl implements TheaterService {
 	@Override
 	public List<DiscountSeat> getDiscountSeatsForProjectionDate(Long projection_date_id, PageRequest pageRequest) {
 		
-		String sql = "select ds.discount, ds.projection_date_id, ds.seat_hall_label, t.name, s.number, p.id, pd.price, pd.date, pd.time, p.title, p.poster " +
-					"from discount_seat ds, seat s, hall h, theater t, projection_date pd, projection p " +
-					"where pd.id = ? and " +
-						"ds.seat_number = s.number and ds.seat_hall_label = s.hall_label and ds.seat_hall_theater_id = s.hall_theater_id " +
-					    "and " +
-					    "s.hall_label = h.label and s.hall_theater_id = h.theater_id " +
-					    "and " +
-					    "h.theater_id = t.id " +
-					    "and " +
-					    "pd.id = ds.projection_date_id " +
-					    "and " +
-					    "pd.projection_id = p.id " +
-					"order by ds.seat_number;";
+		String sql = "select ds.discount, ds.projection_date_id, ds.seat_segment_hall_label, ds.seat_segment_label, t.name, s.number, p.id, pd.price, pd.date, pd.time, p.title, p.poster, s.row " +
+				"from discount_seat ds, seat s, segment seg, hall h, theater t, projection_date pd, projection p " +
+				"where pd.id = ? and " +
+					"ds.seat_number = s.number and ds.seat_row = s.row and ds.seat_segment_label = s.segment_label and ds.seat_segment_hall_label = s.segment_hall_label and ds.seat_segment_hall_theater_id = s.segment_hall_theater_id " +
+				    "and " +
+				    "s.segment_label = seg.label and s.segment_hall_label = seg.hall_label and s.segment_hall_theater_id = seg.hall_theater_id " +
+				    "and " +
+					"seg.hall_label = h.label and seg.hall_theater_id = h.theater_id " +
+				    "and " +
+					"h.theater_id = t.id " +
+				    "and " +
+				    "pd.id = ds.projection_date_id " +
+				    "and " +
+				    "pd.projection_id = p.id " +
+				"order by ds.seat_number ";
 		List<DiscountSeat> dss = jdbcTemplate.query(sql, new Object[] {projection_date_id}, new DiscountSeatRowMapper());
 		
 		return dss;
 	}
+
+	@Override
+	public boolean addNewHallForTheater(Long theater_id, String hall_label) {
+		final String sql = "insert into hall (theater_id, label) values (?, ?)";
+        int inserted = jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setLong(1, theater_id);
+                ps.setString(2, hall_label);
+                return ps;
+            }
+        });
+        return inserted != 0;
+	}
+
+	
 }

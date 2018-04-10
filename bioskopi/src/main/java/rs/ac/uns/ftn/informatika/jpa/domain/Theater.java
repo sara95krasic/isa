@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.jpa.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class Theater implements Serializable {
@@ -44,7 +48,8 @@ public class Theater implements Serializable {
 	private Set<Hall> halls;
 	
 	public Theater() {
-		
+		reviews = new HashSet<Review>();
+		halls = new HashSet<Hall>();
 	}
 	
 	public String getName() {
@@ -79,13 +84,13 @@ public class Theater implements Serializable {
 		this.theaterType = theaterType;
 	}
 
-	public Set<Review> getReviews() {
+	/*public Set<Review> getReviews() {
 		return reviews;
 	}
 
 	public void setReviews(Set<Review> reviews) {
 		this.reviews = reviews;
-	}
+	}*/
 
 	public void setId(Long id) {
 		this.id = id;
