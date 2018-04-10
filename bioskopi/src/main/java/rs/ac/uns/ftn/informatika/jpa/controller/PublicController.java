@@ -3,15 +3,21 @@ package rs.ac.uns.ftn.informatika.jpa.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
+import rs.ac.uns.ftn.informatika.jpa.service.UserService;
 
 /**
  * Kontroler dostupan svim korisnicima.
@@ -26,6 +32,24 @@ public class PublicController {
 
 	@Autowired
 	private TheaterService theaterService;
+	
+	@Autowired
+	private UserService userService;
+	
+	
+	@RequestMapping(value = "/registration",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE
+			)
+	public ResponseEntity<UserDTO> registerUser(@RequestBody User user) throws Exception{
+		System.out.println("*********************" + user.getName() + user.getSurname() + user.getEmail() + user.getPasswordHash());
+		userService.create(user);
+		User savedUser = userService.findByEmail(user.getEmail());
+		//userService.sendVerificationMail(savedUser);
+		UserDTO userdto = new UserDTO(user);
+		return new ResponseEntity<UserDTO>(userdto, HttpStatus.CREATED);
+	}
 	
 	
 	/**

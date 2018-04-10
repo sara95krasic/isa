@@ -9,6 +9,40 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <script src="js/helpers.js"></script>
 	
+	<script>
+		function registrujKorisnika(){
+			var registracija_param = getFormData($('#registracija_form'));
+			//var paramToJson = JSON.stringify(registracija_param);
+			var flag = false;
+			var p = registracija_param.passwordHash;
+			var cp = registracija_param.potvrdi;
+			if(p == cp){
+				delete registracija_param.potvrdi;
+				var paramToJson = JSON.stringify(registracija_param);
+				$.ajax({
+					type : 'POST',
+					url : "/public/registration",
+					contentType : 'application/json',
+					dataType : "json",
+					data: paramToJson,
+					success : function(data) {
+						$('#registracija_form').empty();
+						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="index.html">Return to homepage</a></i>`);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("AJAX ERROR: " + textStatus);
+					}
+				});
+			}else{
+				alert("Lozinke se ne poklapaju, unesite ponovo vrednosti za lozinke!");
+			}
+			
+		
+		}
+		
+		
+	</script>
+	
 	
 	<style>
 	
@@ -69,15 +103,15 @@
 				<div>Registracija</div>
 			</div>
 			<div style='background: white; padding: 10px 15px;'>
-				<form method='post'>
-					<span style='display:inline-block;width:100px;'>Ime:</span><input type="text" name='ime' id='ime' style='margin-bottom: 5px;'><br>
-					<span style='display:inline-block;width:100px;'>Prezime:</span><input type="text" name='prezime' id='prezime' style='margin-bottom: 5px;'><br>
-					<span style='display:inline-block;width:100px;'>Grad:</span><input type="text" name='grad' id='grad' style='margin-bottom: 5px;'><br>
-					<span style='display:inline-block;width:100px;'>Broj telefona:</span><input type="text" name='brTel' id='brTel' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="lozinka" name='lozinka' id='lozinka' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="potvrdi" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;'><br>
-		        	<div style='text-align: right;'><button type="submit" class='flat-button'>Registruj se</button></div>
+				<form id = 'registracija_form'  >
+					<span style='display:inline-block;width:100px;'>Ime:</span><input type="text" name='name' id='name' style='margin-bottom: 5px;' required><br>
+					<span style='display:inline-block;width:100px;'>Prezime:</span><input type="text" name='surname' id='surname' style='margin-bottom: 5px;' required><br>
+					<span style='display:inline-block;width:100px;'>Grad:</span><input type="text" name='city' id='city' style='margin-bottom: 5px;' required><br>
+					<span style='display:inline-block;width:100px;'>Broj telefona:</span><input type="text" name='phone' id='phone' style='margin-bottom: 5px;' required><br>
+		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;' required><br>
+		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='passwordHash' id='passwordHash' style='margin-bottom: 5px;' required><br>
+		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="password" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;' required><br>
+		        	<div style='text-align: right;'><button type="submit" onclick='registrujKorisnika()' class='flat-button'>Registruj se</button></div>
 				</form>
 			</div>
 		</div>
