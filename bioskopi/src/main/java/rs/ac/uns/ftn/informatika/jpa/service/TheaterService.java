@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
+import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
@@ -46,5 +47,8 @@ public interface TheaterService {
 	boolean addNewDiscountSeat(DiscountSeat ds);
 
 	List<DiscountSeat> getDiscountSeatsForProjectionDate(Long projection_date_id, PageRequest pageRequest);
+
+	boolean addNewHallForTheater(Long theater_id, String hall_label);
+
 
 }

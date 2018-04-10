@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
+import rs.ac.uns.ftn.informatika.jpa.service.SegmentService;
+import rs.ac.uns.ftn.informatika.jpa.service.HallService;
 
 /**
  * Sadrzi funkcionalnosti namenjene registrovanim korisnicima.
@@ -33,7 +38,8 @@ public class RegisteredUserController {
 	private TheaterService theaterService;
 	@Autowired
 	private ProjectionService projectionService;
-	
+	@Autowired
+	private SegmentService segmentService;
 	
 	@RequestMapping(value = "get_projection_dates_for_theater/{id}",
 			method = RequestMethod.GET,
@@ -103,5 +109,21 @@ public class RegisteredUserController {
 	public List<DiscountSeat> getDiscountSeatsForProjectionDate(@PathVariable Long projection_date_id) {
 		return this.theaterService.getDiscountSeatsForProjectionDate(projection_date_id, new PageRequest(0, 10));
 	}
+
 	
+	@RequestMapping(value = "get_all_segments_for_hall_for_theater/{theater_id}/{hall_label}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Segment> getAllSegmentsForHallForTheater(@PathVariable Long theater_id, @PathVariable String hall_label) {
+		return this.segmentService.getAllSegmentsForHallForTheater(theater_id, hall_label, new PageRequest(0, 10));
+	}
+	
+	@RequestMapping(value = "get_segment_by_label_for_hall_for_theater/{segment_label}/{theater_id}/{hall_label}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Segment getSegmentByLabelForHallForTheater(@PathVariable String segment_label, @PathVariable Long theater_id, @PathVariable String hall_label) {
+		return this.segmentService.getSegmentByLabelForHallForTheater(segment_label, theater_id, hall_label);
+	}
 }
