@@ -28,10 +28,11 @@
 					success : function(data) {
 						$('#registracija_form').empty();
 						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="/">Return to homepage</a></i>`);
+						$('#registerB').hide();
 					},
- 					error : function(XMLHttpRequest, textStatus, errorThrown) {
-						alert("AJAX ERROR: " + textStatus);
-					}
+ 					//error : function(XMLHttpRequest, textStatus, errorThrown) {
+						//alert("Greska: ponovite vas unos" + textStatus);
+					//}
 				});
 			}else{
 				alert("Lozinke se ne poklapaju, unesite ponovo vrednosti za lozinke!");
@@ -104,16 +105,18 @@
 			</div>
 			<div style='background: white; padding: 10px 15px;'>
 				<form id = 'registracija_form'  >
-					<span style='display:inline-block;width:100px;'>Ime:</span><input type="text" name='name' id='name' style='margin-bottom: 5px;' required><br>
-					<span style='display:inline-block;width:100px;'>Prezime:</span><input type="text" name='surname' id='surname' style='margin-bottom: 5px;' required><br>
-					<span style='display:inline-block;width:100px;'>Grad:</span><input type="text" name='city' id='city' style='margin-bottom: 5px;' required><br>
-					<span style='display:inline-block;width:100px;'>Broj telefona:</span><input type="text" name='phone' id='phone' style='margin-bottom: 5px;' required><br>
-		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;' required><br>
-		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='passwordHash' id='passwordHash' style='margin-bottom: 5px;' required><br>
-		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="password" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;' required><br>
+					<span style='display:inline-block;width:100px;'>Ime:</span><input type="text" name='name' id='name' style='margin-bottom: 5px;' placeholder="Unesite ime" required><br>
+					<span style='display:inline-block;width:100px;'>Prezime:</span><input type="text" name='surname' id='surname' style='margin-bottom: 5px;' placeholder="Unesite prezime" required><br>
+					<span style='display:inline-block;width:100px;'>Grad:</span><input type="text" name='city' id='city' style='margin-bottom: 5px;' placeholder="Unesite grad" required><br>
+					<span style='display:inline-block;width:100px;'>Broj telefona:</span><input type="text" name='phone' id='phone' style='margin-bottom: 5px;' placeholder="Unesite broj telefona" required><br>
+		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;' placeholder="example@gmail.com" required><br>
+		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='passwordHash' id='passwordHash' style='margin-bottom: 5px;' placeholder="Unesite lozinku" required><br>
+		        	<span style='display:inline-block;width:100px;'>Potvrdi lozinku:</span><input type="password" name='potvrdi' id='potvrdi' style='margin-bottom: 5px;' placeholder="Unesite lozinku" required><br>
 				</form>
-	        	<div style='text-align: right;'><button onclick='registrujKorisnika()' class='flat-button'>Registruj se</button></div>
-
+				 <div style='text-align: right;'>
+					<button onclick='registrujKorisnika()' class='flat-button' id='registerB'>Registruj se</button>
+				</div>
+	        	
 			</div>
 		</div>
 	</div>
