@@ -55,12 +55,12 @@ public class PublicController {
 	}
 	
 	//verifikovanje registracije
-	/*@RequestMapping(value="/verifiy/{id}", method = RequestMethod.GET)
+	@RequestMapping(value="/verify/{id}", method = RequestMethod.GET)
+	@ResponseBody
 	public ResponseEntity<String> verifyUser(@PathVariable Long id) throws Exception{
 		userService.verifyEmail(id);
 		return new ResponseEntity<String>("verifikovan",HttpStatus.ACCEPTED);
 	}
-	*/
 	
 	/**
 	 * Vraca trenutno ulogovanog korisnika (sve podatke sem passworda)

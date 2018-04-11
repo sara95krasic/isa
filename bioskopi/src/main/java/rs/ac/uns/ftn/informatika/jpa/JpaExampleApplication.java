@@ -2,8 +2,10 @@ package rs.ac.uns.ftn.informatika.jpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync
 public class JpaExampleApplication {
 
 	public static void main(String[] args) {
