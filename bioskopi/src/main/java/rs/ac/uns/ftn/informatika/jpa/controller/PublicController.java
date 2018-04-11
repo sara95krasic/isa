@@ -49,11 +49,18 @@ public class PublicController {
 		System.out.println("*********************" + user.getName() + user.getSurname() + user.getEmail() + user.getPasswordHash());
 		userService.create(user);
 		User savedUser = userService.findByEmail(user.getEmail());
-		//userService.sendVerificationMail(savedUser);
+		userService.sendVerificationMail(savedUser);
 		UserDTO userdto = new UserDTO(user);
 		return new ResponseEntity<UserDTO>(userdto, HttpStatus.CREATED);
 	}
 	
+	//verifikovanje registracije
+	/*@RequestMapping(value="/verifiy/{id}", method = RequestMethod.GET)
+	public ResponseEntity<String> verifyUser(@PathVariable Long id) throws Exception{
+		userService.verifyEmail(id);
+		return new ResponseEntity<String>("verifikovan",HttpStatus.ACCEPTED);
+	}
+	*/
 	
 	/**
 	 * Vraca trenutno ulogovanog korisnika (sve podatke sem passworda)

@@ -14,4 +14,6 @@ public interface UserService {
 	User findByEmail(String email);
 	
 	void sendVerificationMail(User user);
+	
+	boolean verifyEmail(Long id);
 }

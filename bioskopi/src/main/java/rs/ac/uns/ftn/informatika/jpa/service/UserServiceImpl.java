@@ -63,4 +63,12 @@ public class UserServiceImpl implements UserService {
 		javaMailSender.send(mail);
 	}
 	
+	@Override
+	public boolean verifyEmail(Long id) {
+		User user = userRepository.findOne(id);
+		user.setVerification(true);
+		userRepository.save(user);
+		return true;
+	}
+	
 }

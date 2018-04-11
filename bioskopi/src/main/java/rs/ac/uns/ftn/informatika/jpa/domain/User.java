@@ -23,10 +23,10 @@ public class User {
     private Long id;
     
 
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String name;
 	
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String surname;
 	
 	@Column(nullable = false)
