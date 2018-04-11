@@ -16,6 +16,194 @@
 		}
 	</script>
 
+
+
+	
+	<script>
+		function prikaziDetaljeSegmenta(hall_label, projection_date_id) {
+			//projection_date_id ce posluziti da povadimo zauzeta mesta za ovu projekciju
+
+			$('#seats-div').empty();
+			
+			var theater_id = getUrlParameter('id');
+			var segment_label = $('#segmenti-pregled-select').val();
+			
+			$.ajax({
+	   			url: "registered/get_segment_by_label_for_hall_for_theater/" + segment_label + "/" + theater_id + "/" + hall_label,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				segment = JSON.parse(data.responseText);
+	   				
+	   				if (segment.seats == null) {
+	   					return; //neka greska, nema tog segmenta
+	   				}
+	   				
+					if (segment.segmentType == 'STANDARD')
+						$('#tip-segmenta-span').text('(standardni)');
+					else if (segment.segmentType == 'BALCONY')
+						$('#tip-segmenta-span').text('(balkon)');
+					else if (segment.segmentType == 'VIP')
+						$('#tip-segmenta-span').text('(VIP)');
+					
+					//sad treba namestiti sedista...
+					for (var r = 1; r <= 10; r++) {
+						var row = "<div style='display:inline-block; width: 25px;'>"+r + " </div>";
+						for (var s = 1; s <= 20; s++) {
+							row += "<button class='seat empty' id='seat-"+r+"-"+s+"' onclick='toggleSediste("+r+", "+s+")'>"+s+"</button>";
+						}
+						row += "<br>"
+						$('#seats-div').append(row)
+					}
+					//okej to je prikaz generalno, sad treba oznaciti mesta koja postoje
+					
+					for (var s in segment.seats) {
+						var row_num = segment.seats[s].row;
+						var seat_num = segment.seats[s].number;
+						$('#seat-'+row_num+"-"+seat_num).removeClass('empty');
+					}
+					
+					window.selektovanoSedista = 0;
+					$('#prijatelji-selecti-div').empty();
+					
+					//aj sad da blokiram sva zauzeta
+					$.ajax({
+			   			url: "registered/get_taken_seats/" + segment_label + "/" + theater_id + "/" + hall_label + "/" + projection_date_id,
+			   			type:"GET",
+			   			dataType:"json",
+			   			complete: function(data) {
+			   				var seats = JSON.parse(data.responseText);
+			   				
+			   				for (var s in seats) {
+								var row_num = seats[s].row;
+								var seat_num = seats[s].number;
+								$('#seat-'+row_num+"-"+seat_num).addClass('taken');
+			   				}
+			   			}
+					});
+	   			}
+			});
+		}
+	</script>
+	
+	<script>
+		function setupOdabirSegmenata(projection_date_id, hall_label) {
+			
+			$('#sala-labela').text("sala " + hall_label);
+			$('#segmenti-pregled-select').attr('onchange', 'prikaziDetaljeSegmenta("'+hall_label+'", '+projection_date_id+')');
+			$('#rezervisi-button').attr('onclick', 'rezervisi('+projection_date_id+', "'+hall_label+'")');
+		
+			$.ajax({
+				url: "registered/get_all_segments_for_projection_date/" + projection_date_id,
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					segs = JSON.parse(data.responseText);
+					//segs = page.content;
+					
+					$('#segmenti-pregled-select').empty();
+					
+					if (segs == null) {
+						return;
+					}
+					
+					segs.forEach(function(s, i) {
+						$('#segmenti-pregled-select').append("<option value='"+s.label+"'>"+s.label+"</option>");
+					});
+					
+					prikaziDetaljeSegmenta(hall_label, projection_date_id);
+				}
+			});
+		}
+	</script>
+	
+	<script>
+		//prima red i broj sedista kao parametre
+		function toggleSediste(r, s) {
+			
+			if ($('#seat-'+r+'-'+s).hasClass('empty') || $('#seat-'+r+'-'+s).hasClass('taken'))
+				return;
+			
+			if ($('#seat-'+r+'-'+s).hasClass('reserved')) {
+				$('#seat-'+r+'-'+s).removeClass('reserved');
+				
+				window.selektovanoSedista--;
+				$('#prijatelj-'+r+'-'+s).remove();
+				if (window.selektovanoSedista <= 1) {
+					$('#prijatelji-labela').css('display', 'none');
+				}
+				
+			} else {
+
+				$('#seat-'+r+'-'+s).addClass('reserved');
+				
+				window.selektovanoSedista++;
+				if (window.selektovanoSedista > 1) {
+					$('#prijatelji-labela').css('display', 'block');
+					$('#prijatelji-selecti-div').append("<div id='prijatelj-"+r+"-"+s+"'><div style='display:inline-block; width:150px;'>Red "+r+", Sediste "+s+"</div><select style='width:150px; margin-bottom:4px;' ></select></div>")
+				}
+			}
+			
+		}
+	</script>
+	
+	<script>
+		function rezervisi(projection_date_id, hall_label) {
+
+			var theater_id = getUrlParameter('id');
+			var segment_label = $('#segmenti-pregled-select').val();
+			
+			var reservation = {};
+			reservation.projectionDate = {}
+			reservation.projectionDate.id = projection_date_id;
+			reservation.reservationSeats = [];
+			$('#seats-div > .reserved').each(function (i, s) {
+				var id_parts = s.id.split('-');
+				var seat_num = parseInt(id_parts[2]);
+				var seat_row = parseInt(id_parts[1]);
+				
+				var reservationSeat = {};
+				reservationSeat.seat = {};
+				reservationSeat.seat.number = seat_num;
+				reservationSeat.seat.row = seat_row;
+				reservationSeat.seat.segment = {};
+				reservationSeat.seat.segment.label = segment_label;
+				reservationSeat.seat.segment.hall = {};
+				reservationSeat.seat.segment.hall.label = hall_label;
+				reservationSeat.seat.segment.hall.theater = {};
+				reservationSeat.seat.segment.hall.theater.id = theater_id;
+				reservationSeat.user = {};
+				
+				var friend_select = $('#prijatelj-'+seat_row+'-'+seat_num+' > select');
+				if (friend_select.length != 0)
+					reservationSeat.user.id = friend_select.val();
+				else 
+					reservationSeat.user.id = window.currentUser.id;
+				reservation.reservationSeats.push(reservationSeat);
+				
+			});
+			
+			var reservationJSON = JSON.stringify(reservation);
+			$.ajax({
+	   			url: "/reservation/add_new_reservation",
+	   			type:"POST",
+	   			data: reservationJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == false) {
+	   					alert('Rezervacija nije uspela!');
+	   				} else {
+	   					alert('Rezervisana mesta!');
+	   					$('#reserve-a-seat-modal').modal('hide');
+	   				}
+	   			}
+			});
+		}
+	</script>
+
 	<script>
 		function showProjectionsForDate(date) {
 			
@@ -63,11 +251,11 @@
 					   				projectionDates.forEach(
 				   						function (pd, ii) {
 				   							if (pd.date == date) {
-					   							s += "<div style='display: inline-block; background:#A16073; padding:5px 15px; text-align: center; margin-bottom: 4px;' > " +
+					   							s += "<button class='flat-button' style='display: inline-block; padding:5px 15px; text-align: center; margin-bottom: 4px;' data-toggle='modal' data-target='#reserve-a-seat-modal' onclick='setupOdabirSegmenata("+pd.id+", \""+pd.hallLabel+"\")'> " +
 														"<div style='color:white'>sala "+pd.hallLabel+"</div> " +
 														"<div style='color:white'>"+pd.time+"</div> " +
 														"<div style='color:white; font-weight: bold;'>"+pd.price+" din</div> " +
-													"</div> ";
+													"</button> ";
 				   							}
 				   						}
 			   						)
@@ -87,6 +275,24 @@
 	<script>
 		$(document).ready(function(){
 			
+			//daj da odmah nadje current usera i ostavi ga u window objektu, mozda zatreba za nesto
+			$.ajax({
+				url: "public/get_current_user",
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					
+					var user;
+					if (data.responseText == "")
+						//nije ulogovan (ovo se i ne moze desiti jer onda ne bi ni imao pristup ovoj stranici)
+						user = null;
+					else
+						user = JSON.parse(data.responseText);
+					
+					window.currentUser = user;
+					//to je to
+				}
+			});
 
 			theater_id = getUrlParameter('id');
 		
@@ -230,7 +436,7 @@
 			-webkit-appearance: none;
 		}
 		.flat-button:HOVER {
-			background: #c18093;
+			background: #e1a0b3;
 		}
 		
 		.fb-active {
@@ -269,6 +475,39 @@
 		}
 		.hover-over-rezervisi:HOVER {
 			opacity: 0.7;
+		}
+		
+				
+		.seat {
+			border: 0;
+			background: #c18093;
+			color: white;
+			width: 20px;
+			height: 20px;
+			padding:0px;
+			margin: 2px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+			transition: background 0.1s linear;
+		}
+		.empty {
+			background: #e1f7d5;
+		}
+		.taken {
+			background: #ccc;
+		}
+		.taken:HOVER {
+			background: #ccc !important;
+		}
+		.seat:HOVER {
+			background: #e1a0b3;
+		}
+		.reserved {
+			background: #5f5;
+		}
+		.reserved:HOVER {
+			background: #afa !important;
 		}
 		
 	</style>
@@ -386,6 +625,30 @@
 	      </div>
 	    </div>
 	
+	  </div>
+	</div>
+	
+	<div id="reserve-a-seat-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" style='border-radius:0px; border:0px; max-height: 100vh;'>
+	     <div class="modal-header header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        	Rezevisi mesto
+	      </div>
+	      <div class="modal-body" style=''>
+	      	<span id='sala-labela' style='color:#999;'>asdf</span><br>
+			<select id='segmenti-pregled-select' style='margin-bottom:10px; min-width: 150px;' onchange="prikaziDetaljeSegmenta('hall label', 'proj date id')">
+			</select>
+			<span style='color:#aaa;' id='tip-segmenta-span'></span>
+	 		<div id='seats-div' style='min-height:240px;'>
+	    	</div>
+	    	<div style='display:none; margin-top:10px; background:#c18093; width:320px; padding:2px 5px; color:white;' id='prijatelji-labela'>Prijatelji</div>
+	    	<div id='prijatelji-selecti-div' style='margin-top:5px;'></div>
+	      </div>
+   	      <div class="modal-footer">
+		        <button id='rezervisi-button' class="flat-button" onclick='rezervisi()'>Rezevisi</button>
+	      </div>
+	    </div>
 	  </div>
 	</div>
 	

@@ -3,21 +3,34 @@ package rs.ac.uns.ftn.informatika.jpa.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.informatika.jpa.repository.DiscountSeatRepository;
+import rs.ac.uns.ftn.informatika.jpa.repository.ReservationSeatRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.SeatRepository;
-
+import rs.ac.uns.ftn.informatika.jpa.repository.SegmentRepository;
+import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.ReservationSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 
 @Service
 public class SeatServiceImpl implements SeatService {
 
 	@Autowired
 	SeatRepository seatRepository;
+	@Autowired
+	SegmentRepository segmentRepository;
+	@Autowired
+	ReservationSeatRepository reservationSeatRepository;
+	@Autowired
+	DiscountSeatRepository discountSeatRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -56,6 +69,25 @@ public class SeatServiceImpl implements SeatService {
             }
         });
 		return deleted != 0;
+	}
+
+	@Override
+	public List<Seat> getTakenSeats(String segment_label, Long theater_id, String hall_label, Long projection_date_id) {
+		List<Seat> ret = new ArrayList<Seat>();
+		
+		Segment seg = segmentRepository.findSegmentByLabelForHallForTheater(segment_label, theater_id, hall_label);
+		for (Seat seat : seg.getSeats()) {
+			ReservationSeat rs = reservationSeatRepository.findOneByProjectionDateIdAndSeat(projection_date_id, seat);	//da li je neko vec rezervisao?
+			DiscountSeat ds = discountSeatRepository.findOneBySeatAndProjectionDateId(seat, projection_date_id);		//da li je ovo mesto na popustu?
+			if (rs != null || ds != null)
+				ret.add(seat);
+		}
+		
+		for (Seat seat : ret) {
+			seat.setSegment(null);
+		}
+		
+		return ret;
 	}
 
 }

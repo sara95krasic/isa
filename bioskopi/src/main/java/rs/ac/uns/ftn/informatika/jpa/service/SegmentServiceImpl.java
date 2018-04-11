@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.jpa.service;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,8 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
+import rs.ac.uns.ftn.informatika.jpa.repository.ProjectionDateRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.SegmentRepository;;
 
 @Service
@@ -23,6 +26,9 @@ public class SegmentServiceImpl implements SegmentService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private ProjectionDateRepository projectionDateRepository;
     
     
     
@@ -90,6 +96,25 @@ public class SegmentServiceImpl implements SegmentService {
 		}
 		
 		return ret;
+	}
+
+
+	@Override
+	public List<Segment> getAllSegmentsForProjectionDate(Long projection_date_id, Pageable pageable) {
+		
+		ProjectionDate pd = projectionDateRepository.findOne(projection_date_id);
+		List<Segment> ret = segmentRepository.findAllByTheaterIdAndHallLabel(pd.getHall().getTheater().getId(), pd.getHall().getLabel(), pageable);
+		
+		//ciscenje da u listi ostanu samo imena i sedista, ovo ostalo ce napraviti haos kad bude serijalizovano u json
+		for (Segment seg : ret) {
+			seg.setHall(null);
+			for (Seat seat : seg.getSeats()) {
+				seat.setSegment(null);
+			}
+		}
+		
+		
+		return ret; 
 	}
 	
 }

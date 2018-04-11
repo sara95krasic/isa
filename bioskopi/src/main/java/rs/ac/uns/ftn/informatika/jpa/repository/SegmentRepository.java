@@ -22,6 +22,7 @@ public interface SegmentRepository extends Repository<Segment, SegmentId> {
 	Segment findSegmentByLabelForHallForTheater(String segment_label, Long theater_id, String hall_label);
 
 
+
 	//@Transactional
 	//@Modifying
 	//@Query("delete from Segment s where s.label=?1 and s.theater.id = ?2 and s.theater.id in (select t.id from Theater t left outer join t.halls  where h.label = ?3)")

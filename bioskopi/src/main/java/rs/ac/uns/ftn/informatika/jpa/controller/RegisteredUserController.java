@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
+import rs.ac.uns.ftn.informatika.jpa.service.SeatService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
 import rs.ac.uns.ftn.informatika.jpa.service.SegmentService;
 import rs.ac.uns.ftn.informatika.jpa.service.HallService;
@@ -40,6 +42,8 @@ public class RegisteredUserController {
 	private ProjectionService projectionService;
 	@Autowired
 	private SegmentService segmentService;
+	@Autowired
+	private SeatService seatService;
 	
 	@RequestMapping(value = "get_projection_dates_for_theater/{id}",
 			method = RequestMethod.GET,
@@ -126,4 +130,27 @@ public class RegisteredUserController {
 	public Segment getSegmentByLabelForHallForTheater(@PathVariable String segment_label, @PathVariable Long theater_id, @PathVariable String hall_label) {
 		return this.segmentService.getSegmentByLabelForHallForTheater(segment_label, theater_id, hall_label);
 	}
+	
+	/**
+	 * Vraca sve segmente u sali u kojoj se drzi taj termin projekcije (zadat po id-u).
+	 * Ovo se koristi pri rezervaciji mesta sa thetaer-full.html strane.
+	 * @param projection_date_id
+	 * @return
+	 */
+	@RequestMapping(value = "get_all_segments_for_projection_date/{projection_date_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Segment> getAllSegmentsForHallForTheater(@PathVariable Long projection_date_id) {
+		return this.segmentService.getAllSegmentsForProjectionDate(projection_date_id, new PageRequest(0, 10));
+	}
+	
+	@RequestMapping(value = "get_taken_seats/{segment_label}/{theater_id}/{hall_label}/{projection_date_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Seat> getTakenSeats(@PathVariable String segment_label, @PathVariable Long theater_id, @PathVariable String hall_label, @PathVariable Long projection_date_id) {
+		return this.seatService.getTakenSeats(segment_label, theater_id, hall_label, projection_date_id);
+	}
+	
 }

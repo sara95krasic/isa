@@ -16,5 +16,7 @@ public interface SegmentService {
 	boolean deleteSegmentByLabelForHallForTheater(Long theater_id, String hall_label, String segment_label);
 
 	Segment getSegmentByLabelForHallForTheater(String segment_label, Long theater_id, String hall_label);
+
+	List<Segment> getAllSegmentsForProjectionDate(Long projection_date_id, Pageable pageable);
 	
 }
