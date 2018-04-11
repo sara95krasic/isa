@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 			email.setTo(user.getEmail());
 			email.setFrom("krasicsara1@gmail.com");
 			email.setSubject("Link za verifikaciju naloga");
-			email.setText("Pozdrav " + user.getName() + ",\n\n http://localhost:8080/api/users/verify/"+user.getId()+"");
+			email.setText("Pozdrav " + user.getName() + ",\n\n http://localhost:8090/public/verify/"+user.getId()+"");
 			javaMailSender.send(email);
 		} catch (Exception e) {
 			e.printStackTrace();
