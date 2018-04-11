@@ -30,9 +30,9 @@
 						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="/">Return to homepage</a></i>`);
 						$('#registerB').hide();
 					},
- 					//error : function(XMLHttpRequest, textStatus, errorThrown) {
-						//alert("Greska: ponovite vas unos" + textStatus);
-					//}
+ 					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("Greska: ponovite vas unos" + textStatus);
+					}
 				});
 			}else{
 				alert("Lozinke se ne poklapaju, unesite ponovo vrednosti za lozinke!");
