@@ -49,7 +49,7 @@ public class PublicController {
 		System.out.println("*********************" + user.getName() + user.getSurname() + user.getEmail() + user.getPasswordHash());
 		userService.create(user);
 		User savedUser = userService.findByEmail(user.getEmail());
-		userService.sendVerificationMail(savedUser);
+		//userService.sendVerificationMail(savedUser);
 		UserDTO userdto = new UserDTO(user);
 		return new ResponseEntity<UserDTO>(userdto, HttpStatus.CREATED);
 	}

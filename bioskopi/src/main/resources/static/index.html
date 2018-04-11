@@ -187,8 +187,10 @@
 					
 					if (window.currentUser != null) {
 						//ako je ulogovan
-						
 						$('#reg-log-bar').hide();
+						$('#nav-item').append('<a style="float:right; margin-top:5px;" href="logout">Profil  korisnika'+  window.currentUser.name + '</a>'
+						+'<a style="float:right; margin-top:5px;" href="logout"> Izloguj se </a>');
+						
 					
 						if (window.currentUser.role == "ADMIN_THEATER") {
 							//huh...nista posebno
@@ -324,16 +326,23 @@
 			background: #aaa;
 		}
 		
+		
+		
 	</style>
 					
 </head>
 <body style='background:#e1f7d5;'>
 	<div class='row top-header'>
 		<div class='col-sm-12'>
-			<a style='float:right; margin-top:5px;' href='logout' id='izloguj-se-a'>Izloguj se</a>
 			<div class='title'>Bioskopi i pozorista</div>
 			<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
 		</div>
+	</div>
+	
+	<div id='nav-item' >
+		<!-- ulogovaan -->
+		<!--  <a style='float:right; margin-top:5px;' href='logout'>  Profil korisnika + window.currentUser.name </a>
+		<a style='float:right; margin-top:5px;' href='logout'>  Izloguj se  </a> -->
 	</div>
 	
 	
