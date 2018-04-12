@@ -33,7 +33,9 @@ public class ThematicPropsController {
 		return new ResponseEntity<ThematicPropsDTO>(thematicPropsDTO,HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/get_all_thematic_props",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ThematicPropsDTO>> getAllThematicProps(){
 		List<ThematicProps> thematicPropsList = thematicPropsService.findAll();
 		List<ThematicPropsDTO> thematicPropsDTO = new ArrayList<ThematicPropsDTO>();
