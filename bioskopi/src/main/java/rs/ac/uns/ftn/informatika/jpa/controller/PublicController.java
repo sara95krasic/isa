@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
+import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
@@ -49,7 +50,7 @@ public class PublicController {
 		System.out.println("*********************" + user.getName() + user.getSurname() + user.getEmail() + user.getPasswordHash());
 		userService.create(user);
 		User savedUser = userService.findByEmail(user.getEmail());
-		//userService.sendVerificationMail(savedUser);
+		userService.sendVerificationMail(savedUser);
 		UserDTO userdto = new UserDTO(user);
 		return new ResponseEntity<UserDTO>(userdto, HttpStatus.CREATED);
 	}
@@ -61,6 +62,14 @@ public class PublicController {
 		userService.verifyEmail(id);
 		return new ResponseEntity<String>("verifikovan",HttpStatus.ACCEPTED);
 	}
+	
+	//edit
+	@RequestMapping(value="/modify/{id}",method = RequestMethod.PUT)
+	public ResponseEntity<UserDTO> modifyUser(@RequestBody UserEditForm user, @PathVariable Long id){
+		User modified = userService.modifyUser(user, id);
+		return new ResponseEntity<UserDTO>(new UserDTO(modified),HttpStatus.OK);
+	}
+	
 	
 	/**
 	 * Vraca trenutno ulogovanog korisnika (sve podatke sem passworda)
