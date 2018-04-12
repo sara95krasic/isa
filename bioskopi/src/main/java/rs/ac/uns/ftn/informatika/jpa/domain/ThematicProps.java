@@ -11,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
@@ -47,7 +48,18 @@ public class ThematicProps implements Serializable{
 	
 	@OneToMany
 	private List<Offer> offers;
+
+	@ManyToOne
+	private User reservedBy;
 	
+	public User getReservedBy() {
+		return reservedBy;
+	}
+
+	public void setReservedBy(User user) {
+		this.reservedBy = user;
+	}
+
 	public ThematicProps() 
 	{}
 	

@@ -16,6 +16,7 @@ public class ThematicPropsDTO {
 	private String picture;
 	private String createdBy;
 	private Boolean reserved;
+	private Long reservedById;
 	
 	public ThematicPropsDTO(ThematicProps thematicProps) {
 		this.id = thematicProps.getId();
@@ -26,6 +27,7 @@ public class ThematicPropsDTO {
 		this.picture = thematicProps.getPicture();	
 		this.createdBy = thematicProps.getCreatedBy();
 		this.reserved = thematicProps.getReserved();
+		this.reservedById = thematicProps.getReservedBy().getId();
 	}
 
 	public Long getId() {
@@ -90,6 +92,14 @@ public class ThematicPropsDTO {
 
 	public void setReserved(Boolean reserved) {
 		this.reserved = reserved;
+	}
+
+	public Long getReservedById() {
+		return reservedById;
+	}
+
+	public void setReservedById(Long reservedById) {
+		this.reservedById = reservedById;
 	}
 	
 	}
