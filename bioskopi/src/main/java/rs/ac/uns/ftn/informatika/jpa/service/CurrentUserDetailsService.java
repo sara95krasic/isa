@@ -42,6 +42,9 @@ public class CurrentUserDetailsService implements UserDetailsService {
 		User user = userService.getUserByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User with email=%s was not found", email)));
 		
+		if (!user.isVerification())
+			throw new UsernameNotFoundException(String.format("User with email=%s was not found", email));
+			
 		CurrentUser cu = new CurrentUser(user);
 		
 		
