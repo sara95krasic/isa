@@ -201,9 +201,9 @@ insert into discount_seat (projection_date_id, seat_segment_hall_theater_id, sea
 insert into discount_seat (projection_date_id, seat_segment_hall_theater_id, seat_segment_hall_label, seat_segment_label, seat_row, seat_number, discount) values (15, 2, '3', 'S.1', 3, 4, 30);
 
 
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'admin@admin', '$2a$10$2DqvFyV0RBcpESD9Wx/9V.HvXEm9NPSW3vmEZmZ0VverIsCZHqLQS', 'ADMIN_SYS');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'pera@gmail.com', '$2a$04$UkuVbPmFp7oy4jxFjVHxz.RhfbYZkMSPGvRS3OudQQ0tfiybU5wAa', 'USER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'djoka@gmail.com', '$2a$04$cuzBAkXvmBlpMjjQ5.D.xO16FR3wARR5PYMnKmFHAcvlMfwEdGELW', 'USER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'mika@gmail.com', '$2a$04$18gGPd/HwM6kgrn/fjyHGet2/XzvkEvhfD/CTgpG41iYRBLtExfsW', 'USER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'theater@gmail.com', '$2a$04$98hiXfz.IQ7Jnwvt9lS48OoaOHJzS/Oj7lSFogCQoOdbpLORW9NgK', 'ADMIN_THEATER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', false, 'ruma', '431121' ,'fan@gmail.com', '$2a$04$IfxZJseYedF1.WA7UPsf5O67PHYVGO/sTaA3XP0zNBnkTrxjwNU/y', 'ADMIN_FAN');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'admin@admin', '$2a$10$2DqvFyV0RBcpESD9Wx/9V.HvXEm9NPSW3vmEZmZ0VverIsCZHqLQS', 'ADMIN_SYS');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'pera@gmail.com', '$2a$04$UkuVbPmFp7oy4jxFjVHxz.RhfbYZkMSPGvRS3OudQQ0tfiybU5wAa', 'USER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'djoka@gmail.com', '$2a$04$cuzBAkXvmBlpMjjQ5.D.xO16FR3wARR5PYMnKmFHAcvlMfwEdGELW', 'USER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'mika@gmail.com', '$2a$04$18gGPd/HwM6kgrn/fjyHGet2/XzvkEvhfD/CTgpG41iYRBLtExfsW', 'USER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'theater@gmail.com', '$2a$04$98hiXfz.IQ7Jnwvt9lS48OoaOHJzS/Oj7lSFogCQoOdbpLORW9NgK', 'ADMIN_THEATER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'fan@gmail.com', '$2a$04$IfxZJseYedF1.WA7UPsf5O67PHYVGO/sTaA3XP0zNBnkTrxjwNU/y', 'ADMIN_FAN');
