@@ -230,7 +230,7 @@
    					      		"<li style='padding:5px 10px; background:#c18093; color: white; margin-bottom: 2px;'> " + 
 	   				      			"<div style='display: inline-block;'>Red "+d_seat.seat.row+", Sediste "+d_seat.seat.number+", segment "+d_seat.seat.segment.label+", popust "+d_seat.discount+"%</div> " +
 	   				      			"<div style='display: inline-block; text-align: right; float:right;'><span style='text-decoration: line-through;'>"+d_seat.projectionDate.price+" din</span> "+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</div> " +
-	   				      			"<div style='width: 100%; text-align: right;'><button class='flat-button' style='padding:2px 5px;'>Obrisi</button></div> " +
+	   				      			"<div style='width: 100%; text-align: right;'><button class='flat-button' style='padding:2px 5px;' onclick='obrisiKartuNaPopustu("+d_seat.projectionDate.id+", "+d_seat.seat.number+", "+d_seat.seat.row+", \""+d_seat.seat.segment.label+"\", \""+d_seat.seat.segment.hall.label+"\")'>Obrisi</button></div> " +
 	   				      		"</li>"
    							);
 
@@ -241,6 +241,45 @@
 			
 		}
 	</script>
+	
+	<script>
+		function obrisiKartuNaPopustu(projection_date_id, seat_num, seat_row, segment_label, hall_label) {
+
+			var theater_id = getUrlParameter('id');
+			
+			var discountSeat = {};
+			discountSeat.projectionDate = {}
+			discountSeat.projectionDate.id = projection_date_id;
+			discountSeat.seat = {};
+			discountSeat.seat.number = seat_num;
+			discountSeat.seat.row = seat_row;
+			discountSeat.seat.segment = {};
+			discountSeat.seat.segment.label = segment_label;
+			discountSeat.seat.segment.hall = {};
+			discountSeat.seat.segment.hall.label = hall_label;
+			discountSeat.seat.segment.hall.theater = {};
+			discountSeat.seat.segment.hall.theater.id = theater_id;
+			
+			var discountSeatJSON = JSON.stringify(discountSeat);
+			$.ajax({
+	   			url: "/theater_management/delete_discount_seat",
+	   			type:"POST",
+	   			data: discountSeatJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == false) {
+	   					alert('Brisanje nije uspelo!');
+	   				} else {
+	   					alert('Obrisano mesto na popustu!');
+	   				}
+	   			}
+			});
+		}
+	</script>
+
 
 	<script>
 		function popuniIzborProjekcijaUModalu() {

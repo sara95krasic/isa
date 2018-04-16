@@ -205,6 +205,52 @@
 	</script>
 
 	<script>
+		function rezervisi_brzo(projection_date_id, seat_num, seat_row, segment_label, hall_label, discount) {
+
+			var theater_id = getUrlParameter('id');
+			
+			var reservation = {};
+			reservation.projectionDate = {}
+			reservation.projectionDate.id = projection_date_id;
+			reservation.reservationSeats = [];
+				
+			var reservationSeat = {};
+			reservationSeat.seat = {};
+			reservationSeat.seat.number = seat_num;
+			reservationSeat.seat.row = seat_row;
+			reservationSeat.seat.segment = {};
+			reservationSeat.seat.segment.label = segment_label;
+			reservationSeat.seat.segment.hall = {};
+			reservationSeat.seat.segment.hall.label = hall_label;
+			reservationSeat.seat.segment.hall.theater = {};
+			reservationSeat.seat.segment.hall.theater.id = theater_id;
+			reservationSeat.user = {};
+			reservationSeat.user.id = window.currentUser.id;
+			reservationSeat.discount = discount;
+			reservation.reservationSeats.push(reservationSeat);
+			
+			var reservationJSON = JSON.stringify(reservation);
+			$.ajax({
+	   			url: "/reservation/add_new_reservation",
+	   			type:"POST",
+	   			data: reservationJSON,
+				contentType:"application/json",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var s = JSON.parse(data.responseText);
+	   				
+	   				if (s == null || s == false) {
+	   					alert('Rezervacija nije uspela!');
+	   				} else {
+	   					alert('Rezervisana mesta!');
+	   					showDiscountSeats();
+	   				}
+	   			}
+			});
+		}
+	</script>
+
+	<script>
 		function showProjectionsForDate(date) {
 			
 			$('#repertoar').empty();
@@ -269,6 +315,60 @@
 	   				);//projections.forEach
 	   			}
 			});//ajax
+		}
+	</script>
+
+	<script>
+		function showDiscountSeats() {
+			
+			var theater_id = getUrlParameter('id');
+			
+			$('#karte-na-popustu-div').empty();
+			
+			$.ajax({
+	   			url: "registered/get_discount_seats_for_theater/" + theater_id,
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				d_seats = JSON.parse(data.responseText); //ne vraca page, samo obicnu List<DiscountSeat>
+	   				
+	   				if (d_seats == null || d_seats.length == 0) {
+	   					
+	   					$('#karte-na-popustu-div').html('<span style="color:#aaa;padding:5px 10px;">(nema karata na popustu)</span>');
+	   					return;
+	   				}
+	   				
+	   				
+	   				
+	   				d_seats.forEach(
+	   					function (d_seat, i) {
+	   						$('#karte-na-popustu-div').append(
+   								"<div class='karta-na-popustu' style='width: 315px; height: 180px'> " +
+	   								"<div style='width: 100%;'> " +
+	   									"<div style='background: #c18093; width: 100%; height: auto; overflow: hidden;'> " +
+	   										"<div style='color: white; padding: 5px 10px; float:left;'>"+d_seat.projectionDate.projection.title+"</div> " +
+	   										"<div style='background: #e1f7d5; padding: 5px 10px; float:right;'>-"+d_seat.discount+"%</div> " +
+	   									"</div> " +
+	   									"<img src='data:image/png;base64, "+d_seat.projectionDate.projection.poster+"' onerror='this.src=\"images/missing.jpg\";' style='height:150px; max-width:100px; float:left;'> " +
+	   									"<div style='display:inline-block; padding:10px 0px 10px 10px; width: 210px;' > " +
+	   										"<span>sala "+d_seat.seat.segment.hall.label+", <span style='color:#aaa;'>segment "+d_seat.seat.segment.label+"</span></span><br> " +
+	   										"<span>"+d_seat.projectionDate.date+"</span><br> " +
+	   										"<span>"+d_seat.projectionDate.time+"</span><br> " +
+	   										"<span>red "+d_seat.seat.row+", sediste "+d_seat.seat.number+"</span><br> " +
+	   										"<span style='text-decoration:line-through;'>"+d_seat.projectionDate.price+" din</span><br> " +
+	   										"<span style='color:white; background: #c18093; padding: 5px 10px; float:right;'>"+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</span><br> " +
+	   									"</div> " +
+	   								"</div> " +
+	   								"<button  class='hover-over-rezervisi' style='position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 3; text-align: center; line-height:180px;' onclick='rezervisi_brzo("+d_seat.projectionDate.id+", "+d_seat.seat.number+", "+d_seat.seat.row+", \""+d_seat.seat.segment.label+"\", \""+d_seat.seat.segment.hall.label+"\", "+d_seat.discount+")'> " +
+	   								"	REZERVISI " +
+	   								"</button> " +
+	   							"</div>"
+   							);
+
+	   					}
+   					);//forEach
+	   			}
+			});
 		}
 	</script>
 
@@ -349,45 +449,7 @@
 			
 			
 			
-			$.ajax({
-	   			url: "registered/get_discount_seats_for_theater/" + theater_id,
-	   			type:"GET",
-	   			dataType:"json",
-	   			complete: function(data) {
-	   				d_seats = JSON.parse(data.responseText); //ne vraca page, samo obicnu List<DiscountSeat>
-	   				
-	   				if (d_seats == null || d_seats.length == 0) {
-	   					return;
-	   				}
-	   				d_seats.forEach(
-	   					function (d_seat, i) {
-	   						$('#karte-na-popustu-div').append(
-   								"<div class='karta-na-popustu' style='width: 315px; height: 180px'> " +
-	   								"<div style='width: 100%;'> " +
-	   									"<div style='background: #c18093; width: 100%; height: auto; overflow: hidden;'> " +
-	   										"<div style='color: white; padding: 5px 10px; float:left;'>"+d_seat.projectionDate.projection.title+"</div> " +
-	   										"<div style='background: #e1f7d5; padding: 5px 10px; float:right;'>-"+d_seat.discount+"%</div> " +
-	   									"</div> " +
-	   									"<img src='data:image/png;base64, "+d_seat.projectionDate.projection.poster+"' onerror='this.src=\"images/missing.jpg\";' style='height:150px; max-width:100px; float:left;'> " +
-	   									"<div style='display:inline-block; padding:10px 0px 10px 10px; width: 210px;' > " +
-	   										"<span>sala "+d_seat.seat.segment.hall.label+", <span style='color:#aaa;'>segment "+d_seat.seat.segment.label+"</span></span><br> " +
-	   										"<span>"+d_seat.projectionDate.date+"</span><br> " +
-	   										"<span>"+d_seat.projectionDate.time+"</span><br> " +
-	   										"<span>red "+d_seat.seat.row+", sediste "+d_seat.seat.number+"</span><br> " +
-	   										"<span style='text-decoration:line-through;'>"+d_seat.projectionDate.price+" din</span><br> " +
-	   										"<span style='color:white; background: #c18093; padding: 5px 10px; float:right;'>"+String(d_seat.projectionDate.price-(d_seat.projectionDate.price*d_seat.discount/100))+" din</span><br> " +
-	   									"</div> " +
-	   								"</div> " +
-	   								"<button  class='hover-over-rezervisi' style='position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 3; text-align: center; line-height:180px;'> " +
-	   								"	REZERVISI " +
-	   								"</button> " +
-	   							"</div>"
-   							);
-
-	   					}
-   					);//forEach
-	   			}
-			});
+			showDiscountSeats();
 			
 		})
 	</script>

@@ -63,7 +63,7 @@
 					'<span>' + b.name + '</span><br>' + 
 					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
 					'<span style="float: right;">' + ocena + '</span></span>' +
-					'<a href="theater-basic.html?id=' + b.id + '">' +
+					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
 					'</a>' +
 					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')

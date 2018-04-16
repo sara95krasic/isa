@@ -15,11 +15,15 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.Statement;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Reservation;
 import rs.ac.uns.ftn.informatika.jpa.domain.ReservationSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
+import rs.ac.uns.ftn.informatika.jpa.repository.DiscountSeatRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.ReservationRepository;
-import rs.ac.uns.ftn.informatika.jpa.repository.ReservationSeatRepository;;
+import rs.ac.uns.ftn.informatika.jpa.repository.ReservationSeatRepository;
+import rs.ac.uns.ftn.informatika.jpa.repository.SeatRepository;;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -28,6 +32,10 @@ public class ReservationServiceImpl implements ReservationService {
 	ReservationRepository reservationRepository;
 	@Autowired
 	ReservationSeatRepository reservationSeatRepository;
+	@Autowired
+	SeatRepository seatRepository;
+	@Autowired
+	DiscountSeatRepository discountSeatRepository;
 	
 	@Autowired
 	UserService userService;
@@ -37,6 +45,11 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	@Override
 	public boolean makeNewReservation(Reservation reservation) {
+		
+		//ako je ovo sediste rezervisano, treba ga posle izbrisati
+		//naravno, mozda ovaj uopste ne pokusava da rezervise mesto na popustu
+		//onda se ovo i ne koristi
+		DiscountSeat discSeat = null; 
 		
 		//prvo neke provere za ova sedista
 		for (ReservationSeat rs : reservation.getReservationSeats()) {
@@ -51,9 +64,18 @@ public class ReservationServiceImpl implements ReservationService {
 			if (rs.getDiscount() != 0) {
 				//ako je popust != 0, onda je mozda preko brze rezervacije poslato, i to je okej
 				//al mozda neko pokusava da ubaci popus na kvarno (preko poslatog jsona)
-				//TODO; validiraj da to sediste zaista jeste na popustu
 				//TODO; za svaki slucaj, u tom slucaju bi lista reservationSeats smela da ima samo jedno sediste (brza rezervacija)
-				
+				Seat sss = seatRepository.findOne(rs.getSeat().getSegment().getHall().getTheater().getId(), 
+						rs.getSeat().getSegment().getHall().getLabel(), 
+						rs.getSeat().getSegment().getLabel(),
+						rs.getSeat().getRow(),
+						rs.getSeat().getNumber());
+				discSeat = discountSeatRepository.findOneBySeatAndProjectionDateId(sss, reservation.getProjectionDate().getId());
+				//to je kao to sediste na popustu
+				if (rs.getDiscount() != discSeat.getDiscount()) {
+					//to nije taj popust, sorry
+					return false;
+				}
 			}
 			
 		}
@@ -101,6 +123,9 @@ public class ReservationServiceImpl implements ReservationService {
 	            }
 	        });
 		}
+		
+		if (discSeat != null)
+			discountSeatRepository.delete(discSeat);
 		
         return inserted1 != 0;
 	}
