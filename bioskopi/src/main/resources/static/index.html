@@ -187,8 +187,10 @@
 					
 					if (window.currentUser != null) {
 						//ako je ulogovan
-						
 						$('#reg-log-bar').hide();
+						$('#nav-item').append(
+						'<a style="margin-left:1010px; font-size:18px;  margin-top:5px;" href="profile.html">Profil  korisnika: '+  window.currentUser.name + '</a>'
+						+'<a style="margin-left:18px;  font-size:18px; vertical-align:left; margin-top:5px;" href="logout"> Izloguj se </a>');
 					
 						if (window.currentUser.role == "ADMIN_THEATER") {
 							//huh...nista posebno
@@ -325,16 +327,26 @@
 			background: #aaa;
 		}
 		
+		.nav-item-c > a:HOVER {
+			background: #ddd;
+		}
+		
+		
 	</style>
 					
 </head>
 <body style='background:#e1f7d5;'>
 	<div class='row top-header'>
 		<div class='col-sm-12'>
-			<a style='float:right; margin-top:5px;' href='logout' id='izloguj-se-a'>Izloguj se</a>
 			<div class='title'>Bioskopi i pozorista</div>
 			<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
 		</div>
+	</div>
+	
+	<div id='nav-item' class='nav-item-c' style='background:white; margin-top:10px; margin-left:30px;  margin-right:30px;' >
+		<!-- ulogovaan -->
+		<!--<a href='logout' style='margin-left:600px; font-size:18px; '>  Profil korisnika + window.currentUser.name </a>
+		<a  href='logout'>  Izloguj se  </a> -->
 	</div>
 	
 	

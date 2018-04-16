@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
+import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
 import rs.ac.uns.ftn.informatika.jpa.repository.UserRepository;
 
 @Service
@@ -71,6 +74,35 @@ public class UserServiceImpl implements UserService {
 		user.setVerification(true);
 		userRepository.save(user);
 		return true;
+	}
+	
+	@Override
+	public User modifyUser(UserEditForm userFormData, Long id) {
+		User userToModify = userRepository.findOne(id);
+		
+		if(userFormData.getName() != null && !userFormData.getName().isEmpty()){
+			userToModify.setName(userFormData.getName());
+		}
+		
+		if(userFormData.getSurname()!=null && !userFormData.getName().isEmpty()){
+			userToModify.setSurname(userFormData.getSurname());
+		}
+		
+		if(userFormData.getCity()!=null && !userFormData.getName().isEmpty()){
+			userToModify.setCity(userFormData.getCity());
+		}
+		
+		if(userFormData.getPhone()!=null && !userFormData.getName().isEmpty()){
+			userToModify.setPhone(userFormData.getPhone());
+		}
+		
+		if(userFormData.getPasswordNew() != null && !userFormData.getPasswordNew().isEmpty() &&
+				userFormData.getPasswordOld() != null && !userFormData.getPasswordOld().isEmpty() &&
+				new BCryptPasswordEncoder().matches(userFormData.getPasswordOld(), userToModify.getPasswordHash())){			
+			userToModify.setPasswordHash(new BCryptPasswordEncoder().encode(userFormData.getPasswordNew()));
+		}
+		
+		return userRepository.save(userToModify);
 	}
 	
 }
