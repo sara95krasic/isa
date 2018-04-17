@@ -1,28 +1,19 @@
 package rs.ac.uns.ftn.informatika.jpa.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
-import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
-import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.repository.UserRepository;
 
 @Service
@@ -124,13 +115,34 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findUsers(String name, String surname) {
-		 if(name.equals("") && !surname.equals("")) {
-			return userRepository.findBySurname(surname);
-		}else if(!name.equals("") && surname.equals("")) {
-			return userRepository.findByName(name);
-		}else{
-			return null;
-		}
+		
+		List<User> by_name = new ArrayList<User>();
+		List<User> by_surname = new ArrayList<User>();
+		
+		//nadji sve po imenu
+		if(!name.isEmpty())
+			by_name = userRepository.findByNameContainingAllIgnoringCase(name);
+		//ako nije zadato prezime, samo vrati te po imenu
+		if (surname.isEmpty())
+			return by_name;
+		
+		//ako je zadato prezime, trazi po njemu
+		if(!surname.isEmpty())
+			by_surname = userRepository.findBySurnameContainingAllIgnoringCase(surname);
+		//ako nismo trazili po imenu (jer nije zadato), samo vrati ove nadjene po prezimenu
+		if (name.isEmpty())
+			return by_surname;
+		
+		
+		//jbg, ako smo stigli do ovde onda je trazeno i po imenu i prz
+		//spoji te 2 liste u double_match
+		List<User> double_match = new ArrayList<User>();
+		for (User u : by_name)
+			for (User uu : by_surname)
+				if (u.getId() == uu.getId())
+					double_match.add(uu);
+		
+		return double_match;
 	}
 
 	

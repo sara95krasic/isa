@@ -177,17 +177,20 @@ public class PublicController {
 	}
 	
 	
-	@RequestMapping(value="/get_korisnik_by_name/{name}/{surname}")
-	public ResponseEntity<List<UserDTO>> searchUsers(@PathVariable String name, @PathVariable String surname){
+	@RequestMapping(value="/search_user_by_name_or_surname",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<UserDTO>> searchUsers(@RequestBody User user){
 		System.out.println("RADDim PRETR");
-		List<User> searched = userService.findUsers(name, surname);
+		List<User> searched = userService.findUsers(user.getName(), user.getSurname());
 		List<UserDTO> searcheddto = new ArrayList<UserDTO>();
 		
-		for(User user : searched) {
-			searcheddto.add(new UserDTO(user));
-			System.out.println("RADDim PRETR" + user.getName() + " " + user.getSurname());
+		for(User u : searched) {
+			searcheddto.add(new UserDTO(u));
+			System.out.println("RADDim PRETR" + u.getName() + " " + u.getSurname());
 		}
-		if(searched!=null) {
+		if(!searched.isEmpty()) {
 			return new ResponseEntity<List<UserDTO>>(searcheddto,HttpStatus.OK);
 		}
 		return new ResponseEntity<List<UserDTO>>(searcheddto,HttpStatus.NOT_FOUND);

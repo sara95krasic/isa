@@ -23,9 +23,9 @@ public interface UserRepository extends Repository<User, Long>{
 	
 	User findByEmail(String email);
 	
-	List<User> findByName(String name);
+	List<User> findByNameContainingAllIgnoringCase(String name);
 	
-	List<User> findBySurname(String surname);
+	List<User> findBySurnameContainingAllIgnoringCase(String surname);
 
 	
 
