@@ -6,6 +6,7 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/fanzone.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 
 	
@@ -63,7 +64,7 @@
 					'<span>' + b.name + '</span><br>' + 
 					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
 					'<span style="float: right;">' + ocena + '</span></span>' +
-					'<a href="theater-basic.html?id=' + b.id + '">' +
+					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
 					'</a>' +
 					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')
@@ -189,12 +190,14 @@
 						//ako je ulogovan
 						$('#reg-log-bar').hide();
 						$('#nav-item').append(
-						'<a style="margin-left:1010px; font-size:18px;  margin-top:5px;" href="profile.html">Profil  korisnika: '+  window.currentUser.name + '</a>'
+								'<a style="margin-left:1010px; font-size:18px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>'			
+						+'<a style="margin-left:18px; font-size:18px;  margin-top:5px;" href="profile.html">Profil  korisnika: '+  window.currentUser.name + '</a>'
 						+'<a style="margin-left:18px;  font-size:18px; vertical-align:left; margin-top:5px;" href="logout"> Izloguj se </a>');
 					
 						if (window.currentUser.role == "ADMIN_THEATER") {
 							//huh...nista posebno
 						}
+						
 						
 					} else {
 						//ako nije ulogovan

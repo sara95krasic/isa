@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
+import rs.ac.uns.ftn.informatika.jpa.service.DiscountSeatService;
 import rs.ac.uns.ftn.informatika.jpa.service.HallService;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.SegmentService;
@@ -38,6 +39,8 @@ public class TheaterManagementController {
 	private SegmentService segmentService;
 	@Autowired
 	private SeatService seatService;
+	@Autowired
+	private DiscountSeatService discountSeatService;
 	
 	@RequestMapping(value = "update_theater/{id}",
 			method = RequestMethod.POST,
@@ -150,5 +153,15 @@ public class TheaterManagementController {
 	@ResponseBody
 	public boolean removeSeat(@RequestBody Seat seat) {
 		return this.seatService.removeSeat(seat);
+	}
+	
+	
+	@RequestMapping(value = "delete_discount_seat",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean deleteDiscountSeat(@RequestBody DiscountSeat discountSeat) {
+		return this.discountSeatService.deleteDiscountSeat(discountSeat);
 	}
 }
