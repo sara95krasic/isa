@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.informatika.jpa.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
@@ -25,45 +23,40 @@ public class ThematicProps implements Serializable{
 	private Long id;
 	
 	@Column(nullable = true)
-	private String createdBy;
+	private Long createdBy;
+	
+	@Column(nullable = true)
+	private Long theaterId;
 	
 	@Column(nullable = false)
 	private String name;
 	
 	@Column(nullable = false)
-	private Boolean reserved;
+	private String reserved;
 	
 	@Column(nullable = false)
 	private String description;
 	
 	@Column(nullable = false)
-	private Date date;
+	private String date;
 	
 	@Column(nullable = true, length = 1010379)
 	private String picture; //base64 zapis
 	
-    @Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private ThematicPropsType tptype;
+	
+	@Column(nullable = true)
+	private Boolean approved;
 	
 	@OneToMany
 	private List<Offer> offers;
 
-	@ManyToOne
-	private User reservedBy;
-	
-	public User getReservedBy() {
-		return reservedBy;
-	}
-
-	public void setReservedBy(User user) {
-		this.reservedBy = user;
-	}
-
 	public ThematicProps() 
 	{}
 	
-	public ThematicProps(ThematicPropsType tptype,String createdBy,Boolean reserved, String name,String description,Date date,String picture) {
+	public ThematicProps(Long theaterId, ThematicPropsType tptype,Long createdBy,String reserved, String name,String description,String date,String picture,Boolean approved) {
 		this.tptype = tptype;
 		this.name = name;
 		this.description = description;
@@ -71,13 +64,33 @@ public class ThematicProps implements Serializable{
 		this.picture = picture;	
 		this.createdBy = createdBy;
 		this.reserved = reserved;
+		this.theaterId = theaterId;
+		this.approved = approved;
 	}
 
-	public Boolean getReserved() {
+	
+	
+	public Boolean getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Boolean approved) {
+		this.approved = approved;
+	}
+
+	public Long getTheaterId() {
+		return theaterId;
+	}
+
+	public void setTheaterId(Long theaterId) {
+		this.theaterId = theaterId;
+	}
+
+	public String getReserved() {
 		return reserved;
 	}
 
-	public void setReserved(Boolean reserved) {
+	public void setReserved(String reserved) {
 		this.reserved = reserved;
 	}
 
@@ -89,11 +102,11 @@ public class ThematicProps implements Serializable{
 		this.offers = offers;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -121,11 +134,11 @@ public class ThematicProps implements Serializable{
 		this.description = description;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -144,5 +157,6 @@ public class ThematicProps implements Serializable{
 	public void setTptype(ThematicPropsType tptype) {
 		this.tptype = tptype;
 	}
-
+	
+	
 }

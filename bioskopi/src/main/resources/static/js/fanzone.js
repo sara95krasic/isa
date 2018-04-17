@@ -67,7 +67,3 @@ function izbrisiOglas(obj){
 	});
 }
 	
-$(document).on("click",".fanzoneButton",function(){
-	$(".welcome").empty();
-	$(".welcome").append(`<img class="card-img-top" id="welcome" src="images/cheerblue.png" alt="">`);
-});
