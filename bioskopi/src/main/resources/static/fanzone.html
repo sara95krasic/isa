@@ -8,40 +8,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/fanzone.css">
-    
-    <script src="js/helpers.js"></script>
-
-	<script>
-		$(document).ready(function(){
-			
-
-			theater_id = getUrlParameter('id');
-		
-			if (theater_id == "") {
-				return;
-			}
-		
-			$.ajax({
-	   			url: "public/get_theater_by_id/" + theater_id,
-	   			type:"GET",
-	   			dataType:"json",
-	   			complete: function(data) {
-	   				theater = JSON.parse(data.responseText);
-	   				
-	   				if (theater == null) {
-	   					return;
-	   				}
-
-	   				$('#desc-bioskopa').text(theater.description)
-	   				$('#naziv-bioskopa').text(theater.name)
-	   				$('#adresa-bioskopa').text(theater.address)
-	   				$('#gmap_canvas').attr('src', "https://maps.google.com/maps?q="+encodeURIComponent(theater.address)+"&t=&z=13&ie=UTF8&iwloc=&output=embed")
-	   			}
-			});
-	   				
-		})
-	</script>
-				
+    <script src="js/helpers.js"></script>				
 </head>
 <body>
 	<div class='top-header'>
