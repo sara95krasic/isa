@@ -6,6 +6,7 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/fanzone.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 
 	
@@ -189,7 +190,7 @@
 						//ako je ulogovan
 						$('#reg-log-bar').hide();
 						$('#nav-item').append(
-								'<a style="margin-left:1010px; font-size:18px;  margin-top:5px;" href="fanzone.html">Fan zona</a>'			
+								'<a style="margin-left:1010px; font-size:18px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>'			
 						+'<a style="margin-left:18px; font-size:18px;  margin-top:5px;" href="profile.html">Profil  korisnika: '+  window.currentUser.name + '</a>'
 						+'<a style="margin-left:18px;  font-size:18px; vertical-align:left; margin-top:5px;" href="logout"> Izloguj se </a>');
 					
