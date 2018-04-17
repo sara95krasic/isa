@@ -1,42 +1,76 @@
 @charset "ISO-8859-1";
 
-.welcome {
-	width : 1000px;
-	margin-top: 80px;
-}
-
-#divNaziv {
-	background-color: #9bb7c4;
-	color : black;
-	border:1px solid black;
-	padding : 5px;
-	font-size : 25px;
-}
-
-#divOpis {
-	background-color: #e8f3f8;
-	color:black;
-	padding : 5px;
-}
-#divOpis2 {
-	background-color: #e8f3f8;
-	color:black;
-	padding : 5px;
-	
-}
-#pojedinacni {
-	margin : 10px;
-	border : 2px solid black;
-	padding : 5px;
-	margin-bottom : 40px;
-}
-
-.izbrisi {
-	margin-left : 2px;
-}
-
-.rekvizitButtoni {
-	margin-left : 2px;
-	background-color : steelblue;
-	color : white;
-}
+		body {
+		background:#e1f7d5;
+		}
+		
+		.blok {
+			height: 500px;
+			padding-bottom: 50px;
+		}
+		
+		
+/*header u vrhu stranice*/
+		.top-header {
+            background: white;
+            min-height: 40px;
+            margin: 20px 30px -5px 30px;
+            padding: 5px 10px; 
+		}
+		
+		/*.top-header */.title {
+			color : #555;
+            font-size: 50px;
+            margin-left: 42%; 
+  			margin-right: 40%;
+		}
+		
+		/*centralni sadrzaj stranice*/
+		.content {
+			margin: 15px 15px 50px 15px;
+		}
+		
+		.blok {
+			height: 500px;
+			padding-bottom: 50px;
+		}
+		
+		.blok .header {
+			background : #A16073;
+			color : white;
+			padding : 5px;
+		}
+		
+		.button-card {
+			padding: 15px;
+			margin-left:43%;
+			margin-right:30px;
+			
+    		width: 200px;
+		}
+		
+		.button-card > a {
+			border: 0;
+			font-size: 20px;
+			color: white;
+			text-align: center;
+			padding : 15px;
+			background: #A16073;
+			display: block;
+  			text-decoration: none;
+  			transition: background 0.1s linear;
+  			
+		}
+		.button-card > a:HOVER {
+			background: #aaa;
+		}
+		
+		.header {
+			background : #A16073;
+			color : white;
+			padding : 5px;
+			margin: 20px 30px -5px 30px;
+			font-size: 20px;
+		}
+		
+		
