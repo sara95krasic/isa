@@ -43,7 +43,9 @@
 						+'<label>Prezime: '+ window.currentUser.surname + '</label><br>'
 						+'<label>Grad: '+ window.currentUser.city + '</label><br>'
 						+'<label>Broj telefona: '+ window.currentUser.phone + '</label><br>'
-						+'<label>Email: '+ window.currentUser.email + '</label>');
+						+'<label>Email: '+ window.currentUser.email + '</label><br>'
+						+'<label><a href="friends.html" class="href">Moji prijatelji</a></label>');
+				
 				} 
 		}
 		});
@@ -169,6 +171,20 @@
 			-webkit-appearance: none;
 			transition: background 0.1s linear;
 		}
+		
+		.href {
+			-webkit-appearance: none;
+			color: #A16073;
+		}
+		
+		.href:HOVER {
+			-webkit-appearance: none;
+			background: #c18093;
+			color: white;
+			text-decoration: none;
+			
+		}
+		
 		.flat-button:HOVER {
 			background: #c18093;
 		}
@@ -204,6 +220,7 @@
 			</div>
 			<div style='background: white; padding: 10px 15px;'>
 				<div id='korisnik'>
+					<!--<label><a href='friends.html' class='href'>Moji prijatelji</a></label>-->
 					<!--  <label>Pera</label><br>
 					<label>Peric</label><br>
 					<label>Ruma</label><br>

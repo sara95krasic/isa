@@ -29,11 +29,11 @@
 					data: paramToJson,
 					success : function(data) {
 						$('#registracija_form').empty();
-						$('#registracija_form').append(`<h3>User registered, verification mail sent.</h3><hr><i><a href="/">Return to homepage</a></i>`);
+						$('#registracija_form').append(`<h3>Korisnik je registrovan, mail za verifikaciju je poslat.</h3><hr><i><a href="/">Vrati se na pocetnu</a></i>`);
 						$('#registerB').hide();
 					},
  					error : function(XMLHttpRequest, textStatus, errorThrown) {
-						alert("Greska: ponovite vas unos" + textStatus);
+						alert("GRESKA: ponovite vas unos!");
 					}
 				});
 			}else{

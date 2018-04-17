@@ -9,6 +9,36 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <script src="js/helpers.js"></script>
 	
+	<!--  <script>
+	 function loginKorisnika(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		var login_param = getFormData($('#loginForm'));
+		var paramToJson = JSON.stringify(login_param);
+		$.ajax({
+			type : 'POST',
+			url : "/public/login",
+			contentType : 'application/json',
+			dataType : "json",
+			data:paramToJson,
+			success : function(data) {
+				if(data != null){
+				window.location = 'index.html';
+				}else{
+					
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("GRESKA: email ili lozinka nisu ispravni!");
+			}
+		});
+		
+		return false;
+	}
+	
+	
+	
+	</script>-->
 	
 	<style>
 	
@@ -71,7 +101,7 @@
 			<div style='background: white; padding: 10px 15px;'>
 				<form method='post'>
 		        	<span style='display:inline-block;width:100px;'>Email:</span><input type="text" name='email' id='email' style='margin-bottom: 5px;'><br>
-		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='password' id='password' style='margin-bottom: 5px;'><br>
+		        	<span style='display:inline-block;width:100px;'>Lozinka:</span><input type="password" name='passwordHash' id='password' style='margin-bottom: 5px;'><br>
 		        	<div style='text-align: right;'><button type="submit" class='flat-button'>Uloguj se</button></div>
 				</form>
 			</div>

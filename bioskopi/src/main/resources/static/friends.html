@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Bioskopi - Profil korisnika - Moji prijatelji</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/helpers.js"></script>
+	
+	<script>
+		$(document).ready(function(){
+			
+			$.ajax({
+				url: "public/get_current_user",
+				type:"GET",
+				dataType:"json",
+				complete: function(data) {
+					
+					//pripremi trenutno ulogovanog usera, da bude dostupan svima na stranici
+					var user;
+					if (data.responseText == "")
+						//nista, nije ulogovan
+						user = null;
+					else
+						user = JSON.parse(data.responseText);
+					
+					window.currentUser = user;	//cuvamo ga globalno, da ove funckcije sto treba da prikazu sve bioskope
+												//mogu malo da koriguju prikaz za ulogovane korisnike
+					//to je to
+				}	
+			});
+			
+		})
+	</script>
+	
+	<script>	
+		function traziPrijateljaIme(){
+			var user = {}
+			user.name = $('#korisnici-search-box-ime').val();
+			user.surname = $('#korisnici-search-box-surname').val();
+			var userJson = JSON.stringify(user);
+			var logedUserId = window.currentUser.id;
+			$.ajax({
+	   			url: "public/search_user_by_name_or_surname",
+	   			type:"POST",
+				contentType : 'application/json',
+				dataType : "json",
+				data: userJson,
+				success: function(data){
+					 $("#korisnici").empty();
+					 var users = data;
+					 users.forEach(function (u, i) {
+						 if(u.id != logedUserId){
+							 $('#korisnici').append(
+								'<tr>'+
+				                     '<td>'+
+			                      		'<span class="font-weight-bold">' + u.name  +" "+ u.surname+ " "+ u.email +'</span>'+
+			                        	'<span class="float-right" style="float:right;"><a href="#"><img src="images/add.png" onclick="sendFriendRequest('+u.id+')" title="send friend request"></img></a></span>'+
+			                         '</td>'+
+			                   	'</tr>'
+		                	);
+						}
+			 		});
+			 	},
+			 	error : function(){
+			 		 $('#korisnici').html(
+			 				'<li style="font-style:italic;color:grey; margin-top:10px;">Nema rezulata</li>'		 
+			 		 );
+			 	}
+			});
+	   		
+		}
+		
+	</script>
+	
+	
+	
+	
+	<style>
+	
+		/*header u vrhu stranice*/
+		.top-header {
+            background: white;
+            min-height: 40px;
+            margin: 20px 30px -5px 30px;
+            padding: 5px 10px;
+            
+		}
+		
+		.top-header .title {
+			color : #555;
+            font-size: 27px;
+           
+		}
+		
+		/*centralni sadrzaj stranice*/
+		.content {
+			margin-left: 15px;
+			margin-top: 10px;
+		}
+		
+		.blok {
+			padding-bottom: 50px;
+			
+			
+		}
+		
+		.header {
+			background : #A16073;
+			color : white;
+			padding : 5px;	
+		}
+		
+		.flat-button {
+			border: 0;
+			background: #A16073;
+			color: white;
+			padding: 3px 10px;
+			box-shadow: none;
+			border-radius: 0px;
+			-webkit-appearance: none;
+			transition: background 0.1s linear;
+		}
+		
+		
+		
+		.flat-button:HOVER {
+			background: #c18093;
+		}
+		
+		.flat-buttonn {	
+			border: 0;
+			color: white;
+			padding: 3px 10px;
+			background: #A16073;
+			display: inline-block;
+  			text-decoration: none;
+  			-webkit-appearance: none;
+  			transition: background 0.1s linear;
+		}
+		
+		.pronadjiText {
+			color: #A16073;
+			font-size: 16px;
+		}
+		
+		.flat-buttonn:HOVER {
+			background: #c18093;
+			color: white;
+			text-decoration: none;
+		}
+		
+		.trazi {
+			width: 60%;
+			font-style: italic;
+			color: grey;
+		}
+		
+		.trazi:HOVER {
+			background:#E5FAE1;
+		}
+		
+	</style>
+					
+</head>
+<body style='background:#e1f7d5;'>
+	<div class='top-header'>
+		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
+	</div>
+	
+	<div class='content'>
+		<div class='col-sm-6 blok'>
+			<div class='header'>
+				<div>Profil korisnika - moji prijatelji</div>
+			</div>
+			<div style='background: white; padding: 10px 15px;'>
+				<div id='korisnik'>
+<!-- 					<label>Sara </label><br>
+					<label>Sara </label><br>
+					<label>Sara </label><br>
+					<label>Sara </label><br>	 -->
+				</div>
+				
+				<div style='padding:5px;text-align:left;'>
+					<label class='pronadjiText' >Pronadji prijatelje:</label><br>
+					<input id='korisnici-search-box-ime' class="trazi" type='text' placeholder="Ime trazenog korisnika..." oninput="traziPrijateljaIme()"><br>
+					<input style='margin-top:10px;' id='korisnici-search-box-surname' class="trazi" type='text' placeholder="Prezime trazenog korisnika..." oninput="traziPrijateljaIme()"><br>
+					<div>
+						<table id='korisnici'>
+                        	<!--<tr>
+	                        	 <td>
+	                            	<span class="font-weight-bold">+data[i].name+  +data[i].surname+ | +data[i].email+ | +data[i].city+ | +data[i].phone+</span>
+	                            	<span class="float-right"><a href="#"><img src="images/add.png" onclick="sendFriendRequest(`+data[i].id+`)" title="send friend request"></img></a></span>
+	                         	</td>
+	                     	</tr>-->
+                    	</table>
+	                     
+					
+					</div>
+				</div>
+					
+				
+				
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

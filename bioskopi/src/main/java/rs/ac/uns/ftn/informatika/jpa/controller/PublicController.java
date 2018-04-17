@@ -1,12 +1,18 @@
 package rs.ac.uns.ftn.informatika.jpa.controller;
 
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
@@ -39,6 +46,23 @@ public class PublicController {
 	
 	@Autowired
 	private UserService userService;
+	
+	
+	/*@RequestMapping(value="/login", method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserDTO> signIn(@RequestBody User user,HttpSession session,HttpServletRequest request){
+		User loggedUser = userService.logIn(user);
+		if(loggedUser != null) {
+		   
+		    UserDTO logged = new UserDTO(loggedUser);
+		    System.out.println("PROSAO SAM");
+		    return new ResponseEntity<UserDTO>(logged,HttpStatus.OK);
+		    
+		}
+		UserDTO logged = null;
+		return new ResponseEntity<UserDTO>(logged,HttpStatus.NOT_FOUND);
+	}*/
 	
 	
 	@RequestMapping(value = "/registration",
@@ -151,4 +175,26 @@ public class PublicController {
 	public TheaterDTO getTheaterById(@PathVariable Long id) {
 	return this.theaterService.getTheaterById(id);
 	}
+	
+	
+	@RequestMapping(value="/search_user_by_name_or_surname",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<UserDTO>> searchUsers(@RequestBody User user){
+		System.out.println("RADDim PRETR");
+		List<User> searched = userService.findUsers(user.getName(), user.getSurname());
+		List<UserDTO> searcheddto = new ArrayList<UserDTO>();
+		
+		for(User u : searched) {
+			searcheddto.add(new UserDTO(u));
+			System.out.println("RADDim PRETR" + u.getName() + " " + u.getSurname());
+		}
+		if(!searched.isEmpty()) {
+			return new ResponseEntity<List<UserDTO>>(searcheddto,HttpStatus.OK);
+		}
+		return new ResponseEntity<List<UserDTO>>(searcheddto,HttpStatus.NOT_FOUND);
+	}
+	
+	
 }
