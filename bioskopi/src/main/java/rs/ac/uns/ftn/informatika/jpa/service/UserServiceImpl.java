@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.jpa.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
+import org.springframework.util.Assert;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.repository.UserRepository;
 
 @Service
@@ -34,6 +38,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> getUserByEmail(String email) {
 		return userRepository.findOneByEmail(email);
+	}
+	
+	@Override
+	public User logIn(User user) {
+		User userToLog = userRepository.findByEmail(user.getEmail());
+		System.out.println("-------------" + user.getEmail() + user.getPasswordHash() );
+		
+		if(userToLog != null) {
+			if(new BCryptPasswordEncoder().matches(user.getPasswordHash(), userToLog.getPasswordHash()) && userToLog.isVerification() == true) {
+				return userToLog;
+			}
+		}
+		return null;
 	}
 	
 	@Override
@@ -104,5 +121,20 @@ public class UserServiceImpl implements UserService {
 		
 		return userRepository.save(userToModify);
 	}
+
+	@Override
+	public List<User> findUsers(String name, String surname) {
+		 if(name.equals("") && !surname.equals("")) {
+			return userRepository.findBySurname(surname);
+		}else if(!name.equals("") && surname.equals("")) {
+			return userRepository.findByName(name);
+		}else{
+			return null;
+		}
+	}
+
+	
+		
+	
 	
 }
