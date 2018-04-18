@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.jpa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,7 +47,7 @@ public class CurrentUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException(String.format("User with email=%s was not found", email));
 			
 		CurrentUser cu = new CurrentUser(user);
-		
+		   
 		
 		//Authentication auth = new UsernamePasswordAuthenticationToken(cu, cu.getPassword(), cu.getAuthorities());
 		//SecurityContextHolder.getContext().setAuthentication(auth);

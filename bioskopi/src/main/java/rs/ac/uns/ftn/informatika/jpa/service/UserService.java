@@ -28,4 +28,6 @@ public interface UserService {
 	User modifyUser(UserEditForm user, Long id);
 	
 	List<User> findUsers(String name,String surname);
+
+	boolean changePassword(String old_pass, String new_pass);
 }

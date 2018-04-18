@@ -47,6 +47,9 @@ public class User {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    
+    @Column(columnDefinition="tinyint(1) default 0")
+    private boolean hasLoggedInBefore;
 
     public User() {
 		
@@ -145,6 +148,14 @@ public class User {
                 ", role=" + role +
                 '}';
     }
+
+	public boolean isHasLoggedInBefore() {
+		return hasLoggedInBefore;
+	}
+
+	public void setHasLoggedInBefore(boolean hasLoggedInBefore) {
+		this.hasLoggedInBefore = hasLoggedInBefore;
+	}
 	
 
 }
