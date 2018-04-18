@@ -1,3 +1,62 @@
+function propsOnHold() {
+	$(".welcome").empty();
+	//console.log("kliknuo");
+	$.ajax({
+		  method : 'GET',
+		  url : "thematic_props/get_all_thematic_props",
+		  success : function(data){
+			  console.log("uspjesno!");
+			  podijeliOglaseNaCekanju(data);
+		  },
+		  error: function(){
+			  console.log("neuspesno");
+		  }
+		  
+	});	
+}
+
+function podijeliOglaseNaCekanju(data) {
+	//console.log("usao u podjelu");
+	var list = data == null ? [] : (data instanceof Array ? data : [ data ]);
+	$.each(list, function(index, oglas) {
+	//console.log(oglas.name);
+	if(oglas.approved == false) {
+		$(".welcome").append(`<div class="panel panel-default form-group" id="pojedinacni">
+	 			<div id="divNaziv" class="panel-heading"><label id="odmakniMe"><b>`+oglas.name+`</b><br><label>
+	 			<label id="odmakniMe" style="color:#A16073"><b>`+oglas.tptype+`</b><label></div>
+	 			<div id="divOpis" class="panel-body"><textarea readonly id="divOpis2" class="form-control" rows="6">`+oglas.description+`</textarea></div>
+	 			<div id="batoni">
+   					<button onclick="odobriOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-success rekvizitButtoni" id="odobri`+oglas.id+`" name="odobri`+oglas.id+`">Approve</button>
+   					<button onclick="izbrisiOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-danger izbrisi" name="izbrisi`+oglas.id+`">Decline and delete</button></div>
+				</div>`);
+	}
+	});
+}
+
+function odobriOglas(data) {
+	var pokusaj = data.name;
+	console.log("odobravam");
+	var konacan = pokusaj.split("odobri")[1];
+	$(document).on("click",data,function(e) {
+		e.preventDefault();
+		//console.log("pokusaj na "+pokusaj);
+		//console.log("konacan "+konacan);		
+		$.ajax({
+			method : 'GET',
+			url : "/thematic_props/approve/"+konacan,
+			success : function(data){
+				console.log("uspjesno!");
+				window.location.href = 'fanzone.html';
+			},
+			error: function(){
+				console.log("neuspesno");
+			}
+		});
+		
+	});
+}
+
+
 function thematicprops(){
 	$(".welcome").empty();
 	$.ajax({
