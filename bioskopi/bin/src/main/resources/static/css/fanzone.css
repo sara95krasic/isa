@@ -89,16 +89,15 @@
 		}
 		
 		#divOpis {
-			background-color: #e1f7d5;
+			background-color: #e8f3f8;
 			color:black;
 			padding : 5px;
-			font-size : 20px;
 		}
 		#divOpis2 {
-			background-color: #e1f7d5;
-			color: black;
+			background-color: #e8f3f8;
+			color:black;
 			padding : 5px;
-			font-size : 20px;
+			
 		}
 		#pojedinacni {
 			margin : 10px;
@@ -113,7 +112,7 @@
 		
 		.rekvizitButtoni {
 			margin-left : 2px;
-			background-color : #A16073;
+			background-color : steelblue;
 			color : white;
 		}
 		

@@ -47,7 +47,7 @@ public class ThematicProps implements Serializable{
 	@Column(nullable = false)
 	private ThematicPropsType tptype;
 	
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private Boolean approved;
 	
 	@OneToMany
