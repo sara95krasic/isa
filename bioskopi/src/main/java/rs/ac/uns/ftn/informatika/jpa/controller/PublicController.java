@@ -29,6 +29,7 @@ import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
+import rs.ac.uns.ftn.informatika.jpa.service.SessionService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
 import rs.ac.uns.ftn.informatika.jpa.service.UserService;
 
@@ -109,12 +110,12 @@ public class PublicController {
 	public User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
-		User u = userService.getUserByEmail(email).orElse(null);
+		User u = new User(userService.getUserByEmail(email).orElse(null));
 		if (u != null) {
 			u.setPasswordHash(""); //...
-			u.setFriends(null);
-			u.setFriendsOf(null);
-			u.setReceivedRequests(null);
+			u.getFriends().clear();
+			u.getFriendsOf().clear();
+			u.getReceivedRequests().clear();;
 		}
 		return u;
 	}
@@ -217,7 +218,7 @@ public class PublicController {
 	
 	@RequestMapping(value="/sendReq/{receiverId}",method = RequestMethod.GET)
 	public ResponseEntity<String> sendFriendRequest(@PathVariable Long receiverId,HttpServletRequest request){
-		User sender = getCurrentUser(); 
+		User sender = SessionService.getCurrentlyLoggedUser(); 
 		userService.sendFriendRequest(sender.getId(), receiverId);
 		return new ResponseEntity<String>("zahtev uspesno poslat",HttpStatus.ACCEPTED);
 		
@@ -236,14 +237,14 @@ public class PublicController {
 	
 	@RequestMapping(value="/acceptFriendReq/{acceptedId}",method = RequestMethod.GET)
 	public ResponseEntity<String> approveFriendRequest(@PathVariable Long acceptedId, HttpServletRequest request){
-		User user = getCurrentUser(); 	
+		User user = SessionService.getCurrentlyLoggedUser();	
 		userService.acceptFriendRequest(acceptedId, user.getId());
 		return new ResponseEntity<String>("request approved",HttpStatus.ACCEPTED);
 	}
 	
 	@RequestMapping(value="/refuseRequest/{refusedId}", method=RequestMethod.GET)
 	public ResponseEntity<UserDTO> declineRequest(@PathVariable Long refusedId,HttpServletRequest request){
-		User user = getCurrentUser(); 	
+		User user = SessionService.getCurrentlyLoggedUser();	
 		User refused = userService.refuseFriendReq(refusedId, user.getId());
 		UserDTO refusedDTO = new UserDTO(refused);
 		return new ResponseEntity<UserDTO>(refusedDTO,HttpStatus.OK);
@@ -262,7 +263,7 @@ public class PublicController {
 	
 	@RequestMapping(value="/removeFr/{friendId}",method=RequestMethod.GET)
 	public ResponseEntity<UserDTO> removeFriend(@PathVariable Long friendId, HttpServletRequest request){
-		User user = getCurrentUser();
+		User user = SessionService.getCurrentlyLoggedUser();
 		User removed = userService.removeFr(friendId, user.getId());
 		UserDTO removedDTO = new UserDTO(removed);
 		return new ResponseEntity<UserDTO>(removedDTO,HttpStatus.OK);
