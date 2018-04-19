@@ -35,8 +35,7 @@ public class User {
 	@Column(nullable = false)
 	private boolean verification;
 	
-	@Column(nullable = true)
-	private int brZahteva;
+	
 
 
 	@Column(nullable = true)
@@ -216,13 +215,5 @@ public class User {
  	}
  	
  	
- 	public int getBrZahteva() {
-		return brZahteva;
-	}
-
-
-
-	public void setBrZahteva(int brZahteva) {
-		this.brZahteva = brZahteva;
-	}
+ 	
 }
