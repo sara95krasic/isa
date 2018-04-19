@@ -110,7 +110,7 @@ function props1(){
 	$('#culVenues select').val(culValID);
 	$.ajax({
 		  method : 'GET',
-		  url : "/thematic_props/get_all_thematic_props/"+culValID+"/"+tptype,
+		  url : "/thematic_props/"+culValID+"/"+tptype,
 		  success : function(data){
 			  //console.log("uspjesno!");
 			  podeliOglase(data);
