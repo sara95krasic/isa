@@ -20,10 +20,12 @@ function onload() {
 			//to je to
 			
 
-			if(user.role != "ADMIN_FAN") {
+			if(user.role == "ADMIN_FAN") {
 				document.getElementById("onHold").hidden = "";
+				console.log("jeste admin");
 			} else {
-				document.getElementById("onHold").hidden = "hidden";
+				document.getElementById("onHold").style.display = "none";
+				console.log("nije admin");
 			}
 		}
 	});
@@ -58,8 +60,8 @@ function podijeliOglaseNaCekanju(data) {
 	 			<label id="odmakniMe" style="color:#A16073"><b>`+oglas.tptype+`</b><label></div>
 	 			<div id="divOpis" class="panel-body"><textarea readonly id="divOpis2" class="form-control" rows="6">`+oglas.description+`</textarea></div>
 	 			<div id="batoni">
-   					<button onclick="odobriOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-success rekvizitButtoni" id="odobri`+oglas.id+`" name="odobri`+oglas.id+`">Approve</button>
-   					<button onclick="izbrisiOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-danger izbrisi" name="izbrisi`+oglas.id+`">Decline and delete</button></div>
+   					<button onclick="odobriOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-success rekvizitButtoni" id="odobri`+oglas.id+`" name="odobri`+oglas.id+`">Odobri</button>
+   					<button onclick="izbrisiOglas(this)" style='background-color:#A16073;' type="button" class="btn btn-danger izbrisi" name="izbrisi`+oglas.id+`">Obrisi</button></div>
 				</div>`);
 	}
 	});
@@ -161,15 +163,16 @@ function podijeliObjekte(data) {
 //myProps
 function props2(){
 	var culValID = $('#culVenues option:selected').attr('name');
-	var tptype = $('input[name=type]:checked').val();
+	var tptype = $('input[name="type"]:checked').val();
 	myProps();
 	$("#"+tptype).attr('checked', true);
 	$('#culVenues select').val(culValID);
+	console.log("prosao");
 	$.ajax({
 		  method : 'GET',
 		  url : "/thematic_props/my/"+culValID+"/"+tptype,
 		  success : function(data){
-			// console.log("uspjesno!");
+			 console.log("uspjesno!");
 			  podeliOglase(data);
 		  },
 		  error: function(){
