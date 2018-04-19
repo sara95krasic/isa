@@ -52,7 +52,7 @@ public class ThematicPropsController {
 	
 	@RequestMapping( value = "/{theaterId}/{tptype}",method = RequestMethod.GET)
 	public ResponseEntity<List<ThematicPropsDTO>> getAllThematicPropsByCV(@PathVariable Long theaterId, @PathVariable ThematicPropsType tptype, HttpServletRequest request) {
-		User user = (User) request.getSession().getAttribute("loggedUser");
+		User user = SessionService.getCurrentlyLoggedUser();
 		List<ThematicPropsDTO> thematicPropsListDTO = new ArrayList<ThematicPropsDTO>();
 		if(tptype.name().equals("USED")) {
 			System.out.println("usao u polovne");
