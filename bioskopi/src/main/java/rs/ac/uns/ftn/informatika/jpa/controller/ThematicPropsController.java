@@ -29,7 +29,8 @@ public class ThematicPropsController {
 	private ThematicPropsService thematicPropsService;
 	
 	
-	@RequestMapping(method = RequestMethod.POST,
+	@RequestMapping(value ="/save_thematic_props",
+			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ThematicPropsDTO> save(@RequestBody ThematicProps thematicProps){

@@ -4,7 +4,7 @@ function citaj() {
 	$("#culturalVenueSelect").empty();
 	$.ajax({
 		  method : 'GET',
-		  url : "../api/culturalVenues",
+		  url : "/public/get_all_movie_theaters",
 		  success : function(data){
 			  console.log("uspjesno!");
 			  podijeli(data);
@@ -47,7 +47,7 @@ $(document).on('click','#dugmeNapravi',function(e) {
 	var user = JSON.parse(sessionStorage.getItem("loggedUser"));
 	$.ajax({
 		type : 'POST',
-		url : "/thematic_props",
+		url : "/thematic_props/save_thematic_props",
 		contentType : 'application/json',
 		dataType : "json",
 		data:formToJSON(user),
@@ -68,7 +68,7 @@ $(document).on('click','#dugmeIzmjeni',function(e) {
 	var oglas = JSON.parse(sessionStorage.getItem("mijenjanje"));
 	$.ajax({
 		type : 'PUT',
-		url : "../api/props/"+oglas.id,
+		url : "/thematic_props/"+oglas.id,
 		contentType : 'application/json',
 		dataType : "json",
 		data:formToJSON2(user),
