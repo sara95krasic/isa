@@ -52,7 +52,7 @@ public class ThematicPropsController {
 	
 	@RequestMapping( value = "/{theaterId}/{tptype}",method = RequestMethod.GET)
 	public ResponseEntity<List<ThematicPropsDTO>> getAllThematicPropsByCV(@PathVariable Long theaterId, @PathVariable ThematicPropsType tptype, HttpServletRequest request) {
-		User user = (User) request.getSession().getAttribute("loggedUser");
+		User user = SessionService.getCurrentlyLoggedUser();
 		List<ThematicPropsDTO> thematicPropsListDTO = new ArrayList<ThematicPropsDTO>();
 		if(tptype.name().equals("USED")) {
 			System.out.println("usao u polovne");
@@ -88,7 +88,7 @@ public class ThematicPropsController {
 		return new ResponseEntity<ThematicPropsDTO>(thematicPropsDTO,HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/{id}",method = RequestMethod.PUT)
+	@RequestMapping(value="/modify/{id}",method = RequestMethod.PUT)
 	public ResponseEntity<ThematicPropsDTO> modifyThematicProps(@RequestBody ThematicProps thematicProps, @PathVariable Long id){
 		ThematicProps modified = thematicPropsService.modifyThematicProps(thematicProps, id);
 		return new ResponseEntity<ThematicPropsDTO>(new ThematicPropsDTO(modified),HttpStatus.OK);
