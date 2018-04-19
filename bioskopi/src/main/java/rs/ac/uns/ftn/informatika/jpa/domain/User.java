@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.jpa.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,9 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
-
-import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 
 @Entity
 public class User {
@@ -90,9 +88,29 @@ public class User {
 		this.phone = phone;
 		this.verification= false;
 		this.role = role;
+		friends = new ArrayList<User>();
+		friendsOf = new ArrayList<User>();
+		receivedRequests = new ArrayList<User>();
 	}
     
-    public String getName() {
+    public User(User user) {
+    	this.id = user.id;
+		this.email = user.email;
+		this.passwordHash = user.passwordHash;
+		this.name = user.name;
+		this.surname = user.surname;
+		this.city = user.city;
+		this.phone = user.phone;
+		this.verification= false;
+		this.role = user.role;
+		friends = new ArrayList<User>(user.getFriends());
+		friendsOf = new ArrayList<User>(user.getFriendsOf());
+		receivedRequests = new ArrayList<User>(user.getReceivedRequests());
+	}
+
+
+
+	public String getName() {
 		return name;
 	}
 
