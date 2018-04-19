@@ -1,3 +1,35 @@
+
+function onload() {
+	//var user = JSON.parse(sessionStorage.getItem("loggedUser"));
+	$.ajax({
+		url: "public/get_current_user",
+		type:"GET",
+		dataType:"json",
+		complete: function(data) {
+			
+			//pripremi trenutno ulogovanog usera, da bude dostupan svima na stranici
+			var user;
+			if (data.responseText == "")
+				//nista, nije ulogovan
+				user = null;
+			else
+				user = JSON.parse(data.responseText);
+			
+			window.currentUser = user;	//cuvamo ga globalno, da ove funckcije sto treba da prikazu sve bioskope
+										//mogu malo da koriguju prikaz za ulogovane korisnike
+			//to je to
+			
+
+			if(user.role != "ADMIN_FAN") {
+				document.getElementById("onHold").hidden = "";
+			} else {
+				document.getElementById("onHold").hidden = "hidden";
+			}
+		}
+	});
+}
+
+
 function propsOnHold() {
 	$(".welcome").empty();
 	//console.log("kliknuo");
@@ -53,6 +85,97 @@ function odobriOglas(data) {
 			}
 		});
 		
+	});
+}
+
+//thematicProps
+function props() {
+	$(".welcome").empty();
+	$(".welcome").append(`<div><select id="culVenues" class="form-control"></select></div><br>`);
+	$(".welcome").append(`<div id="type"><label><input type="radio" id="USED" name="type" value="USED">Used</label>
+    							<label><input type="radio" id="NEW" name="type" value="NEW">New</label></div><br>
+    					  <div><button onclick="props1()" type="button" class="btn btn-success izbrisi">Submit</button></div>`);
+	$("#USED").attr('checked', true);
+	readVenues();
+}
+
+//thematicProps
+function props1(){
+	var culValID = $('#culVenues option:selected').attr('name');
+	var tptype = $('input[name=type]:checked').val();
+	props();
+	$("#"+tptype).attr('checked', true);
+	$('#culVenues select').val(culValID);
+	$.ajax({
+		  method : 'GET',
+		  url : "/thematic_props/get_all_thematic_props/"+culValID+"/"+tptype,
+		  success : function(data){
+			  //console.log("uspjesno!");
+			  podeliOglase(data);
+		  },
+		  error: function(){
+			  console.log("neuspesno");
+		  }
+		  
+	});
+}
+
+
+//my thematic props
+function myProps() {
+	$(".welcome").empty();
+	$(".welcome").append(`<div style="text-align:center"><h2>My thematic props</h2></div><br>
+						  <div><select id="culVenues" class="form-control"></select></div><br>`);
+	$(".welcome").append(`<div style="text-align:center" id="type"><label><input type="radio" id="USED" name="type" value="USED">Used</label>
+    							<label><input type="radio" id="NEW" name="type" value="NEW">New</label></div><br>
+    					  <div style="text-align:center"><button onclick="props2()" type="button" class="btn btn-success izbrisi">Submit</button></div>`);
+	$("#USED").attr('checked', true);
+	readVenues();
+}
+
+//ajax poziv za pozorista/bioskope
+function readVenues() {
+	$.ajax({
+		  method : 'GET',
+		  url : "/public/get_all_theaters",
+		  success : function(data){
+			  //console.log("uspjesno!");
+			  podijeliObjekte(data);
+		  },
+		  error: function(){
+			  console.log("neuspesno");
+		  }
+		  
+	});
+}
+//punjenje comboboxa
+function podijeliObjekte(data) {
+	//console.log("usao u podjelu");
+	var list = data == null ? [] : (data instanceof Array ? data : [ data ]);
+	$.each(list, function(index, culVe) {
+	$("#culVenues").append(`<option name=`+culVe.id+` value=`+culVe.id+`>`+culVe.name+`</option>`);
+	});
+}
+
+
+//myProps
+function props2(){
+	var culValID = $('#culVenues option:selected').attr('name');
+	var tptype = $('input[name=type]:checked').val();
+	myProps();
+	$("#"+tptype).attr('checked', true);
+	$('#culVenues select').val(culValID);
+	$.ajax({
+		  method : 'GET',
+		  url : "/thematic_props/my/"+culValID+"/"+tptype,
+		  success : function(data){
+			// console.log("uspjesno!");
+			  podeliOglase(data);
+		  },
+		  error: function(){
+			  console.log("neuspesno");
+		  }
+		  
 	});
 }
 

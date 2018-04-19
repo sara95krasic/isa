@@ -61,7 +61,12 @@ public class TheaterServiceImpl implements TheaterService {
 	public Page<TheaterDTO> getAllPlayTheaters(Pageable pageable) {
 		return this.theaterRepository.getAllPlayThearers(pageable);
 	}
-
+	
+	@Override
+	public List<TheaterDTO> getAllTheaters() {
+		return this.theaterRepository.getAllThearers();
+	}
+	
 	@Override
 	public TheaterDTO getTheaterById(Long id) {
 		return this.theaterRepository.getTheaterById(id);

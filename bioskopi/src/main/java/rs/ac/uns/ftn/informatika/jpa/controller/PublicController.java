@@ -110,8 +110,12 @@ public class PublicController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User u = userService.getUserByEmail(email).orElse(null);
-		if (u != null)
+		if (u != null) {
 			u.setPasswordHash(""); //...
+			u.setFriends(null);
+			u.setFriendsOf(null);
+			u.setReceivedRequests(null);
+		}
 		return u;
 	}
 	
@@ -127,6 +131,18 @@ public class PublicController {
 	public Page<TheaterDTO> getMovieTheaterByName(@PathVariable String name) {
 	return this.theaterService.getMovieTheaters(name, new PageRequest(0, 10));
 	}
+	
+	/**
+	 * Vraca sve bioskope i pozorista, zajedno
+	 * @return
+	 */
+	@RequestMapping(value = "/get_all_theaters",
+		method = RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<TheaterDTO> getAllTheaters() {
+	return this.theaterService.getAllTheaters();
+	}	
 	
 	/**
 	 * Vraca sve bioskope

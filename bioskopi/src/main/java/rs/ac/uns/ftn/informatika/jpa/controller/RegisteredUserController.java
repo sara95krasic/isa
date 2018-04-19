@@ -1,12 +1,15 @@
 package rs.ac.uns.ftn.informatika.jpa.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.CurrentUser;
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
+import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.SeatService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
@@ -164,4 +170,22 @@ public class RegisteredUserController {
 		//PRI PRVOM LOGINU, ovo ce namestiti i vrednost polja has_logged_in_before
 		return this.userService.changePassword(old_pass, new_pass);
 	}
+
+	@RequestMapping(value="/get_all_my_friends",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<UserDTO>> getAllMyFriends(){
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null || !(auth.getPrincipal() instanceof CurrentUser)) return new ResponseEntity<List<UserDTO>>(new ArrayList<UserDTO>(),HttpStatus.FORBIDDEN);
+		Long curr_user_id = ((CurrentUser)auth.getPrincipal()).getUser().getId();
+		List<User> friends = userService.getFriends(curr_user_id);
+		List<UserDTO> friendsDTO = new ArrayList<UserDTO>();
+		for(User friend : friends) {
+			friend.setPasswordHash(null);
+			friendsDTO.add(new UserDTO(friend));
+		}
+		return new ResponseEntity<List<UserDTO>>(friendsDTO,HttpStatus.OK);
+	}
+	
 }

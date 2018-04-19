@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.jpa.repository;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,6 +54,11 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 	Page<TheaterDTO> getAllPlayThearers(Pageable pageable);
 
 	@Query("select t.id as id, t.theaterType as theaterType, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
+			"from Theater t left outer join t.reviews r " +
+			"group by t")
+	List<TheaterDTO> getAllThearers();
+	
+	@Query("select t.id as id, t.theaterType as theaterType, t.name as name, t.address as address, t.description as description, coalesce(avg(r.rating),0) as averageRating " +
 			"from Theater t left outer join t.reviews r " + 
 			"where t.id = ?1 " +
 			"group by t")
@@ -85,6 +91,7 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 
 	@Query("select h.label from Hall h right outer join h.theater t where t.id = ?1")
 	Page<String> getAllHallLabelsForTheater(Long id, Pageable pageable);
+
 
 
 }

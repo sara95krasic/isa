@@ -118,6 +118,32 @@
 	</script>
 	
 	<script>
+		function setUpPrijateljiSelect(r,s) {
+			//prima row i seat number
+			
+			$('#prijatelji-selecti-div').append("<div id='prijatelj-"+r+"-"+s+"'><div style='display:inline-block; width:150px;'>Red "+r+", Sediste "+s+"</div><select style='width:150px; margin-bottom:4px;' ></select></div>")
+			
+			$.ajax({
+	   			url: "registered/get_all_my_friends",
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var friends = JSON.parse(data.responseText);
+	   				
+	   				if (friends.length == 0) {
+		   				//
+	   				}
+		   				
+	   				friends.forEach(function (f, i) {
+	   					$('#prijatelj-'+r+'-'+s+'>select').append('<option val='+f.id+'>'+f.name+' '+f.surname+'</option>');
+	   				});
+	   			}
+			});
+			
+		}
+	</script>
+	
+	<script>
 		//prima red i broj sedista kao parametre
 		function toggleSediste(r, s) {
 			
@@ -140,7 +166,7 @@
 				window.selektovanoSedista++;
 				if (window.selektovanoSedista > 1) {
 					$('#prijatelji-labela').css('display', 'block');
-					$('#prijatelji-selecti-div').append("<div id='prijatelj-"+r+"-"+s+"'><div style='display:inline-block; width:150px;'>Red "+r+", Sediste "+s+"</div><select style='width:150px; margin-bottom:4px;' ></select></div>")
+					setUpPrijateljiSelect(r, s);
 				}
 			}
 			
