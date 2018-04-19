@@ -18,7 +18,7 @@ function onload() {
 			window.currentUser = user;	//cuvamo ga globalno, da ove funckcije sto treba da prikazu sve bioskope
 										//mogu malo da koriguju prikaz za ulogovane korisnike
 			//to je to
-			
+			sessionStorage.setItem('loggedUser', data);
 
 			if(user.role == "ADMIN_FAN") {
 				document.getElementById("onHold").hidden = "";
