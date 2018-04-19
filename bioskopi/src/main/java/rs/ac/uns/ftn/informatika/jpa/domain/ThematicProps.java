@@ -25,7 +25,7 @@ public class ThematicProps implements Serializable{
 	@Column(nullable = true)
 	private Long createdBy;
 	
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private Long theaterId;
 	
 	@Column(nullable = false)
