@@ -28,4 +28,14 @@ public interface UserService {
 	User modifyUser(UserEditForm user, Long id);
 	
 	List<User> findUsers(String name,String surname);
+	
+	List<User> getFriendRequests(Long id);
+	
+	User sendFriendRequest(Long sender, Long receiver);
+	
+	User acceptFriendRequest(Long aceptedId,Long userId);
+	
+	User refuseFriendReq(Long refusedId, Long userId);
+	
+	List<User> getFriends(Long id);
 }

@@ -10,6 +10,96 @@
     <script src="js/helpers.js"></script>
 	
 	<script>
+		function loadFrindsReq(){
+			var logedUserId = window.currentUser.id;
+			$.ajax({
+				 url: "public/getRequests/" + window.currentUser.id,
+				 method: "GET",
+				 success: function(data){
+					 $("#zahtevi").empty();
+					// var users = JSON.parse(data.responseText);
+					var users = data;
+					 users.forEach(function (u, i) {
+						 if(u.id != logedUserId){
+							 $('#zahtevi').append( '<div style="margin-top:10px;">'+
+								'<tr >'+
+				                     '<td >'+
+			                      		'<span class="font-weight-bold">' + u.name  +" "+ u.surname+ " "+ u.email +'</span>'+
+			                      		'<span style="float:right;"><button class="zahBut"  onclick="prihvati(' + u.id +')"><img src="images/acept.png" title="prihvati prijateljstvo"></img></button></span>'+
+		                                '<span style="float:right;"><button class="zahBut" onclick="odbij(' + u.id +')"><img src="images/decine.png" title="odbij prijateljstvo"></img></button></span>'+
+			                         '</td>'+
+			                   	'</tr>'+
+			                   	'</div>'
+		                	);
+						}
+			 		});
+			 	},
+				 error: function(){
+					 alert("Greska pri ucitavanju zahteva za prijateljstvo!");
+				 }
+			});
+		}
+		
+		function prihvati(id){
+			$.ajax({
+				 url: "public/acceptFriendReq/"+id,
+				 method: "GET",
+				 success: function(){					 
+					 	 loadFrindsReq();
+						 loadMyFriends();
+						 alert("Prihvatili ste zahtev!")
+				 },
+				 error: function(){
+					 alert("Greska pri prihvatanju prijateljstva!");
+				 }
+			});
+		}
+		
+		function odbij(id){
+			$.ajax({
+				 url: "public/refuseRequest/"+id,
+				 method: "GET",
+				 success: function(){
+					 loadFrindsReq();
+					 alert('Odbili ste zahtev!');
+				 },
+				 error: function(){
+					 alert("Greska");
+				 }
+			});
+		}
+		
+		function loadMyFriends(){
+			var logedUserId = window.currentUser.id;
+			$.ajax({
+				 url: "public/getFriends/" + window.currentUser.id,
+				 method: "GET",
+				 success: function(data){
+					 $('#prijatelji').empty();
+					 var users = data;
+					 users.forEach(function (u, i) {
+						 if(u.id != logedUserId){
+							 $('#prijatelji').append( '<div style="margin-top:10px;">'+
+								'<tr >'+
+				                     '<td >'+
+			                      		'<span class="font-weight-bold">' + u.name  +" "+ u.surname+ " "+ u.email +'</span>'+
+			                      		 '<span class="float-right"><button class="zahBut" onclick="removeFr(' + u.id + ')"><img src="images/delete.png" title="remove from friends"></img></button></span>'+
+			                         '</td>'+
+			                   	'</tr>'+
+			                   	'</div>'
+								);
+							}
+				 		});
+				 },
+				 error: function(){
+					 alert("Greska prilikom ucitavanja prijatelja!");
+				 }
+			});
+		}
+	
+	</script>
+	
+	<script>
 		$(document).ready(function(){
 			
 			$.ajax({
@@ -29,6 +119,9 @@
 					window.currentUser = user;	//cuvamo ga globalno, da ove funckcije sto treba da prikazu sve bioskope
 												//mogu malo da koriguju prikaz za ulogovane korisnike
 					//to je to
+					loadFrindsReq();
+					loadMyFriends();
+					
 				}	
 			});
 			
@@ -53,13 +146,14 @@
 					 var users = data;
 					 users.forEach(function (u, i) {
 						 if(u.id != logedUserId){
-							 $('#korisnici').append(
+							 $('#korisnici').append('<div style="margin-top:10px;">'+
 								'<tr>'+
-				                     '<td>'+
+				                     '<td style="margin-top:20px;">'+
 			                      		'<span class="font-weight-bold">' + u.name  +" "+ u.surname+ " "+ u.email +'</span>'+
-			                        	'<span class="float-right" style="float:right;"><a href="#"><img src="images/add.png" onclick="sendFriendRequest('+u.id+')" title="send friend request"></img></a></span>'+
+			                        	'<span class="float-right" style="float:right;"><a href="#"><img src="images/add.png" onclick="sendFriendRequest('+u.id+')" title="posalji zahtev za prijateljstvo"></img></a></span>'+
 			                         '</td>'+
-			                   	'</tr>'
+			                   	'</tr>'+
+			                   	'</div>'
 		                	);
 						}
 			 		});
@@ -71,6 +165,21 @@
 			 	}
 			});
 	   		
+		}
+		
+		function sendFriendRequest(receiverid){
+		
+			$.ajax({
+				 url: "public/sendReq/"+receiverid,
+				 method: "GET",
+				 success: function(){
+					 alert("Uspesno poslat zahtev!");
+									 
+				 },
+				 error: function(){
+					 alert("Greska pri slanju zahteva!");
+				 }
+			});
 		}
 		
 	</script>
@@ -162,10 +271,16 @@
 			background:#E5FAE1;
 		}
 		
+		.zahBut {
+			background:white;
+			border:0px;
+			padding: 0px 4px;
+		}
+		
 	</style>
 					
 </head>
-<body style='background:#e1f7d5;'>
+<body  style='background:#e1f7d5;'>
 	<div class='top-header'>
 		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
 	</div>
@@ -175,12 +290,32 @@
 			<div class='header'>
 				<div>Profil korisnika - moji prijatelji</div>
 			</div>
+			
+			
+			
 			<div style='background: white; padding: 10px 15px;'>
-				<div id='korisnik'>
-<!-- 					<label>Sara </label><br>
-					<label>Sara </label><br>
-					<label>Sara </label><br>
-					<label>Sara </label><br>	 -->
+				
+				<div>
+					<label class='pronadjiText' >Pristigli zahtevi:</label><br>
+					<table id='zahtevi' style='margin-top:0px;'>
+					 	<!--<td>
+	                	  	<span class="font-weight-bold">+data[i].name+  +data[i].surname+ | +data[i].email+ | +data[i].city+ | +data[i].phone+</span>
+	                    	 <span class="float-right"><button class="zahBut"><img src="images/acept.png" title="prihvati prijateljstvo"></img></button></span>
+                                   <span class="float-right"><button class="zahBut"><img src="images/decine.png" title="odbij prijateljstvo"></img></button></span>
+	               		</td> -->
+					</table>
+				</div>
+			
+				<div id='korisnik' style='margin-top:10px;' >
+					<label class='pronadjiText' >Lista prijatelja:</label><br>
+					<table id='prijatelji'>
+						<!-- <tr>
+                           <td>
+                              <span class="font-weight-bold">`+data[i].name+` +` | `+data[i].phone+`</span>
+                              <span class="float-right"><a href="#"><img onclick="removeFriend(`+data[i].id+`)" src="images/delete.png" title="remove from friends"></img></a></span>
+                           </td>
+                       </tr>-->
+					</table>
 				</div>
 				
 				<div style='padding:5px;text-align:left;'>
@@ -188,7 +323,7 @@
 					<input id='korisnici-search-box-ime' class="trazi" type='text' placeholder="Ime trazenog korisnika..." oninput="traziPrijateljaIme()"><br>
 					<input style='margin-top:10px;' id='korisnici-search-box-surname' class="trazi" type='text' placeholder="Prezime trazenog korisnika..." oninput="traziPrijateljaIme()"><br>
 					<div>
-						<table id='korisnici'>
+						<table id='korisnici' style='margin-top:10px;'>
                         	<!--<tr>
 	                        	 <td>
 	                            	<span class="font-weight-bold">+data[i].name+  +data[i].surname+ | +data[i].email+ | +data[i].city+ | +data[i].phone+</span>

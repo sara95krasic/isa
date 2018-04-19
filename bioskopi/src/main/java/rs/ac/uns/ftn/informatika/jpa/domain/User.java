@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.jpa.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 
 import rs.ac.uns.ftn.informatika.jpa.domain.Role;
@@ -47,12 +51,29 @@ public class User {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    
+    @ManyToMany
+    @JoinTable(name="friends", joinColumns=@JoinColumn(name="personId"), inverseJoinColumns=@JoinColumn(name="friendId"))
+    private List<User> friends;
+    
+    
+    @ManyToMany(targetEntity = User.class)
+    @JoinTable(name="requests", joinColumns=@JoinColumn(name="receiver"))
+    public List<User> receivedRequests;
+    
+    @ManyToMany
+    @JoinTable(name="friends", joinColumns=@JoinColumn(name="friendId"), inverseJoinColumns=@JoinColumn(name="personId"))
+    private List<User> friendsOf; 
+    
 
-    public User() {
+
+	public User() {
 		
 	}
     
-    public User(String email, String passwordHash, String name, String surname, String city, String phone, Role role) {
+
+
+	public User(String email, String passwordHash, String name, String surname, String city, String phone, Role role) {
 		super();
 		this.email = email;
 		this.passwordHash = passwordHash;
@@ -145,6 +166,32 @@ public class User {
                 ", role=" + role +
                 '}';
     }
-	
+    
+    public List<User> getFriends() {
+		return friends;
+	}
 
+
+	public void setFriends(List<User> friends) {
+		this.friends = friends;
+	}
+    
+	
+    public List<User> getReceivedRequests() {
+  		return receivedRequests;
+  	}
+
+  	public void setReceivedRequests(List<User> receivedRequests) {
+  		this.receivedRequests = receivedRequests;
+  	}
+
+    public List<User> getFriendsOf() {
+ 		return friendsOf;
+ 	}
+
+
+
+ 	public void setFriendsOf(List<User> friendsOf) {
+ 		this.friendsOf = friendsOf;
+ 	}
 }

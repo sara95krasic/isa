@@ -5,6 +5,8 @@ package rs.ac.uns.ftn.informatika.jpa.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -176,7 +178,7 @@ public class PublicController {
 	return this.theaterService.getTheaterById(id);
 	}
 	
-	
+	//trazi po imenu ili prezimenu korisnike
 	@RequestMapping(value="/search_user_by_name_or_surname",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -196,5 +198,50 @@ public class PublicController {
 		return new ResponseEntity<List<UserDTO>>(searcheddto,HttpStatus.NOT_FOUND);
 	}
 	
+	
+	@RequestMapping(value="/sendReq/{receiverId}",method = RequestMethod.GET)
+	public ResponseEntity<String> sendFriendRequest(@PathVariable Long receiverId,HttpServletRequest request){
+		User sender = getCurrentUser(); 	
+		userService.sendFriendRequest(sender.getId(), receiverId);
+		return new ResponseEntity<String>("zahtev uspesno poslat",HttpStatus.ACCEPTED);
+		
+	}
+	
+	@RequestMapping(value="/getRequests/{id}",method=RequestMethod.GET)
+	public ResponseEntity<List<UserDTO>> getRequests(@PathVariable Long id){
+		System.out.println("POZVAN SAAAM ZAHTEEVII LOAD");
+		List<User> req = userService.getFriendRequests(id);
+		List<UserDTO> reqDTO = new ArrayList<UserDTO>();
+		for(User request : req) {
+			reqDTO.add(new UserDTO(request));
+		}
+		return new ResponseEntity<List<UserDTO>>(reqDTO,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/acceptFriendReq/{acceptedId}",method = RequestMethod.GET)
+	public ResponseEntity<String> approveFriendRequest(@PathVariable Long acceptedId, HttpServletRequest request){
+		User user = getCurrentUser(); 	
+		userService.acceptFriendRequest(acceptedId, user.getId());
+		return new ResponseEntity<String>("request approved",HttpStatus.ACCEPTED);
+	}
+	
+	@RequestMapping(value="/refuseRequest/{refusedId}", method=RequestMethod.GET)
+	public ResponseEntity<UserDTO> declineRequest(@PathVariable Long refusedId,HttpServletRequest request){
+		User user = getCurrentUser(); 	
+		User refused = userService.refuseFriendReq(refusedId, user.getId());
+		UserDTO refusedDTO = new UserDTO(refused);
+		return new ResponseEntity<UserDTO>(refusedDTO,HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value="/getFriends/{id}" , method = RequestMethod.GET)
+	public ResponseEntity<List<UserDTO>> getFriends(@PathVariable Long id){
+		List<User> friends = userService.getFriends(id);
+		List<UserDTO> friendsDTO = new ArrayList<UserDTO>();
+		for(User friend : friends) {
+			friendsDTO.add(new UserDTO(friend));
+		}
+		return new ResponseEntity<List<UserDTO>>(friendsDTO,HttpStatus.OK);
+	}
 	
 }
