@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -146,7 +147,93 @@ public class UserServiceImpl implements UserService {
 	}
 
 	
-		
+	@Override
+	public User sendFriendRequest(Long sender, Long receiver) {
+		User user = userRepository.findOne(receiver);
+		User senderuser = userRepository.findOne(sender);
+		Hibernate.initialize(user.getReceivedRequests());
+		if(user!=null && sender!=receiver) {
+			for(User req : user.getReceivedRequests()) {
+				if(req.getId() == sender) {
+					return null;
+				}
+			}
+			for(User req : user.getFriends()) {
+				if(req.getId() == sender) {
+					return null;
+				}
+			}
+			user.getReceivedRequests().add(senderuser);
+			userRepository.save(user);
+			return user;
+		}
+		return null;
+	}	
 	
+	
+	@Override
+	public List<User> getFriendRequests(Long id) {
+		User user = userRepository.findOne(id);
+		Hibernate.initialize(user.getReceivedRequests());
+		if(user!=null) {
+			List<User> requests = user.getReceivedRequests();
+			return requests;
+		}
+		return null;
+	}
+
+	@Override
+	public User acceptFriendRequest(Long aceptedId, Long userId) {
+		User receiveUser = userRepository.findOne(userId);
+		User sendUser = userRepository.findOne(aceptedId);
+		Hibernate.initialize(receiveUser.getReceivedRequests());
+		Hibernate.initialize(sendUser.getReceivedRequests());
+		Hibernate.initialize(receiveUser.getFriends());
+		Hibernate.initialize(receiveUser.getFriendsOf());
+		Hibernate.initialize(sendUser.getFriends());
+		Hibernate.initialize(sendUser.getFriendsOf());
+		boolean flag = false;
+		for(User user:receiveUser.getReceivedRequests()) {
+			if(user.getId() == aceptedId) {
+				flag =true;
+			}
+		}
+		if(receiveUser != null && flag == true) {
+			receiveUser.getReceivedRequests().remove(sendUser);
+			sendUser.getReceivedRequests().remove(receiveUser);
+			receiveUser.getFriends().add(sendUser);
+			userRepository.save(receiveUser);
+			return receiveUser;
+		}
+		return null;
+
+	}
+
+	@Override
+	public User refuseFriendReq(Long refusedId, Long userId) {
+		User receiverUser = userRepository.findOne(userId);
+		User senderUser = userRepository.findOne(refusedId);
+		Hibernate.initialize(receiverUser.getReceivedRequests());
+		receiverUser.getReceivedRequests().remove(senderUser);
+		userRepository.save(receiverUser);
+		return senderUser;
+		
+	}
+
+	@Override
+	public List<User> getFriends(Long id) {
+		User user = userRepository.findOne(id);
+		Hibernate.initialize(user.getFriends());
+		Hibernate.initialize(user.getFriendsOf());
+		if(user != null) {
+			List<User> addOne = new ArrayList<User>();
+			List<User> friends = user.getFriends();
+			List<User> friendsof = user.getFriendsOf();
+			addOne.addAll(friends);
+			addOne.addAll(friendsof);
+			return addOne;
+		}
+		return null;
+	}
 	
 }
