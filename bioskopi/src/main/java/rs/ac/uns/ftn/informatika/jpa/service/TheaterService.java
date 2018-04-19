@@ -50,5 +50,7 @@ public interface TheaterService {
 
 	boolean addNewHallForTheater(Long theater_id, String hall_label);
 
+	List<TheaterDTO> getAllTheaters();
+
 
 }

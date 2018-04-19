@@ -133,6 +133,18 @@ public class PublicController {
 	}
 	
 	/**
+	 * Vraca sve bioskope i pozorista, zajedno
+	 * @return
+	 */
+	@RequestMapping(value = "/get_all_theaters",
+		method = RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<TheaterDTO> getAllTheaters() {
+	return this.theaterService.getAllTheaters();
+	}	
+	
+	/**
 	 * Vraca sve bioskope
 	 * @return
 	 */
