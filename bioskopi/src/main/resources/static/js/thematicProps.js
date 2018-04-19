@@ -19,18 +19,18 @@ function citaj() {
 		$("#naslov").append(`Edit thematic prop`);
 		$("#naziv").val(oglas.name);
 		$("#opis").val(oglas.description);
-		$("#slikaRekvizit").val(oglas.picture);
+//		$("#slikaRekvizit").val(oglas.picture);
 		$("#datum").val(oglas.date);
 		$("#tipRekvizit").val(oglas.tptype);
 		$("#culturalVenueSelect select").val(oglas.culturalVenue);
-		document.getElementById("dugmeNapravi").hidden = "hidden";
+		document.getElementById("dugmeNapravi").style.display = "none";
 		document.getElementById("dugmeIzmjeni").hidden = "";
 		
 	}else {
 		$("#naslov").empty();
 		$("#naslov").append(`Create thematic prop`);
 		document.getElementById("dugmeNapravi").hidden = "";
-		document.getElementById("dugmeIzmjeni").hidden = "hidden";
+		document.getElementById("dugmeIzmjeni").style.display = "none";
 	}
 	
 }
