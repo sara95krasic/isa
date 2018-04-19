@@ -19,7 +19,9 @@ import rs.ac.uns.ftn.informatika.jpa.domain.ThematicProps;
 import rs.ac.uns.ftn.informatika.jpa.domain.ThematicPropsType;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ThematicPropsDTO;
+import rs.ac.uns.ftn.informatika.jpa.service.SessionService;
 import rs.ac.uns.ftn.informatika.jpa.service.ThematicPropsService;
+import rs.ac.uns.ftn.informatika.jpa.service.UserService;
 
 @RestController
 @RequestMapping("/thematic_props")
@@ -70,7 +72,7 @@ public class ThematicPropsController {
 	
 	@RequestMapping(value="/my/{theaterId}/{tptype}", method = RequestMethod.GET)
 	public ResponseEntity<List<ThematicPropsDTO>> getMyThematicProps(@PathVariable Long theaterId, @PathVariable ThematicPropsType tptype, HttpServletRequest request) {
-		User user = (User) request.getSession().getAttribute("loggedUser");
+		User user = SessionService.getCurrentlyLoggedUser();
 		List<ThematicPropsDTO> thematicPropsListDTO = new ArrayList<ThematicPropsDTO>();
 		List<ThematicProps> thematicPropsList = thematicPropsService.findByTheaterIdAndTptypeAndCreatedBy(theaterId, tptype, user.getId());
 		for(ThematicProps thematicProps : thematicPropsList) {

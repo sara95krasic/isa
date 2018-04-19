@@ -161,7 +161,7 @@ function podijeliObjekte(data) {
 //myProps
 function props2(){
 	var culValID = $('#culVenues option:selected').attr('name');
-	var tptype = $('input[name=type]:checked').val();
+	var tptype = $('input[name="type"]:checked').val();
 	myProps();
 	$("#"+tptype).attr('checked', true);
 	$('#culVenues select').val(culValID);
