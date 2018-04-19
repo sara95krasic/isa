@@ -201,7 +201,7 @@ public class PublicController {
 	
 	@RequestMapping(value="/sendReq/{receiverId}",method = RequestMethod.GET)
 	public ResponseEntity<String> sendFriendRequest(@PathVariable Long receiverId,HttpServletRequest request){
-		User sender = getCurrentUser(); 	
+		User sender = getCurrentUser(); 
 		userService.sendFriendRequest(sender.getId(), receiverId);
 		return new ResponseEntity<String>("zahtev uspesno poslat",HttpStatus.ACCEPTED);
 		
@@ -242,6 +242,14 @@ public class PublicController {
 			friendsDTO.add(new UserDTO(friend));
 		}
 		return new ResponseEntity<List<UserDTO>>(friendsDTO,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/removeFr/{friendId}",method=RequestMethod.GET)
+	public ResponseEntity<UserDTO> removeFriend(@PathVariable Long friendId, HttpServletRequest request){
+		User user = getCurrentUser();
+		User removed = userService.removeFr(friendId, user.getId());
+		UserDTO removedDTO = new UserDTO(removed);
+		return new ResponseEntity<UserDTO>(removedDTO,HttpStatus.OK);
 	}
 	
 }
