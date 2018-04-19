@@ -1,22 +1,21 @@
 package rs.ac.uns.ftn.informatika.jpa.domain.DTOs;
 
-import java.util.Date;
-
 import rs.ac.uns.ftn.informatika.jpa.domain.ThematicProps;
 import rs.ac.uns.ftn.informatika.jpa.domain.ThematicPropsType;
 
+
 public class ThematicPropsDTO {
 	
-
 	private Long id;
 	private ThematicPropsType tptype;
 	private String name;
 	private String description;
-	private Date date;
+	private String date;
 	private String picture;
-	private String createdBy;
-	private Boolean reserved;
-	private Long reservedById;
+	private Long createdBy;
+	private String reserved;
+	private Long theaterId;
+	private Boolean approved;
 	
 	public ThematicPropsDTO(ThematicProps thematicProps) {
 		this.id = thematicProps.getId();
@@ -27,8 +26,29 @@ public class ThematicPropsDTO {
 		this.picture = thematicProps.getPicture();	
 		this.createdBy = thematicProps.getCreatedBy();
 		this.reserved = thematicProps.getReserved();
-		this.reservedById = thematicProps.getReservedBy().getId();
+		this.theaterId = thematicProps.getTheaterId();
+		this.approved = thematicProps.getApproved();
 	}
+
+	
+	public Boolean getApproved() {
+		return approved;
+	}
+
+
+	public void setApproved(Boolean approved) {
+		this.approved = approved;
+	}
+
+
+	public Long getTheaterId() {
+		return theaterId;
+	}
+
+	public void setTheaterId(Long theaterId) {
+		this.theaterId = theaterId;
+	}
+
 
 	public Long getId() {
 		return id;
@@ -62,11 +82,11 @@ public class ThematicPropsDTO {
 		this.description = description;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -78,28 +98,21 @@ public class ThematicPropsDTO {
 		this.picture = picture;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Boolean getReserved() {
+	public String getReserved() {
 		return reserved;
 	}
 
-	public void setReserved(Boolean reserved) {
+	public void setReserved(String reserved) {
 		this.reserved = reserved;
 	}
-
-	public Long getReservedById() {
-		return reservedById;
-	}
-
-	public void setReservedById(Long reservedById) {
-		this.reservedById = reservedById;
-	}
 	
-	}
+	
+}

@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.CurrentUser;
 import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
@@ -144,6 +147,30 @@ public class UserServiceImpl implements UserService {
 					double_match.add(uu);
 		
 		return double_match;
+	}
+
+	@Override
+	public boolean changePassword(String old_pass, String new_pass) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User u = null;
+		if (auth != null && auth.getPrincipal() instanceof CurrentUser)
+			u = ((CurrentUser)auth.getPrincipal()).getUser();
+		if (u == null) return false;
+		
+		if(!new_pass.isEmpty() && !old_pass.isEmpty() &&
+				new BCryptPasswordEncoder().matches(old_pass, u.getPasswordHash())){			
+			User u_iz_baze = userRepository.findOne(u.getId());
+			u_iz_baze.setPasswordHash(new BCryptPasswordEncoder().encode(new_pass));
+			u_iz_baze.setHasLoggedInBefore(true);
+			userRepository.save(u_iz_baze);
+			
+			//usput,...
+			((CurrentUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().setPasswordHash(u_iz_baze.getPasswordHash());
+			((CurrentUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().setHasLoggedInBefore(u_iz_baze.isHasLoggedInBefore());
+			
+			return true;
+		}
+		return false;
 	}
 
 	

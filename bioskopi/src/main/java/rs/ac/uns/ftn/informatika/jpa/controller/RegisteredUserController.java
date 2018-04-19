@@ -23,6 +23,7 @@ import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
 import rs.ac.uns.ftn.informatika.jpa.service.SeatService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
+import rs.ac.uns.ftn.informatika.jpa.service.UserService;
 import rs.ac.uns.ftn.informatika.jpa.service.SegmentService;
 import rs.ac.uns.ftn.informatika.jpa.service.HallService;
 
@@ -44,6 +45,8 @@ public class RegisteredUserController {
 	private SegmentService segmentService;
 	@Autowired
 	private SeatService seatService;
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value = "get_projection_dates_for_theater/{id}",
 			method = RequestMethod.GET,
@@ -153,4 +156,12 @@ public class RegisteredUserController {
 		return this.seatService.getTakenSeats(segment_label, theater_id, hall_label, projection_date_id);
 	}
 	
+	@RequestMapping(value = "change_pass/{old_pass}/{new_pass}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean ChangePassword(@PathVariable String old_pass, @PathVariable String new_pass) {
+		//PRI PRVOM LOGINU, ovo ce namestiti i vrednost polja has_logged_in_before
+		return this.userService.changePassword(old_pass, new_pass);
+	}
 }

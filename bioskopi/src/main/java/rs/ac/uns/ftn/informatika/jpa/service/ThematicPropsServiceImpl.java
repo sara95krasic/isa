@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.ThematicProps;
+import rs.ac.uns.ftn.informatika.jpa.domain.ThematicPropsType;
 import rs.ac.uns.ftn.informatika.jpa.repository.ThematicPropsRepository;
 
 @Service
 @Transactional
 public class ThematicPropsServiceImpl implements ThematicPropsService {
 
+	
 	@Autowired
 	private ThematicPropsRepository thematicPropsRepository;
 
@@ -59,4 +61,27 @@ public class ThematicPropsServiceImpl implements ThematicPropsService {
 		return thematicPropsRepository.save(oldThematicProps);
 	}
 
+	@Override
+	public List<ThematicProps> findByTheaterId(Long theaterId) {
+		return thematicPropsRepository.findByTheaterId(theaterId);
+	}
+
+	@Override
+	public List<ThematicProps> findByTheaterIdAndTptype(Long theaterId, ThematicPropsType tptype) {
+		return thematicPropsRepository.findByTheaterIdAndTptype(theaterId, tptype);
+	}
+
+
+	@Override
+	public List<ThematicProps> findByTheaterIdAndTptypeAndCreatedByNot(Long theaterId,
+			ThematicPropsType tptype, Long createdBy) {
+		return thematicPropsRepository.findByTheaterIdAndTptypeAndCreatedByNot(theaterId, tptype, createdBy);	
+	}
+
+	@Override
+	public List<ThematicProps> findByTheaterIdAndTptypeAndCreatedBy(Long theaterId, ThematicPropsType tptype,
+			Long createdBy) {
+		return thematicPropsRepository.findByTheaterIdAndTptypeAndCreatedBy(theaterId, tptype, createdBy);
+		
+	}
 }
