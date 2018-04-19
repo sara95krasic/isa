@@ -96,6 +96,20 @@
 				 }
 			});
 		}
+		
+		function removeFr(id){
+			$.ajax({
+				 url: "public/removeFr/"+id,
+				 method: "GET",
+				 success: function(){
+					 alert("Prijatelj obrisan!");
+					 loadMyFriends();
+				 },
+				 error: function(){
+					 alert("Greska prelikom brisanja!");
+				 }
+			});
+		}
 	
 	</script>
 	
@@ -150,11 +164,12 @@
 								'<tr>'+
 				                     '<td style="margin-top:20px;">'+
 			                      		'<span class="font-weight-bold">' + u.name  +" "+ u.surname+ " "+ u.email +'</span>'+
-			                        	'<span class="float-right" style="float:right;"><a href="#"><img src="images/add.png" onclick="sendFriendRequest('+u.id+')" title="posalji zahtev za prijateljstvo"></img></a></span>'+
+			                        	'<span class="float-right" style="float:right;"><a href="#"><img src="images/add.png" onclick="sendFriendRequest('+u.id +')" title="posalji zahtev za prijateljstvo"></img></a></span>'+
 			                         '</td>'+
 			                   	'</tr>'+
 			                   	'</div>'
 		                	);
+							
 						}
 			 		});
 			 	},

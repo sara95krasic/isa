@@ -36,6 +36,10 @@ public class User {
 	private boolean verification;
 	
 	@Column(nullable = true)
+	private int brZahteva;
+
+
+	@Column(nullable = true)
 	private String city;
 	
 	@Column(nullable = true)
@@ -210,4 +214,15 @@ public class User {
  	public void setFriendsOf(List<User> friendsOf) {
  		this.friendsOf = friendsOf;
  	}
+ 	
+ 	
+ 	public int getBrZahteva() {
+		return brZahteva;
+	}
+
+
+
+	public void setBrZahteva(int brZahteva) {
+		this.brZahteva = brZahteva;
+	}
 }

@@ -39,6 +39,8 @@ public interface UserService {
 	User refuseFriendReq(Long refusedId, Long userId);
 	
 	List<User> getFriends(Long id);
+	
+	User removeFr(Long friendId, Long userId);
 //=======
 
 	boolean changePassword(String old_pass, String new_pass);
