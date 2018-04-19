@@ -263,4 +263,31 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 	
+	@Override
+	public User removeFr(Long friendId, Long userId) {
+		User userL = userRepository.findOne(userId);
+		User friend = userRepository.findOne(friendId);
+		Hibernate.initialize(userL.getFriends());
+		Hibernate.initialize(userL.getFriendsOf());
+		List<User> all = new ArrayList<User>();
+		List<User> friends = userL.getFriends();
+		List<User> friendof = userL.getFriendsOf();
+		all.addAll(friends);
+		all.addAll(friendof);
+		for(int i=0;i<friends.size();i++) {
+			if(friends.get(i).getId() == friendId) {
+				friends.remove(i);
+			}
+		}
+		for(int i=0;i<friendof.size();i++) {
+			if(friendof.get(i).getId() == friendId) {
+				friendof.remove(i);
+			}
+		}
+		userRepository.save(userL);
+		userRepository.save(friend);
+		return friend;
+	}
+
+	
 }

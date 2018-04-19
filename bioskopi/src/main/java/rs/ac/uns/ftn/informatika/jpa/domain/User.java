@@ -35,6 +35,9 @@ public class User {
 	@Column(nullable = false)
 	private boolean verification;
 	
+	
+
+
 	@Column(nullable = true)
 	private String city;
 	
@@ -210,4 +213,7 @@ public class User {
  	public void setFriendsOf(List<User> friendsOf) {
  		this.friendsOf = friendsOf;
  	}
+ 	
+ 	
+ 	
 }

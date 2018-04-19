@@ -25,22 +25,83 @@
 				
 				ocena = "";
 				for (i = 0; i < b.averageRating; i++) { 
-				    ocena += "$";
+				    ocena += "&#x2605;";
 				}
 				
 				$('#bioskopi').append(
 					'<li>' +
 					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<span>' + b.name + '</span><br>' + 
-					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
+					'<span><span style="color:gray; float: left; margin-right:5px;">' + b.address + '</span><span id="distance-span-'+b.id+'" style="color:white;background:#c18093; padding:2px 5px;">-<span>' + 
 					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
 					'</a>' +
 					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')
-					);
+				);
+				
+				setDistance(b.id, b.address);
 			});
 		}
 	</script>
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script>
+	
+		function deg2rad (angle) {
+		  return angle * 0.017453292519943295 // (angle / 180) * Math.PI;
+		}
+		
+		function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+	        const R = 6371; // Radius of the earth in km
+	        const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+	        const dLon = this.deg2rad(lon2 - lon1);
+	        const a =
+	            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+	            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+	            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	        const d = R * c; // Distance in km
+	        return d;
+	    }
+	
+		function setDistance(id, address) {
+			
+			var ret;
+			
+			var geocoder = new google.maps.Geocoder();
+			//var address = "Bulevar Mihajla Pupina 3, Novi Sad 21000"; //uncomment this shit
+
+			geocoder.geocode(
+				{ 'address': address},
+				function(results, status) {
+
+					if (status == google.maps.GeocoderStatus.OK) {
+						var theater_latitude = results[0].geometry.location.lat();
+						var theater_longitude = results[0].geometry.location.lng();
+						//alert(latitude);
+						
+						//***
+						
+				        navigator.geolocation.getCurrentPosition((position) => {
+				            this.userPositionLatitude = position.coords.latitude;
+				            this.userPositionLongitude = position.coords.longitude;
+				
+			                if (theater_latitude !== null && theater_longitude != null) {
+			                    var d = this.getDistanceFromLatLonInKm(theater_latitude, theater_longitude,
+			                        this.userPositionLatitude, this.userPositionLongitude);
+			                    d = d.toFixed(2);
+			                    $('#distance-span-'+id).text(String(d) + " km");
+			                }
+				        });
+						
+						//***
+					} 
+				}
+			);
+			
+		}
+	</script>
+	
 	<script>
 		function popuniPozorista(pozorista) {
 	
@@ -56,19 +117,21 @@
 				
 				ocena = "";
 				for (i = 0; i < b.averageRating; i++) { 
-				    ocena += "$";
+				    ocena += "&#x2605;";
 				}
 				
 				$('#pozorista').append(
 					'<li>' +
 					'<span>' + b.name + '</span><br>' + 
-					'<span><span style="color:gray; float: left;">' + b.address + '</span>' + 
+					'<span><span style="color:gray; float: left; margin-right:5px;">' + b.address + '</span><span id="distance-span-'+b.id+'" style="color:white;background:#c18093; padding:2px 5px;">-<span>' + 
 					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
 					'</a>' +
 					((window.currentUser != null && window.currentUser.role=='ADMIN_THEATER') ? '<a style="float:right;" href="theater-management.html?id=' + b.id + '">izmeni</a></li>' : '')
-					);
+				);
+
+				setDistance(b.id, b.address);
 			});
 		}
 	</script>
@@ -267,7 +330,7 @@
 		}
 		
 		.bioskopi-widget > ul > li {
-			height : 45px; /*zbog floatova*/
+			height : 50px; /*zbog floatova*/
 			padding : 5px;
 			transition: background 0.15s linear;
 			position:relative; /*zbog link-spannera*/
@@ -343,7 +406,7 @@
 	<div class='row top-header'>
 		<div class='col-sm-12'>
 			<div class='title'>Bioskopi i pozorista</div>
-			<div class='subtitle'>Dobrodosli...lorem ipsumasnf ajnsfjnasjnfjansjfnakdsn</div>
+			<div class='subtitle'>Dobrodosli!</div>
 		</div>
 	</div>
 	
