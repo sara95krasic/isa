@@ -110,14 +110,16 @@ public class PublicController {
 	public User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
-		User u = new User(userService.getUserByEmail(email).orElse(null));
-		if (u != null) {
+		User u_iz_sesije = userService.getUserByEmail(email).orElse(null);
+		if (u_iz_sesije != null) {
+			User u = new User(u_iz_sesije);
 			u.setPasswordHash(""); //...
 			u.getFriends().clear();
 			u.getFriendsOf().clear();
-			u.getReceivedRequests().clear();;
+			u.getReceivedRequests().clear();
+			return u;
 		}
-		return u;
+		return null;
 	}
 	
 	/**
