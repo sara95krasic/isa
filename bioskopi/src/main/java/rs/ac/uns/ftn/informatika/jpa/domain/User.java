@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.informatika.jpa.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -52,6 +51,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     
+//<<<<<<< HEAD
     @ManyToMany
     @JoinTable(name="friends", joinColumns=@JoinColumn(name="personId"), inverseJoinColumns=@JoinColumn(name="friendId"))
     private List<User> friends;
@@ -65,6 +65,10 @@ public class User {
     @JoinTable(name="friends", joinColumns=@JoinColumn(name="friendId"), inverseJoinColumns=@JoinColumn(name="personId"))
     private List<User> friendsOf; 
     
+//=======
+    @Column(columnDefinition="tinyint(1) default 0")
+    private boolean hasLoggedInBefore;
+//>>>>>>> refs/remotes/origin/master
 
 
 	public User() {
@@ -166,10 +170,22 @@ public class User {
                 ", role=" + role +
                 '}';
     }
+//<<<<<<< HEAD
     
     public List<User> getFriends() {
 		return friends;
 	}
+//=======
+
+	public boolean isHasLoggedInBefore() {
+		return hasLoggedInBefore;
+	}
+
+	public void setHasLoggedInBefore(boolean hasLoggedInBefore) {
+		this.hasLoggedInBefore = hasLoggedInBefore;
+	}
+	
+//>>>>>>> refs/remotes/origin/master
 
 
 	public void setFriends(List<User> friends) {

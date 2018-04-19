@@ -29,6 +29,10 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
     public Role getRole() {
         return user.getRole();
     }
+    
+    public boolean hasLoggedInBefore() {
+    	return user.isHasLoggedInBefore();
+    }
 
     @Override
     public String toString() {
@@ -36,4 +40,6 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
                 "user=" + user +
                 "} " + super.toString();
     }
+
+
 }

@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,7 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        
+    	http.addFilterAfter(new FirstLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+    	http.authorizeRequests()
 	                .antMatchers("/", "/bootstrap/**", "/images/**", "/js/**", "/theater-basic.html", "/registration.html", "/public/**", "/test/**").permitAll()
 	                .antMatchers("/theater-management.html", "/theater_management/**").hasAuthority("ADMIN_THEATER")
 	                .anyRequest().fullyAuthenticated()

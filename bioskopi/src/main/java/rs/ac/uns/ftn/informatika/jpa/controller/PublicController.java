@@ -110,8 +110,12 @@ public class PublicController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User u = userService.getUserByEmail(email).orElse(null);
-		if (u != null)
+		if (u != null) {
 			u.setPasswordHash(""); //...
+			u.setFriends(null);
+			u.setFriendsOf(null);
+			u.setReceivedRequests(null);
+		}
 		return u;
 	}
 	

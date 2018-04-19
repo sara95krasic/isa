@@ -28,6 +28,7 @@ public interface UserService {
 	User modifyUser(UserEditForm user, Long id);
 	
 	List<User> findUsers(String name,String surname);
+//<<<<<<< HEAD
 	
 	List<User> getFriendRequests(Long id);
 	
@@ -38,4 +39,8 @@ public interface UserService {
 	User refuseFriendReq(Long refusedId, Long userId);
 	
 	List<User> getFriends(Long id);
+//=======
+
+	boolean changePassword(String old_pass, String new_pass);
+//>>>>>>> refs/remotes/origin/master
 }
