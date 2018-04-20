@@ -143,16 +143,23 @@ public class UserServiceImpl implements UserService {
 		//ako nije zadato prezime, samo vrati te po imenu
 		if (surname.isEmpty()){
 			for (User n : by_name){
-				for (User p : prijatelji){
-					for (User z : zahtevi){
-						if (n.getId() == p.getId() || n.getId()==z.getId()){
-							return null;
-						}	
-					}
-				}
+				for (User p : prijatelji){			
+					if (n.getId() == p.getId()){
+						return null;
+					}	
+				}	
+			}
+		
+			for (User n : by_name){
+				for (User z : zahtevi){			
+					if (n.getId() == z.getId()){
+						return null;
+					}	
+				}	
 			}
 			return by_name;
-		}	
+
+		}
 		
 		//ako je zadato prezime, trazi po njemu
 		if(!surname.isEmpty())
@@ -161,34 +168,36 @@ public class UserServiceImpl implements UserService {
 		if (name.isEmpty()){
 			for (User n : by_surname){
 				for (User p : prijatelji){
-					for (User z : zahtevi){
-						if (n.getId() == p.getId() || n.getId() == z.getId()){
-							return null;
-						}
+					if (n.getId() == p.getId()){
+						return null;
 					}	
 				}
 			}
+	
+			
+			for (User n : by_surname){
+				for (User z : zahtevi){			
+					if (n.getId() == z.getId()){
+						return null;
+					}	
+				}	
+			}
 			return by_surname;
+
 		}
+		
 		
 		//jbg, ako smo stigli do ovde onda je trazeno i po imenu i prz
 		//spoji te 2 liste u double_match
 		List<User> double_match = new ArrayList<User>();
-		for (User u : by_name){
-			for (User uu : by_surname){
-				for (User p : prijatelji){
-					for (User z : zahtevi){
-						if ((u.getId() == p.getId() && uu.getId() == p.getId()) || (u.getId() == z.getId() && uu.getId() == z.getId())){ 
-							return null;
-						}
-					}
-				}
+		for (User u : by_name)
+			for (User uu : by_surname)
+				
 				
 				if (u.getId() == uu.getId())
 					double_match.add(uu);
-			}
-		}
-		return double_match;
+		
+				return double_match;
 	}
 		
 	
