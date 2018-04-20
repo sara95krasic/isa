@@ -10,24 +10,73 @@ import javax.persistence.Id;
 
 @Entity
 public class Offer implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(nullable = false)
-	private String createdBy;
+	private Long createdBy;
 	
 	@Column(nullable = false)
-	private int offeredMoney; //mozda INT
+	private Long culturalVenueId;
+	
+	@Column(nullable = false)
+	private Integer offeredMoney; 
+	
+	@Column(nullable = false)
+	private Long propId;
+	
+	@Column(nullable = true)
+	private Boolean sent;
+	
+	@Column(nullable = true)
+	private Boolean approved;
 	
 	public Offer() {}
 	
-	public Offer(String cratedBy, int offeredMoney) {
+	public Offer(Long cratedBy, Integer offeredMoney, Long propId, Long culturalVenueId, Boolean approved, Boolean sent) {
 		this.createdBy = cratedBy;
 		this.offeredMoney = offeredMoney;
+		this.propId = propId;
+		this.culturalVenueId = culturalVenueId;
+		this.sent = sent;
+		this.approved = approved;
+	}
+
+	
+	
+	public Long getCulturalVenueId() {
+		return culturalVenueId;
+	}
+
+	public void setCulturalVenueId(Long culturalVenueId) {
+		this.culturalVenueId = culturalVenueId;
+	}
+
+	public Long getPropId() {
+		return propId;
+	}
+
+	public void setPropId(Long propId) {
+		this.propId = propId;
+	}
+
+	public Boolean getSent() {
+		return sent;
+	}
+
+	public void setSent(Boolean sent) {
+		this.sent = sent;
+	}
+
+	public Boolean getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Boolean approved) {
+		this.approved = approved;
 	}
 
 	public Long getId() {
@@ -38,20 +87,21 @@ public class Offer implements Serializable{
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public int getOfferedMoney() {
+	public Integer getOfferedMoney() {
 		return offeredMoney;
 	}
 
-	public void setOfferedMoney(int offeredMoney) {
+	public void setOfferedMoney(Integer offeredMoney) {
 		this.offeredMoney = offeredMoney;
 	}
 
+	
 }

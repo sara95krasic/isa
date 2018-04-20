@@ -123,19 +123,68 @@ public class UserServiceImpl implements UserService {
 		List<User> by_name = new ArrayList<User>();
 		List<User> by_surname = new ArrayList<User>();
 		
+		User userLoged =  SessionService.getCurrentlyLoggedUser(); 
+		
+		List<User> prijatelji = getFriends(userLoged.getId());
+		List<User> zahtevi = getFriendRequests(userLoged.getId());
+		
+		for (User u: prijatelji){
+			System.out.println("Ulogovan je:" + u.getName());
+		}
+		//Hibernate.initialize(userLoged.getFriends());
+		
+		//List<User> prijatelji = userLoged.getFriends();
+		
+		
+		
 		//nadji sve po imenu
 		if(!name.isEmpty())
 			by_name = userRepository.findByNameContainingAllIgnoringCase(name);
 		//ako nije zadato prezime, samo vrati te po imenu
-		if (surname.isEmpty())
+		if (surname.isEmpty()){
+			for (User n : by_name){
+				for (User p : prijatelji){			
+					if (n.getId() == p.getId()){
+						return null;
+					}	
+				}	
+			}
+		
+			for (User n : by_name){
+				for (User z : zahtevi){			
+					if (n.getId() == z.getId()){
+						return null;
+					}	
+				}	
+			}
 			return by_name;
+
+		}
 		
 		//ako je zadato prezime, trazi po njemu
 		if(!surname.isEmpty())
 			by_surname = userRepository.findBySurnameContainingAllIgnoringCase(surname);
 		//ako nismo trazili po imenu (jer nije zadato), samo vrati ove nadjene po prezimenu
-		if (name.isEmpty())
+		if (name.isEmpty()){
+			for (User n : by_surname){
+				for (User p : prijatelji){
+					if (n.getId() == p.getId()){
+						return null;
+					}	
+				}
+			}
+	
+			
+			for (User n : by_surname){
+				for (User z : zahtevi){			
+					if (n.getId() == z.getId()){
+						return null;
+					}	
+				}	
+			}
 			return by_surname;
+
+		}
 		
 		
 		//jbg, ako smo stigli do ovde onda je trazeno i po imenu i prz
@@ -143,11 +192,15 @@ public class UserServiceImpl implements UserService {
 		List<User> double_match = new ArrayList<User>();
 		for (User u : by_name)
 			for (User uu : by_surname)
+				
+				
 				if (u.getId() == uu.getId())
 					double_match.add(uu);
 		
-		return double_match;
+				return double_match;
 	}
+		
+	
 
 	@Override
 	public boolean changePassword(String old_pass, String new_pass) {
