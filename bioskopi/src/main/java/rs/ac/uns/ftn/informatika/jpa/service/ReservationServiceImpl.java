@@ -9,6 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,14 +19,17 @@ import org.springframework.stereotype.Service;
 import com.mysql.jdbc.Statement;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.ProjectionDate;
 import rs.ac.uns.ftn.informatika.jpa.domain.Reservation;
 import rs.ac.uns.ftn.informatika.jpa.domain.ReservationSeat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.repository.DiscountSeatRepository;
+import rs.ac.uns.ftn.informatika.jpa.repository.ProjectionDateRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.ReservationRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.ReservationSeatRepository;
-import rs.ac.uns.ftn.informatika.jpa.repository.SeatRepository;;
+import rs.ac.uns.ftn.informatika.jpa.repository.SeatRepository;
+import rs.ac.uns.ftn.informatika.jpa.repository.UserRepository;;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -36,6 +42,13 @@ public class ReservationServiceImpl implements ReservationService {
 	SeatRepository seatRepository;
 	@Autowired
 	DiscountSeatRepository discountSeatRepository;
+	@Autowired
+	ProjectionDateRepository projectionDateRepository;
+	@Autowired
+	UserRepository userRepository;
+
+	@Autowired
+	JavaMailSender javaMailSender;
 	
 	@Autowired
 	UserService userService;
@@ -45,11 +58,17 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	@Override
 	public boolean makeNewReservation(Reservation reservation) {
+
+		//ovaj sto je trenutno ulogovan, on i pravi rezervaciju
+		User u = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
+		
 		
 		//ako je ovo sediste rezervisano, treba ga posle izbrisati
 		//naravno, mozda ovaj uopste ne pokusava da rezervise mesto na popustu
 		//onda se ovo i ne koristi
 		DiscountSeat discSeat = null; 
+		
+		boolean proverio_ovog_ulogovanog = false;
 		
 		//prvo neke provere za ova sedista
 		for (ReservationSeat rs : reservation.getReservationSeats()) {
@@ -78,12 +97,21 @@ public class ReservationServiceImpl implements ReservationService {
 				}
 			}
 			
+			
+			if (rs.getUser().getId() == u.getId()) {
+				if (proverio_ovog_ulogovanog == false) {
+					proverio_ovog_ulogovanog = true;
+				} else {
+					//e pa onda smo ga vec jedan put nasli
+					//ovaj pokusava sebi 2 mesta da rezervise
+					//ne daj mu
+					return false;
+				}
+			}
+			
 		}
 		//sve okej...
 		
-		
-		//ovaj sto je trenutno ulogovan, on i pravi rezervaciju
-		User u = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
 		
 		
 		final String sql = "insert into reservation (projection_date_id, reserved_by_id) values (?, ?)";
@@ -127,7 +155,84 @@ public class ReservationServiceImpl implements ReservationService {
 		if (discSeat != null)
 			discountSeatRepository.delete(discSeat);
 		
+		//aj jos posalji mejl ovom sto je rezervisao i frendovima
+		ProjectionDate pd = projectionDateRepository.findOne(reservation.getProjectionDate().getId());
+		for (ReservationSeat rs : reservation.getReservationSeats()) {
+			if (rs.getUser().getId() == u.getId()) {
+				//mejl za current usera
+				sendReservationInfoMail(u.getEmail(), rs.getSeat(), pd, rs.getDiscount());
+			}
+			else {
+				//mejlovi za frendove
+				User frend = userRepository.findOne(rs.getUser().getId());
+				sendReservationInviteMail(frend.getEmail(), rs.getSeat(), pd, rs.getDiscount(), holder.getKey().longValue());
+			}
+		}
+		
         return inserted1 != 0;
 	}
+	
+	@Async
+	private void sendReservationInfoMail(String emailAdress, Seat seat, ProjectionDate pd, int discount) {
+		try {
+			SimpleMailMessage email = new SimpleMailMessage();
+			email.setTo(emailAdress);
+			email.setFrom("krasicsara1@gmail.com");
+			email.setSubject("Informacije o rezervaciji");
+			email.setText(
+				"Pozdrav,\n\n" +
+				"napravili ste rezervaciju za film '" + 
+				pd.getProjection().getTitle() +
+				"', sediste " + seat.getNumber() +
+				", red " + seat.getRow() +
+				", segment " + seat.getSegment().getLabel() +
+				" u sali " + seat.getSegment().getHall().getLabel() + ".\n\n" +
+				"Projekcija se odrzava u " + pd.getTime() + ", " + pd.getDate() +
+				", po ceni od " + (pd.getPrice() - (discount/100*pd.getPrice()))  +" din.\n\n"
+				);
+			javaMailSender.send(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@Async
+	private void sendReservationInviteMail(String emailAdress, Seat seat, ProjectionDate pd, int discount, Long reservationId) {
+		try {
+			SimpleMailMessage email = new SimpleMailMessage();
+			email.setTo(emailAdress);
+			email.setFrom("krasicsara1@gmail.com");
+			email.setSubject("Poziv na film");
+			email.setText(
+				"Pozdrav,\n\n" +
+				"pozvani ste na film '" + 
+				pd.getProjection().getTitle() +
+				"', sediste " + seat.getNumber() +
+				", red " + seat.getRow() +
+				", segment " + seat.getSegment().getLabel() +
+				" u sali " + seat.getSegment().getHall().getLabel() + ".\n\n" +
+				"Projekcija se odrzava u " + pd.getTime() + ", " + pd.getDate() +
+				", po ceni od " + (pd.getPrice() - (discount/100*pd.getPrice()))  +" din.\n\n" +
+				"Potvrdite dolazak na http://localhost:8090/friend-confirm.html?reservationid="+reservationId+" \n\n"
+				);
+			javaMailSender.send(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean cancelReservedSeat(Long reservation_id) {
+		User u = SessionService.getCurrentlyLoggedUser();
+		Reservation r = reservationRepository.findOne(reservation_id);
+		for (ReservationSeat rs : r.getReservationSeats()) {
+			if (rs.getUser().getId() == u.getId()) {
+				reservationSeatRepository.delete(rs);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 
 }

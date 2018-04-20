@@ -201,13 +201,26 @@ insert into discount_seat (projection_date_id, seat_segment_hall_theater_id, sea
 insert into discount_seat (projection_date_id, seat_segment_hall_theater_id, seat_segment_hall_label, seat_segment_label, seat_row, seat_number, discount) values (15, 2, '3', 'S.1', 3, 4, 30);
 
 
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'admin@admin', '$2a$10$2DqvFyV0RBcpESD9Wx/9V.HvXEm9NPSW3vmEZmZ0VverIsCZHqLQS', 'ADMIN_SYS');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('pera', 'peric', true, 'ruma', '733543' ,'pera@gmail.com', '$2a$04$UkuVbPmFp7oy4jxFjVHxz.RhfbYZkMSPGvRS3OudQQ0tfiybU5wAa', 'USER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('sara', 'krasic', true, 'ruma', '431121' ,'admin@admin.com', '$2a$10$2DqvFyV0RBcpESD9Wx/9V.HvXEm9NPSW3vmEZmZ0VverIsCZHqLQS', 'ADMIN_SYS');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('pera', 'peric', true, 'ruma', '733543', 'pera@gmail.com', '$2a$04$UkuVbPmFp7oy4jxFjVHxz.RhfbYZkMSPGvRS3OudQQ0tfiybU5wAa', 'USER');
 insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('djoka', 'djokic', true, 'ruma', '453445' ,'djoka@gmail.com', '$2a$04$cuzBAkXvmBlpMjjQ5.D.xO16FR3wARR5PYMnKmFHAcvlMfwEdGELW', 'USER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('mika', 'mikic', true, 'ruma', '431121' ,'mika@gmail.com', '$2a$04$18gGPd/HwM6kgrn/fjyHGet2/XzvkEvhfD/CTgpG41iYRBLtExfsW', 'USER');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('mika', 'mikic', true, 'ruma', '431121', 'mika@gmail.com', '$2a$04$18gGPd/HwM6kgrn/fjyHGet2/XzvkEvhfD/CTgpG41iYRBLtExfsW', 'USER');
 insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('theater', 'theatric', true, 'subotiste', '634554' ,'theater@gmail.com', '$2a$04$98hiXfz.IQ7Jnwvt9lS48OoaOHJzS/Oj7lSFogCQoOdbpLORW9NgK', 'ADMIN_THEATER');
-insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('fan', 'fanovic', true, 'ruma', '431121' ,'fan@gmail.com', '$2a$04$IfxZJseYedF1.WA7UPsf5O67PHYVGO/sTaA3XP0zNBnkTrxjwNU/y', 'ADMIN_FAN');
-
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('fan', 'fanovic', true, 'ruma', '431121', 'fan@gmail.com', '$2a$04$IfxZJseYedF1.WA7UPsf5O67PHYVGO/sTaA3XP0zNBnkTrxjwNU/y', 'ADMIN_FAN');
+insert into user (name, surname, verification, city, phone, email, password_hash, role) values ('asdf', 'asdf', true, 'kikinda', '52919', 'xecabate@1webmail.info', '$2a$10$qCVGf5foDhMxtZ5gi7Hh1uvjUVKDTlT9Wqf8JNtTRiBRTNayx.NDO', 'USER');
 
 insert into friends (person_id, friend_id) values (2, 5);
 insert into friends (person_id, friend_id) values (2, 6);
+insert into friends (person_id, friend_id) values (2, 7);
+insert into friends (person_id, friend_id) values (1, 7);
+
+insert into reservation (projection_date_id, reserved_by_id) values (1, 2);
+insert into reservation (projection_date_id, reserved_by_id) values (1, 2);
+insert into reservation (projection_date_id, reserved_by_id) values (1, 7);
+
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (1, 9, 3, '1', 1, 'Seg A', 5, 0);
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (1, 10, 3, '1', 1, 'Seg A', 2, 0);
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (2, 7, 3, '1', 1, 'Seg A', 5, 0);
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (2, 8, 3, '1', 1, 'Seg A', 2, 0);
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (3, 2, 3, '1', 1, 'Seg A', 1, 0);
+insert into reservation_seat (reservation_id, seat_number, seat_row, seat_segment_hall_label, seat_segment_hall_theater_id, seat_segment_label, user_id, discount) values (3, 1, 3, '1', 1, 'Seg A', 7, 0);

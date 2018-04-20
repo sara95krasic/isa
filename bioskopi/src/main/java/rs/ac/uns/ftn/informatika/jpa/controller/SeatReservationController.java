@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.informatika.jpa.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,14 @@ public class SeatReservationController {
 	@ResponseBody
 	public boolean addNewReservation(@RequestBody Reservation reservation) {
 		return this.reservationService.makeNewReservation(reservation);
+	}
+	
+	@RequestMapping(value = "refuse_invitation/{reservation_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean addNewHallForTheater(@PathVariable Long reservation_id) {
+		return this.reservationService.cancelReservedSeat(reservation_id);
 	}
 	
 }

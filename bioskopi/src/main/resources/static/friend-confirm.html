@@ -2,52 +2,30 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Bioskopi - izmeni password</title>
+	<title>Prihvati poziv</title>
 	
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <script src="js/jquery-1.11.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/helpers.js"></script>
 
 	 
  	<script>
-		function promeniPass() {
-
-			var old_pass = $('#old_pass_input').val();
-			var new_pass = $('#new_pass_input').val();
-			var new_pass_repeat = $('#new_pass_repeat_input').val();
-
-			if (old_pass.length == 0) {
-				alert('Morate uneti vrednost starog passworda!');
-				return;
-			}
-			if (new_pass.length == 0) {
-				alert('Morate uneti vrednost novog passworda!');
-				return;
-			}
-			if (new_pass_repeat.length == 0) {
-				alert('Morate uneti vrednost ponovljenog novog passworda!');
-				return;
-			}
-			if (new_pass != new_pass_repeat) {
-				alert('Novi password i ponovljeni novi password se moraju poklapati!');
-				return;
-			}
-			
+		function odbijPoziv() {
+			var reservationId = getUrlParameter('reservationid');
 			$.ajax({
-				url: "registered/change_pass/" + old_pass + "/" + new_pass,
-				type:"GET",
-				dataType:"json",
-				complete: function(data) {
-					resp = JSON.parse(data.responseText);
-					if (resp == null || resp == false) {
-						alert('Greska!');
-					}
-					else {
-						alert('Uspesno promenjena lozinka!');
-						window.location.href = 'index.html';
-					}
-				}
+	   			url: "reservation/refuse_invitation/" + reservationId,
+	   			type:"POST",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				var resp = JSON.parse(data.responseText);
+	   				if (resp == null || resp == false) {
+	   					alert('Greska!');
+	   				} else {
+	   					alert('Rezervacija otkazana.');
+	   				}
+	   			}
 			});
 		}
 	</script>
@@ -114,11 +92,7 @@
 	<div class='content'>
 		<div class='row'>
 			<div class='col-sm-6' style='background: white; padding: 10px 15px;'>
-				<div style='display:inline-block; margin-bottom:15px;'>Pri prvom logovanju, neophodno je da promenite svoju sifru.</div><br>
-				<div style='display:inline-block; width: 200px; margin-bottom:5px;'>Stara lozinka</div><input id='old_pass_input' type='password'><br>
-				<div style='display:inline-block; width: 200px; margin-bottom:5px;'>Nova lozinka</div><input id='new_pass_input' type='password'><br>
-				<div style='display:inline-block; width: 200px; margin-bottom:5px;'>Ponovljena nova lozinka</div><input id='new_pass_repeat_input' type='password'><br>
-				<button style='float:right' class='flat-button' onclick='promeniPass()'>Posalji</button>
+				<button class='flat-button' onclick='odbijPoziv()'>Otkazi rezervaciju</button>
 			</div>	
 		</div>
 	</div> <!-- content -->
