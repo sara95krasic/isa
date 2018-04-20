@@ -90,11 +90,13 @@ public class SegmentServiceImpl implements SegmentService {
 		Segment ret = segmentRepository.findSegmentByLabelForHallForTheater(segment_label, theater_id, hall_label);
 		
 		//da ne pravi problem kad generise json
-		ret.setHall(null);
-		for (Seat seat : ret.getSeats()) {
-			seat.setSegment(null);
+		if (ret != null) {
+			ret.setHall(null);
+			for (Seat seat : ret.getSeats()) {
+				seat.setSegment(null);
+			}
 		}
-		
+			
 		return ret;
 	}
 

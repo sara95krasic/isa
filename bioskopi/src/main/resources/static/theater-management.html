@@ -316,7 +316,7 @@
 	   					return;
 	   				}
 	   				halls.forEach(function(h, i) {
-	   					$('#sale-select').append("<option value="+h+">"+h+"</option>");
+	   					$('#sale-select').append("<option value='"+h+"'>"+h+"</option>");
 	   				});
    				}
 			});
@@ -341,8 +341,8 @@
 	   					return;
 	   				}
 	   				halls.forEach(function(h, i) {
-	   					$('#sale-pregled-select').append("<option value="+h+">"+h+"</option>");
-	   					namestiSelectSaSegmentimaZaSalu();
+	   					$('#sale-pregled-select').append("<option value='"+h+"'>"+h+"</option>");
+	   					if (i == 0) namestiSelectSaSegmentimaZaSalu();
 	   				});
 				}
 			});
@@ -523,13 +523,25 @@
 			var theater_id = getUrlParameter('id');
 			var hall_label = $('#sale-pregled-select').val();
 			var segment_label = $('#segmenti-pregled-select').val();
+
+			$('#seats-div').empty();
+			$('#sedista-tip').css('display', 'none');
+			
+			if (hall_label == null || segment_label == null) {
+				return;
+			}
+			
 			
 			$.ajax({
 	   			url: "registered/get_segment_by_label_for_hall_for_theater/" + segment_label + "/" + theater_id + "/" + hall_label,
 	   			type:"GET",
 	   			dataType:"json",
 	   			complete: function(data) {
+	   				if (data.responseText == "") return;
+	   				
 	   				segment = JSON.parse(data.responseText);
+	   				
+	   				if (segment == null) return;
 	   				
 					if (segment.segmentType == 'STANDARD')
 						$('#tip-segmenta-span').text('(standardni)');
@@ -539,7 +551,6 @@
 						$('#tip-segmenta-span').text('(VIP)');
 					
 					//sad treba namestiti sedista...
-					$('#seats-div').empty();
 					for (var r = 1; r <= 10; r++) {
 						var row = "<div style='display:inline-block; width: 25px;'>"+r + " </div>";
 						for (var s = 1; s <= 20; s++) {
@@ -556,6 +567,7 @@
 						$('#seat-'+row_num+"-"+seat_num).removeClass('empty');
 					}
 					
+					$('#sedista-tip').css('display', 'inline-block');
 	   			}
 			});
 		}
@@ -840,7 +852,7 @@
 					<div id='seats-div' style='padding-bottom: 10px;'>
 					
 					</div>
-					<div style='color:#aaa; margin-bottom:10px;'>(kliknite na sedise da ga dodate ili izbrisete iz segmenta)</div>
+					<div style='color:#aaa; margin-bottom:10px; display:none;' id='sedista-tip'>(kliknite na sedise da ga dodate ili izbrisete iz segmenta)</div>
 					<div style='text-align: right;'>
 						<button class='flat-button' onclick='obrisiSegment()'>Obrisi ovaj segment</button>
 						<button class='flat-button'   data-toggle='modal' data-target='#dodaj-segment-modal'>Dodaj segment</button>
@@ -1029,7 +1041,7 @@
 		        <form id='karta-na-popustu-forma'>
 			        	<span style='display:inline-block;width:100px;'>Segment</span><input type="text" name='segment' style='margin-bottom: 5px;'><br>
 			        	<span style='display:inline-block;width:100px;'>Broj sedista</span><input type="number" name='seat-number' style='margin-bottom: 5px;'><br>
-			        	<span style='display:inline-block;width:100px;'>Red sedista</span><input type="number" name='seat-row' style='margin-bottom: 5px;'><br>
+			        	<span style='display:inline-block;width:100px;'>Red</span><input type="number" name='seat-row' style='margin-bottom: 5px;'><br>
 			        	<span style='display:inline-block;width:100px;'>Popust (%)</span><input type="number" name='discount' style='margin-bottom: 5px;'><br>
 			        	<input type="hidden" name='projection-date-id' id='projection-date-id-hidden-input' value="">
 			        	<input type="hidden" name='hall-label' id='hall-label-hidden-input' value="">
