@@ -14,26 +14,54 @@ function citaj() {
 		  }
 		  
 	});
-	if(tip == "edit") {
+	if(tip == "Used") {
 		$("#naslov").empty();
 		$("#naslov").append(`Edit thematic prop`);
 		$("#naziv").val(oglas.name);
 		$("#opis").val(oglas.description);
-		$("#slikaRekvizit").val(oglas.picture);
+//		$("#slikaRekvizit").val(oglas.picture);
 		$("#datum").val(oglas.date);
 		$("#tipRekvizit").val(oglas.tptype);
-		$("#culturalVenueSelect select").val(oglas.culturalVenue);
-		document.getElementById("dugmeNapravi").hidden = "hidden";
+//		$("#culturalVenueSelect select").val(oglas.culturalVenue);
+		document.getElementById("dugmeNapravi").style.display = "none";
 		document.getElementById("dugmeIzmjeni").hidden = "";
+		readVenues();
 		
 	}else {
 		$("#naslov").empty();
 		$("#naslov").append(`Create thematic prop`);
 		document.getElementById("dugmeNapravi").hidden = "";
-		document.getElementById("dugmeIzmjeni").hidden = "hidden";
+		document.getElementById("dugmeIzmjeni").style.display = "none";
+		readVenues();
 	}
 	
 }
+
+//ajax poziv za pozorista/bioskope
+function readVenues() {
+	$.ajax({
+		  method : 'GET',
+		  url : "/public/get_all_theaters",
+		  success : function(data){
+			  //console.log("uspjesno!");
+			  podijeliObjekte(data);
+		  },
+		  error: function(){
+			  console.log("neuspesno");
+		  }
+		  
+	});
+}
+//punjenje comboboxa
+function podijeliObjekte(data) {
+	//console.log("usao u podjelu");
+	var list = data == null ? [] : (data instanceof Array ? data : [ data ]);
+	$.each(list, function(index, culVe) {
+	$("#culturalVenueSelect").append(`<option name=`+culVe.id+` value=`+culVe.id+`>`+culVe.name+`</option>`);
+	});
+}
+
+
 
 function podijeli(data) {
 	console.log("usao u podjelu");
@@ -68,7 +96,7 @@ $(document).on('click','#dugmeIzmjeni',function(e) {
 	var oglas = JSON.parse(sessionStorage.getItem("mijenjanje"));
 	$.ajax({
 		type : 'PUT',
-		url : "/thematic_props/"+oglas.id,
+		url : "/thematic_props/modify/"+oglas.id,
 		contentType : 'application/json',
 		dataType : "json",
 		data:formToJSON2(user),
