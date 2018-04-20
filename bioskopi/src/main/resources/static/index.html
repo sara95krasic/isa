@@ -251,13 +251,30 @@
 					
 					if (window.currentUser != null) {
 						//ako je ulogovan
+						$('#rezPrikaz').append(
+								'<div class="header">Moje rezervacije</div >'+
+								'<table class="table " style="color:grey;">'+
+			                    	'<thead>'+
+									  '<tr>'+
+									     '<th>Datum</th>'+
+									     '<th>Vreme</th>'+
+									     '<th>Event name</th>'+
+									     '<th>Details</th>'+
+									     '<th>Cancel</th>'+
+									  '</tr>'+
+									 '</thead>'+
+			                        '<tbody >'+                                    
+			                           
+			                        '</tbody>'+ 
+			                    '</table>'		
+						);
 						$('#reg-log-bar').hide();
 						$('#nav-item').append(
-							'<span style="float:right;"><a style="font-size:18px; margin-left:18px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>' +		
+							'<a  style="font-size:18px; margin-left:10px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>' +		
 							(window.currentUser.role == "ADMIN_SYS" ? '<a style="margin-left:18px;  font-size:18px; margin-top:5px;" href="sys-admin-panel.html">Administratorski panel</a>' : '') + 
 							'<a style="margin-left:18px; font-size:18px;  margin-top:5px;" href="profile.html">Profil korisnika: '+  window.currentUser.name + '</a>' +
-							'<a style="margin-left:18px;  font-size:18px; margin-top:5px;" href="logout"> Izloguj se </a>' +
-							'</span>'
+							'<a style="margin-left:940px;  font-size:18px; margin-top:5px;" href="logout"> Izloguj se </a>' 
+							
 						);
 					
 						if (window.currentUser.role == "ADMIN_THEATER") {
@@ -269,6 +286,7 @@
 						//ako nije ulogovan
 						$('#nav-item').hide();
 						//$('#izloguj-se-a').hide();
+						$('rezPrikaz').hide();
 					}
 					
 												
@@ -464,6 +482,27 @@
 				</div>
 				<ul id='pozorista'></ul>
 			</div>
+			
+			<div class='col-sm-6 bioskopi-widget'  id='rezPrikaz'>
+			<!--	<div class='header'>Moje rezervacije</div >
+					<table class="table " style="color:grey;">
+                    	<thead>
+						  <tr>
+						     <th>Datum</th>
+						     <th>Vreme</th>
+						     <th>Event name</th>
+						     <th>Details</th>
+						     <th>Cancel</th>
+						  </tr>
+						 </thead>
+                        <tbody id='rezervacije'>                                    
+                           
+                        </tbody> 
+                    </table>
+				
+				</div> -->
+			
+			
 		</div>
 		
 		
