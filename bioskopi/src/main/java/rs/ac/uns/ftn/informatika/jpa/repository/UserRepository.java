@@ -27,6 +27,8 @@ public interface UserRepository extends Repository<User, Long>{
 	
 	List<User> findBySurnameContainingAllIgnoringCase(String surname);
 
+	List<User> findAll();
+
 	
 
 }

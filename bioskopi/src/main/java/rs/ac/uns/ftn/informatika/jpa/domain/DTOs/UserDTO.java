@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.informatika.jpa.domain.DTOs;
 
 import org.hibernate.usertype.UserType;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 
 public class UserDTO {
@@ -13,6 +14,7 @@ public class UserDTO {
 	private String password;
 	private String city;
 	private String phone;
+	private Role role;
 	
 	
 	public UserDTO(User user){
@@ -23,6 +25,7 @@ public class UserDTO {
 		this.password = user.getPasswordHash();
 		this.city = user.getCity();
 		this.phone = user.getPhone();
+		this.role = user.getRole();
 	
 	}
 
@@ -82,5 +85,14 @@ public class UserDTO {
 		this.phone = phone;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	
 	
 }

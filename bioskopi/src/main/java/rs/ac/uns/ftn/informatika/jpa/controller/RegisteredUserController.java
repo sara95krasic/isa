@@ -188,4 +188,19 @@ public class RegisteredUserController {
 		return new ResponseEntity<List<UserDTO>>(friendsDTO,HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/get_all_users",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<UserDTO>> getAllUsers(){
+		List<User> users = userService.getAllUsers();
+		List<UserDTO> usersDTO = new ArrayList<UserDTO>();
+		for(User user : users) {
+			user.setPasswordHash(null);
+			usersDTO.add(new UserDTO(user));
+		}
+		return new ResponseEntity<List<UserDTO>>(usersDTO,HttpStatus.OK);
+	}
+	
+		
+	
 }

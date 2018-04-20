@@ -41,7 +41,8 @@ public class FirstLoginFilter extends GenericFilterBean {
 	            		currentUrl.startsWith("/registered/change_pass")) {
 	                chain.doFilter(request, response);
 	                return;
-	            } else if (cu.getRole() == Role.ADMIN_THEATER && !cu.hasLoggedInBefore()) {
+	            } else if ((cu.getRole() == Role.ADMIN_THEATER && !cu.hasLoggedInBefore()) ||
+	            		(cu.getRole() == Role.ADMIN_FAN && !cu.hasLoggedInBefore())) {
 	                ((HttpServletResponse) response).sendRedirect("/changecredentials.html");
 	                return;
 		        }

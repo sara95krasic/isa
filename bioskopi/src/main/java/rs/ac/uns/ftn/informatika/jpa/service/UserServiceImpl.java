@@ -289,5 +289,17 @@ public class UserServiceImpl implements UserService {
 		return friend;
 	}
 
+	@Override
+	public boolean setRole(Long user_id, Role role) {
+		User u = userRepository.findOne(user_id);
+		u.setRole(role);
+		userRepository.save(u);
+		return true;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
 	
 }

@@ -253,9 +253,12 @@
 						//ako je ulogovan
 						$('#reg-log-bar').hide();
 						$('#nav-item').append(
-								'<a style="margin-left:940px; font-size:18px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>'			
-						+'<a style="margin-left:18px; font-size:18px;  margin-top:5px;" href="profile.html">Profil  korisnika: '+  window.currentUser.name + '</a>'
-						+'<a style="margin-left:18px;  font-size:18px; vertical-align:left; margin-top:5px;" href="logout"> Izloguj se </a>');
+							'<span style="float:right;"><a style="font-size:18px; margin-left:18px;  margin-top:5px;" href="fanzone.html" onclick="props()" >Fan zona</a>' +		
+							(window.currentUser.role == "ADMIN_SYS" ? '<a style="margin-left:18px;  font-size:18px; margin-top:5px;" href="sys-admin-panel.html">Administratorski panel</a>' : '') + 
+							'<a style="margin-left:18px; font-size:18px;  margin-top:5px;" href="profile.html">Profil korisnika: '+  window.currentUser.name + '</a>' +
+							'<a style="margin-left:18px;  font-size:18px; margin-top:5px;" href="logout"> Izloguj se </a>' +
+							'</span>'
+						);
 					
 						if (window.currentUser.role == "ADMIN_THEATER") {
 							//huh...nista posebno
@@ -264,8 +267,8 @@
 						
 					} else {
 						//ako nije ulogovan
-						
-						$('#izloguj-se-a').hide();
+						$('#nav-item').hide();
+						//$('#izloguj-se-a').hide();
 					}
 					
 												
@@ -308,7 +311,7 @@
 		
 		/*centralni sadrzaj stranice*/
 		.content {
-			margin: 25px 30px 50px 30px;
+			margin: 15px 30px 50px 30px;
 		}
 		
 		.bioskopi-widget {
@@ -393,6 +396,10 @@
 			text-decoration: none;
 		}
 		
+		#nav-item {
+			min-height: 30px;
+		}
+		
 		.nav-item-c > a:HOVER {
 			background: #ddd;
 			text-decoration: none;
@@ -419,7 +426,7 @@
 	
 	<div class='content'>
 	
-		<div class = 'row' id='reg-log-bar' style='background:white; margin-bottom:20px; margin-left:0px; margin-right:0px;'>
+		<div class = 'row' id='reg-log-bar' style='background:white; margin-bottom:20px; margin-top:25px; margin-left:0px; margin-right:0px;'>
 			<div style='width: 50%; margin-left:auto; margin-right:auto'>
 				<div class='col-sm-6 button-card' >
 					<span>Imas nalog?</span>

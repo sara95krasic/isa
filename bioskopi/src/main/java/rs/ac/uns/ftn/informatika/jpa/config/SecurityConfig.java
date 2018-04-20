@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	http.authorizeRequests()
 	                .antMatchers("/", "/bootstrap/**", "/images/**", "/js/**", "/theater-basic.html", "/registration.html", "/public/**", "/test/**").permitAll()
 	                .antMatchers("/theater-management.html", "/theater_management/**").hasAuthority("ADMIN_THEATER")
+	                .antMatchers("/sys-admin-panel.html", "/system_administration/**").hasAuthority("ADMIN_SYS")
 	                .anyRequest().fullyAuthenticated()
                 .and()
 	                .formLogin()

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.Role;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.UserEditForm;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
@@ -45,4 +46,8 @@ public interface UserService {
 
 	boolean changePassword(String old_pass, String new_pass);
 //>>>>>>> refs/remotes/origin/master
+
+	boolean setRole(Long user_id, Role role);
+
+	List<User> getAllUsers();
 }
