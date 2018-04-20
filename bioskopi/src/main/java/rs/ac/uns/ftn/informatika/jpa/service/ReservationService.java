@@ -6,4 +6,6 @@ public interface ReservationService {
 
 	boolean makeNewReservation(Reservation reservation);
 
+	boolean cancelReservedSeat(Long reservation_id);
+
 }
