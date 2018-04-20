@@ -25,7 +25,7 @@ public class ThematicProps implements Serializable{
 	@Column(nullable = true)
 	private Long createdBy;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Long theaterId;
 	
 	@Column(nullable = false)
@@ -43,7 +43,6 @@ public class ThematicProps implements Serializable{
 	@Column(nullable = true, length = 1010379)
 	private String picture; //base64 zapis
 	
-	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private ThematicPropsType tptype;
 	
