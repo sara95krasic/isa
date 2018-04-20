@@ -142,21 +142,28 @@ public class UserServiceImpl implements UserService {
 			by_name = userRepository.findByNameContainingAllIgnoringCase(name);
 		//ako nije zadato prezime, samo vrati te po imenu
 		if (surname.isEmpty()){
+			
+			//***
+			List<User> to_remove = new ArrayList<User>();
 			for (User n : by_name){
 				for (User p : prijatelji){			
 					if (n.getId() == p.getId()){
-						return null;
+						to_remove.add(n);
 					}	
 				}	
 			}
-		
 			for (User n : by_name){
 				for (User z : zahtevi){			
 					if (n.getId() == z.getId()){
-						return null;
+						to_remove.add(n);
 					}	
 				}	
 			}
+			for (User tr : to_remove) {
+				by_name.remove(tr);
+			}
+			//***
+			
 			return by_name;
 
 		}
@@ -166,22 +173,28 @@ public class UserServiceImpl implements UserService {
 			by_surname = userRepository.findBySurnameContainingAllIgnoringCase(surname);
 		//ako nismo trazili po imenu (jer nije zadato), samo vrati ove nadjene po prezimenu
 		if (name.isEmpty()){
+
+			//***
+			List<User> to_remove = new ArrayList<User>();
 			for (User n : by_surname){
-				for (User p : prijatelji){
+				for (User p : prijatelji){			
 					if (n.getId() == p.getId()){
-						return null;
-					}	
-				}
-			}
-	
-			
-			for (User n : by_surname){
-				for (User z : zahtevi){			
-					if (n.getId() == z.getId()){
-						return null;
+						to_remove.add(n);
 					}	
 				}	
 			}
+			for (User n : by_surname){
+				for (User z : zahtevi){			
+					if (n.getId() == z.getId()){
+						to_remove.add(n);
+					}	
+				}	
+			}
+			for (User tr : to_remove) {
+				by_surname.remove(tr);
+			}
+			//***
+			
 			return by_surname;
 
 		}
@@ -192,12 +205,31 @@ public class UserServiceImpl implements UserService {
 		List<User> double_match = new ArrayList<User>();
 		for (User u : by_name)
 			for (User uu : by_surname)
-				
-				
 				if (u.getId() == uu.getId())
 					double_match.add(uu);
+
+		//***
+		List<User> to_remove = new ArrayList<User>();
+		for (User n : double_match){
+			for (User p : prijatelji){			
+				if (n.getId() == p.getId()){
+					to_remove.add(n);
+				}	
+			}	
+		}
+		for (User n : double_match){
+			for (User z : zahtevi){			
+				if (n.getId() == z.getId()){
+					to_remove.add(n);
+				}	
+			}	
+		}
+		for (User tr : to_remove) {
+			double_match.remove(tr);
+		}
+		//***
 		
-				return double_match;
+		return double_match;
 	}
 		
 	
