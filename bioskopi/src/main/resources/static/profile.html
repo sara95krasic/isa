@@ -13,7 +13,38 @@
 		$(document).ready(function(){
 			
 			displayUserData();
+			showAllMyReservations();
 		})
+	</script>
+	
+	<script type="text/javascript">
+		function showAllMyReservations() {
+			$.ajax({
+	   			url: "registered/get_all_my_reservations",
+	   			type:"GET",
+	   			dataType:"json",
+	   			complete: function(data) {
+	   				reservations = JSON.parse(data.responseText);
+	   				
+	   				if (reservations == null || reservations.length == 0) {
+	   					return;
+	   				}
+	   				
+	   				reservations.forEach(
+	   					function (r, i) {
+	   						$('#istorija-poseta-lista').append(
+	   							"<li> " +
+								"	<span style='float:right'>"+r.projectionDateDate+", "+r.projectionDateTime+"</span> " +
+								"	<span style='font-weight: bold;'>"+r.projectionTitle+"</span><br> " +
+								"	<span>"+r.theaterName+" - <span style='color:#999;'>Sala</span> 1, <span style='color:#999;'>Segment</span> "+r.segmentLabel+", <span style='color:#999;'>red</span> 1, <span style='color:#999;'>sediste</span> 2</span> " +
+								"	<span style='float:right'><button class='flat-button' style='font-size: 0.8em;'>odustani od rezervacije</button></span> " +
+								"</li>"
+	   						);
+	   					}
+   					);
+	   			}
+			});
+		}
 	</script>
 	
 	<script>
@@ -205,12 +236,22 @@
 			color: white;
 			text-decoration: none;
 		}
+		
+		#istorija-poseta-lista {
+			padding-left:0px;
+			list-style: none;
+			margin-bottom: 0px;
+		}
+		#istorija-poseta-lista > li {
+			padding: 5px 10px;
+			border-bottom: 1px solid #ccc;
+		}
 	</style>
 					
 </head>
 <body style='background:#e1f7d5;'>
 	<div class='top-header'>
-		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
+		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a><span class='title' style='color:#aaa;'>/profil korisnika</span>
 	</div>
 	
 	<div class='content'>
@@ -234,6 +275,28 @@
 					
 				</div>
 				
+			</div>
+		</div>
+		
+		<div class='col-sm-6 blok'>
+			<div class='header'>
+				<div>Istorija poseta</div>
+			</div>
+			<div style='background: white;'>
+				<ul id='istorija-poseta-lista'>
+<!-- 					<li>
+						<span style='float:right'>DATuMd, vreme</span>
+						<span style='font-weight: bold;'>Naziv proj</span><br>
+						<span>Bioskop - <span style='color:#999;'>Sala</span> 1, <span style='color:#999;'>Segment</span> A, <span style='color:#999;'>red</span> 1, <span style='color:#999;'>sediste</span> 2</span>
+						<span style='float:right'><button class='flat-button' style='font-size: 0.8em;'>odustani od rezervacije</button></span>
+					</li>
+					<li>
+						<span style='float:right'>DATuMd, vreme</span>
+						<span style='font-weight: bold;'>Naziv proj</span><br>
+						<span>Bioskop - <span style='color:#999;'>Sala</span> 1, <span style='color:#999;'>Segment</span> A, <span style='color:#999;'>red</span> 1, <span style='color:#999;'>sediste</span> 2</span>
+						<span style='float:right'><button class='flat-button' style='font-size: 0.8em;'>odustani od rezervacije</button></span>
+					</li> -->
+				</ul>			
 			</div>
 		</div>
 	</div>

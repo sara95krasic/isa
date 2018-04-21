@@ -27,14 +27,17 @@ import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.TheaterDTO;
 import rs.ac.uns.ftn.informatika.jpa.repository.HallRepository;
+import rs.ac.uns.ftn.informatika.jpa.repository.ProjectionRepository;
 import rs.ac.uns.ftn.informatika.jpa.repository.TheaterRepository;
 
 @Service
 public class TheaterServiceImpl implements TheaterService {
 
-	
+
 	@Autowired
 	private TheaterRepository theaterRepository;
+	@Autowired
+	private ProjectionRepository projectionRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -85,7 +88,11 @@ public class TheaterServiceImpl implements TheaterService {
 
 	@Override
 	public Page<ProjectionDTO> getProjectionsForTheaterForDate(Long id, Date date, Pageable pageable) {
-		return this.theaterRepository.getAllProjectionsForTheaterForDate(id, date, pageable);
+		Page<ProjectionDTO> ret =  this.theaterRepository.getAllProjectionsForTheaterForDate(id, date, pageable);
+		for (ProjectionDTO prjDTO : ret.getContent()) {
+			prjDTO.setAverageRating(projectionRepository.getAverageRating(prjDTO.getId()));
+		}
+		return ret;
 	}
 
 	@Override
@@ -95,7 +102,11 @@ public class TheaterServiceImpl implements TheaterService {
 
 	@Override
 	public Page<ProjectionDTO> getProjectionsForTheater(Long id, Pageable pageable) {
-		return this.theaterRepository.getAllProjectionsForTheater(id, pageable);
+		Page<ProjectionDTO> ret = this.theaterRepository.getAllProjectionsForTheater(id, pageable);
+		for (ProjectionDTO prjDTO : ret.getContent()) {
+			prjDTO.setAverageRating(projectionRepository.getAverageRating(prjDTO.getId()));
+		}
+		return ret; 
 
 	}
 

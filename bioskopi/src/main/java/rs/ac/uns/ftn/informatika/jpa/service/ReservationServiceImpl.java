@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.informatika.jpa.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -234,5 +235,9 @@ public class ReservationServiceImpl implements ReservationService {
 		return false;
 	}
 	
+	@Override
+	public List<Reservation> getAllMyReservations() {
+		return reservationRepository.getAllReservationsForUser(SessionService.getCurrentlyLoggedUser().getId());
+	}
 
 }

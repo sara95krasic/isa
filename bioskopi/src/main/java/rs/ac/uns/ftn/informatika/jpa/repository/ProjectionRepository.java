@@ -24,4 +24,7 @@ public interface ProjectionRepository extends Repository<Projection, Long> {
 	@Modifying (clearAutomatically = true)
 	@Query("update Projection p set p.poster = ?2 where p.id = ?1")
 	int setPosterImage(Long projection_id, String string);
+
+	@Query("select coalesce(avg(r.rating),0) from Projection p left outer join p.ratings r where p.id = ?1")
+	double getAverageRating(Long id);
 }

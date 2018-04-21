@@ -68,7 +68,11 @@ public class ProjectionServiceImpl implements ProjectionService {
 
 	@Override
 	public Page<ProjectionDTO> getAllProjections(Pageable pageable) {
-		return projectionRepository.findAll(pageable);
+		Page<ProjectionDTO> ret = projectionRepository.findAll(pageable);
+		for (ProjectionDTO prjDTO : ret.getContent()) {
+			prjDTO.setAverageRating(projectionRepository.getAverageRating(prjDTO.getId()));
+		}
+		return ret;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import rs.ac.uns.ftn.informatika.jpa.domain.Projection;
 import rs.ac.uns.ftn.informatika.jpa.domain.Theater;
 import rs.ac.uns.ftn.informatika.jpa.domain.TheaterType;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
@@ -78,7 +79,7 @@ public interface TheaterRepository extends Repository<Theater, Long> {
 			"from ProjectionDate pd left outer join pd.projection p left outer join pd.hall h " +
 			"where h.theater.id = ?1 and pd.date = ?2")
 	Page<ProjectionDTO> getAllProjectionsForTheaterForDate(Long id, Date date, Pageable pageable);
-
+	
 	@Query("select pd.date as date, pd.time as time, pd.price as price, h.label as hallLabel, pd.id as id "+
 			"from ProjectionDate pd left outer join pd.hall h left outer join pd.projection p " +
 			"where h.theater.id = ?1 and p.id = ?2")

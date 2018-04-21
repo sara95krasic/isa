@@ -20,13 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.informatika.jpa.domain.CurrentUser;
 import rs.ac.uns.ftn.informatika.jpa.domain.DiscountSeat;
+import rs.ac.uns.ftn.informatika.jpa.domain.Reservation;
 import rs.ac.uns.ftn.informatika.jpa.domain.Seat;
 import rs.ac.uns.ftn.informatika.jpa.domain.Segment;
 import rs.ac.uns.ftn.informatika.jpa.domain.User;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ProjectionDateDTO;
+import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.ReservationDTO;
 import rs.ac.uns.ftn.informatika.jpa.domain.DTOs.UserDTO;
 import rs.ac.uns.ftn.informatika.jpa.service.ProjectionService;
+import rs.ac.uns.ftn.informatika.jpa.service.ReservationService;
 import rs.ac.uns.ftn.informatika.jpa.service.SeatService;
 import rs.ac.uns.ftn.informatika.jpa.service.TheaterService;
 import rs.ac.uns.ftn.informatika.jpa.service.UserService;
@@ -53,6 +56,8 @@ public class RegisteredUserController {
 	private SeatService seatService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ReservationService reservationService;
 	
 	@RequestMapping(value = "get_projection_dates_for_theater/{id}",
 			method = RequestMethod.GET,
@@ -201,6 +206,17 @@ public class RegisteredUserController {
 		return new ResponseEntity<List<UserDTO>>(usersDTO,HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/get_all_my_reservations",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ReservationDTO>> getAllMyReservations(){
+		List<Reservation> ress = reservationService.getAllMyReservations();
+		List<ReservationDTO> resDTOs = new ArrayList<ReservationDTO>();
+		for(Reservation r : ress) {
+			resDTOs.add(new ReservationDTO(r));
+		}
+		return new ResponseEntity<List<ReservationDTO>>(resDTOs, HttpStatus.OK);
+	}
 		
 	
 }

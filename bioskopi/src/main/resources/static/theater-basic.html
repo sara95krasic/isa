@@ -30,10 +30,11 @@
 	   					return;
 	   				}
 
-	   				$('#desc-bioskopa').text(theater.description)
-	   				$('#naziv-bioskopa').text(theater.name)
-	   				$('#adresa-bioskopa').text(theater.address)
-	   				$('#gmap_canvas').attr('src', "https://maps.google.com/maps?q="+encodeURIComponent(theater.address)+"&t=&z=13&ie=UTF8&iwloc=&output=embed")
+	   				$('#desc-bioskopa').text(theater.description);
+	   				$('#naziv-bioskopa').text(theater.name);
+	   				$('#adresa-bioskopa').text(theater.address);
+	   				$('#gmap_canvas').attr('src', "https://maps.google.com/maps?q="+encodeURIComponent(theater.address)+"&t=&z=13&ie=UTF8&iwloc=&output=embed");
+	   				$('#breadcrumb-title').text('/'+theater.name);
 	   			}
 			});
 	   				
@@ -108,7 +109,7 @@
 </head>
 <body style='background:#e1f7d5;'>
 	<div class='top-header'>
-		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a>
+		<span style='color:#ccc;font-size:18px;'>&lt;&lt;&nbsp;</span><a href='/' class='title'>Bioskopi i pozorista</a><span class='title' style='color:#aaa;' id='breadcrumb-title'></span>
 	</div>
 	
 	<div class = 'reg-log-bar'>

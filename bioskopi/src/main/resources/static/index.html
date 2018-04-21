@@ -24,7 +24,7 @@
 			bioskopi.forEach(function (b, i) {
 				
 				ocena = "";
-				for (i = 0; i < b.averageRating; i++) { 
+				for (i = 0; i < Math.round(b.averageRating); i++) { 
 				    ocena += "&#x2605;";
 				}
 				
@@ -116,15 +116,15 @@
 			pozorista.forEach(function (b, i) {
 				
 				ocena = "";
-				for (i = 0; i < b.averageRating; i++) { 
+				for (i = 0; i < Math.round(b.averageRating); i++) { 
 				    ocena += "&#x2605;";
 				}
 				
 				$('#pozorista').append(
-					'<li>' +
+					'<li>' +					
+					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<span>' + b.name + '</span><br>' + 
 					'<span><span style="color:gray; float: left; margin-right:5px;">' + b.address + '</span><span id="distance-span-'+b.id+'" style="color:white;background:#c18093; padding:2px 5px;">...</span>' + 
-					'<span style="float: right;">' + ocena + '</span></span>' +
 					'<a href="theater-'+ (window.currentUser == null ? 'basic' : 'full') +'.html?id=' + b.id + '">' +
 					'<span class="link-spanner"></span>' +
 					'</a>' +
@@ -417,7 +417,7 @@
 		</div>
 	</div>
 	
-	<div id='nav-item' class='nav-item-c' style='background:white; margin-top:10px; margin-left:30px;  margin-right:30px;' >
+	<div id='nav-item' class='nav-item-c' style='background:white; margin-top:20px; margin-left:30px;  margin-right:30px;' >
 		<!-- ulogovaan -->
 		<!--<a href='logout' style='margin-left:600px; font-size:18px; '>  Profil korisnika + window.currentUser.name </a>
 		<a  href='logout'>  Izloguj se  </a> -->

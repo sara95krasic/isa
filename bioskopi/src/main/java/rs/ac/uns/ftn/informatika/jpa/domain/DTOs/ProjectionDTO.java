@@ -9,7 +9,11 @@ public interface ProjectionDTO {
 	
 	float getRuntime();
 	
-	float getId();
+	Long getId();
 	
 	String getPoster();
+	
+	void setAverageRating(double rating);
+	double getAverageRating();
+	
 }
