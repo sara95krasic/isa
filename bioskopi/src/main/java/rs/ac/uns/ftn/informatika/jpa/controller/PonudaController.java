@@ -113,6 +113,57 @@ public class PonudaController {
 		return new ResponseEntity<Ponuda>(null, httpHeader, HttpStatus.OK);
 		
 	}
+
+	@PreAuthorize("hasAuthority('RK')")
+	@RequestMapping(value = "dodajPonudu/{oglasId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Ponuda> dodajPonudu(@RequestBody Ponuda novaPonuda, @PathVariable int oglasId, ServletRequest request){
+		
+		HttpHeaders httpHeader = new HttpHeaders();
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		String token = httpRequest.getHeader("token");
+		
+		if(token == null) {
+			return null;
+		}
+		
+		String email = tokenUtils.getUsernameFromToken(token);
+
+		Korisnik korisnik = korisnikService.getKorisnikByEmail(email);
+		
+		if(korisnik==null) {
+			return null;
+		}
+
+		RegistrovaniKorisnik posiljalac = regKorisnikService.getRegKorisnikByKorisnikId(korisnik);
+		
+		if(novaPonuda.getIznos().equals(0)) {
+			httpHeader.add("message", "Neuspesno kreiranje nove ponuda, nevalidan objekat.");
+			return new ResponseEntity<Ponuda>(null, httpHeader, HttpStatus.OK);
+		}
+		
+		
+		Oglas oglas =  oc.getOglasById(new Long(oglasId));
+		
+		if(oglas == null) {
+			httpHeader.add("message", "Neuspesno kreiranje nove ponude,nepostojeci oglas.");
+			return new ResponseEntity<Ponuda>(null, httpHeader, HttpStatus.OK);
+		}
+		
+		Ponuda novaNovaPonuda = new Ponuda(oglas, novaPonuda.getIznos(), posiljalac);
+		novaNovaPonuda.setOglas(oglas);
+		
+		
+		Ponuda retVal = pc.addPonuda(novaNovaPonuda);
+		
+		if(retVal != null) {
+			httpHeader.add("message", "Uspesno kreirana nove ponuda.");
+			return new ResponseEntity<Ponuda>(retVal, httpHeader, HttpStatus.OK);
+		}
+		
+		httpHeader.add("message", "Neuspesno kreiranje nove ponude.");
+		return new ResponseEntity<Ponuda>(null, httpHeader, HttpStatus.OK);
+		
+	}
 	
 	@PreAuthorize("hasAuthority('RK')")
 	@RequestMapping(value = "vratiPonude/{idOglasa}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

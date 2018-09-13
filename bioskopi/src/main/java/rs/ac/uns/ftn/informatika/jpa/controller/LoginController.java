@@ -54,29 +54,6 @@ public class LoginController {
 			}
 			
 			token = tokenUtils.generateToken(CustomUserDetailsFactory.createCustomUserDetails(korisnik));
-		}else {
-			if(korisnik.getStatus().equals(RegKorisnikStatus.N)) {
-				httpHeader.set("message", "Vas nalog nije aktiviran.");
-				return new ResponseEntity<String>(token,httpHeader,HttpStatus.OK);			
-			}else if(korisnik.getTip().equals(KorisnikTip.AF) && Arrays.equals(korisnik.getLozinka(), lozinka)) {
-				token = tokenUtils.generateToken(CustomUserDetailsFactory.createCustomUserDetails(korisnik));
-				httpHeader.set("message", "Promeni");
-				return new ResponseEntity<String>(token, httpHeader,HttpStatus.OK);
-			}
-			
-			token = tokenUtils.generateToken(CustomUserDetailsFactory.createCustomUserDetails(korisnik));
-		}
-		else {
-			if(korisnik.getStatus().equals(RegKorisnikStatus.N)) {
-				httpHeader.set("message", "Vas nalog nije aktiviran.");
-				return new ResponseEntity<String>(token,httpHeader,HttpStatus.OK);			
-			}else if(korisnik.getTip().equals(KorisnikTip.AF) && Arrays.equals(korisnik.getLozinka(), lozinka)) {
-				token = tokenUtils.generateToken(CustomUserDetailsFactory.createCustomUserDetails(korisnik));
-				httpHeader.set("message", "Promeni");
-				return new ResponseEntity<String>(token, httpHeader,HttpStatus.OK);
-			}
-			
-			token = tokenUtils.generateToken(CustomUserDetailsFactory.createCustomUserDetails(korisnik));
 		}
 	
 		return new ResponseEntity<String>(token, httpHeader,HttpStatus.OK);
