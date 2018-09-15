@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg">
+  <a class="navbar-brand naslov" href="#">Bioskopi/Pozorista</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a href="#" class="navbar-left"><img src="assets/images/logo1.jpg" height="50" width="70"></a>
+    <ul class="navbar-nav mr-auto">
+      
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Pocetna stranica<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-link" (click)="prikaziBioskope()">Bioskopi</button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-link" (click)="prikaziPozorista()">Pozorista</button>
+      </li>
+      <li class="nav-item">
+          <button type="button" class="btn btn-link" (click)="prikaziFanZonu()">Fan-zona</button>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li *ngIf = "!logovanKorisnik" class="nav-item">
+        <p class="navbar-text">Imate nalog?</p>
+      </li>
+      <li *ngIf = "!logovanKorisnik" class="nav-item">
+        <a class="nav-link" (click) = "prijava()">Prijavite se</a>
+      </li>
+      <li *ngIf = "logovanKorisnik" class="nav-item">
+        <p class="navbar-text">Prijavljeni ste kao:</p>
+      </li>
+
+      <li *ngIf = "logovanKorisnik" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{logovanKorisnik.sub}}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" *ngIf = "uloga==='RK' || uloga==='AF' || uloga==='AU'" (click) = "idiNaProfil()">Moj profil</a>
+          <a class="dropdown-item" *ngIf = "uloga==='RK'" (click) = "idiPrijatelje()">Prijatelji</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "prikaziAdministatoreFz()">Administratori Fz</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "prikaziAdministatoreSis()">Administratori Sis</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "prikaziAdministatorePB()">Administratori PB</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "prikaziSkale()">Skale</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AF'" (click) = "odobriOglase()">Odobri oglase</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AF'" (click) = "izmeniPodatke()">Izmeni podatke</a>
+          <a class="dropdown-item" *ngIf = "uloga==='RK'" (click) = "idiRezervacije()">Moje rezervacije</a>
+          <a class="dropdown-item" *ngIf = "uloga==='RK'" (click) = "idiRekvizite()">Moji rekviziti</a>
+          <a class="dropdown-item" *ngIf = "uloga==='RK'" (click) = "idiNaPoruke()">Moje poruke</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="napraviNovoPB()">Registruj pozoriste/bioskop</a>
+          <a class="dropdown-item" href="#">Pristup fan-zoni</a>
+          <a class="dropdown-item" (click) = "registrujOglas()">Registruj oglas</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "napraviNovoAFZ()">Napravi AdmFz</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "napraviNovoASIS()">Napravi AdmSis</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "napraviNovoAPB()">Napravi AdmPB</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "postaviBS()">Postavi bodovnu skalu</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AS'" (click) = "napraviNovoPB()">Napravi Poz/Bio</a>
+          <a class="dropdown-item" (click) = "idiNaFanZonu()">Pristup fan-zoni</a>
+          <div class="dropdown-divider" *ngIf = "uloga==='AU'"></div>
+          <a class="dropdown-item" *ngIf = "uloga==='AU'" (click) = "napraviNovoPB()">Napravi Poz/Bio</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AU'" (click) = "napraviPredFilm()">Napravite predstavu/film</a>
+          <a class="dropdown-item" *ngIf = "uloga==='AU'" (click)="izvestaji()">Pregled izvestaja</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" (click) = "odjava()">Odjavite se</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+<router-outlet></router-outlet>

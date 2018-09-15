@@ -1,0 +1,105 @@
+<div class="container">
+  <alert></alert>
+  <legend class="leg" align="center">Licni podaci: <button *ngIf="!izmena" (click) = "izmeni()" class="logregBtn btn btn-primary btn-sm">Izmeni</button></legend>
+  <table class="leg table" *ngIf="!izmena && logovanKorisnik">
+      <tr>
+        <td class="w-25" align = "center">Email</td>
+        <td class="w-25" align = "center">{{logovanKorisnik.email}}</td>
+      </tr>
+      <tr>
+        <td class="w-25" align = "center">Ime</td>
+        <td class="w-25" align = "center">{{logovanKorisnik.ime}}</td>
+      </tr>
+      <tr>
+        <td class="w-25" align = "center">Prezime</td>
+        <td class="w-25" align = "center">{{logovanKorisnik.prezime}}</td>
+      </tr>
+      <tr>
+        <td class="w-25" align = "center">Grad</td>
+        <td class="w-25" align = "center">{{logovanKorisnik.grad}}</td>
+      </tr>
+      <tr>
+        <td class="w-25" align = "center">Telefon</td>
+        <td class="w-25" align = "center">{{logovanKorisnik.telefon}}</td>
+      </tr>
+  </table>
+  <form *ngIf="izmena" [formGroup] = "izmenaForma" (ngSubmit) = "potvrdiIzmenu(izmenaForma.value)">
+      <fieldset>
+        <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="text" class="form-control" name="ime" id="ime" placeholder="Ime" formControlName="ime">
+            <span class = "error-message" *ngIf="izmenaForma.get('ime').hasError('required') && izmenaForma.get('ime').dirty">Obavezno unesite ime</span>
+            <span class = "error-message" *ngIf="izmenaForma.get('ime').hasError('maxlength') && izmenaForma.get('ime').dirty">Presli ste broj karaktera koji smete uneti</span>
+          </div>
+          </div>
+          <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="text" class="form-control" name="prezime" id="prezime" placeholder="Prezime" formControlName="prezime">
+            <span class = "error-message" *ngIf="izmenaForma.get('prezime').hasError('required') && izmenaForma.get('prezime').dirty">Obavezno unesite prezime</span>
+            <span class = "error-message" *ngIf="izmenaForma.get('prezime').hasError('maxlength') && izmenaForma.get('prezime').dirty">Presli ste broj karaktera koji smete uneti</span>
+          </div>
+          </div>
+        <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="text" class="form-control" name="grad" id="grad" placeholder="Grad" formControlName="grad">
+            <span class = "error-message" *ngIf="izmenaForma.get('grad').hasError('required') && izmenaForma.get('grad').dirty">Obavezno unesite grad</span>
+            <span class = "error-message" *ngIf="izmenaForma.get('grad').hasError('maxlength') && izmenaForma.get('grad').dirty">Presli ste broj karaktera koji smete uneti</span>
+          </div>
+          </div>
+          <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="text" class="form-control" name="telefon" id="telefon" placeholder="Kontakt Telefon" formControlName="telefon">
+            <span class = "error-message" *ngIf="izmenaForma.get('telefon').hasError('pattern') && izmenaForma.get('telefon').dirty">Unesite telefon u validnoj formi</span>
+          </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-4 mx-auto">
+              <button type="submit" class="logregBtn btn btn-primary btn-md btn-block" name="izmenaBtn" [disabled] = "!izmenaForma.valid">Izmena</button>
+            </div>
+          </div>
+    </fieldset>
+    </form>
+    <div *ngIf="izmena" class="col-md-4 mx-auto">
+          <button (click) = "ponisti()" class="logregBtn btn btn-primary btn-md btn-block" name="ponisti">Ponisti</button>
+      </div>
+      
+      <br>
+      <div *ngIf="!izmena" class="col-md-3 mx-auto">
+      <button (click) = "promeniLozinku()" class="mx-auto logregBtn btn btn-primary btn-md btn-block">Promenite lozinku</button>
+    </div>
+      <br>
+      <div *ngIf = "izmenaLozinke" class="container">
+      <form [formGroup] = "lozinkaForma" (ngSubmit) = "potvrdiIzmenuLozinke(lozinkaForma.value)">
+      <fieldset>
+        <div class="form-group row">
+            <div class="col-md-4 mx-auto">
+              <input type="password" class="form-control" name="sifraStara" id="sifraStara" placeholder="Stara lozinka" formControlName="staraLozinka">
+              <span class = "error-message" *ngIf="lozinkaForma.get('staraLozinka').hasError('required') && lozinkaForma.get('staraLozinka').dirty">Obavezno unesite prethodnu lozinku</span>
+              </div>
+          </div>
+        <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="password" class="form-control" name="sifra" id="sifra" placeholder="Nova lozinka" formControlName="novaLozinka">
+            <span class = "error-message" *ngIf="lozinkaForma.get('novaLozinka').hasError('required') && lozinkaForma.get('novaLozinka').dirty">Obavezno unesite novu lozinku</span>
+            <span class = "error-message" *ngIf="lozinkaForma.get('novaLozinka').hasError('minlength') && lozinkaForma.get('novaLozinka').dirty">Vasa lozinka mora sadrzati bar 8 karaktera</span>
+            <span class = "error-message" *ngIf="lozinkaForma.get('novaLozinka').hasError('maxlength') && lozinkaForma.get('novaLozinka').dirty">Presli ste broj karaktera koji smete uneti</span>
+            </div>
+        </div>
+      <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="password" class="form-control" name="sifra2" id="sifra2" placeholder="Potvrda nove lozinke" formControlName="potvrdaLozinke">
+            <span class = "error-message" *ngIf="lozinkaForma.get('potvrdaLozinke').hasError('required') && lozinkaForma.get('potvrdaLozinke').dirty">Morate potvrditi vasu novu lozinku</span>
+            <span class = "error-message" *ngIf="lozinkaForma.get('potvrdaLozinke').hasError('minlength') && lozinkaForma.get('potvrdaLozinke').dirty">Vasa lozinka mora sadrzati bar 8 karaktera</span>
+            <span class = "error-message" *ngIf="lozinkaForma.get('potvrdaLozinke').hasError('maxlength') && lozinkaForma.get('potvrdaLozinke').dirty">Presli ste broj karaktera koji smete uneti</span>
+            <span class = "error-message" *ngIf="lozinkaForma.hasError('missmatch') && lozinkaForma.get('potvrdaLozinke').dirty">Lozinke se ne poklapaju</span>
+            <span class = "success-message" *ngIf="!lozinkaForma.hasError('missmatch') && lozinkaForma.get('potvrdaLozinke').dirty">Lozinke se poklapaju</span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3 mx-auto">
+              <button type="submit" class="logregBtn btn btn-primary btn-md btn-block" name="potvrdaLozinke" [disabled] = "!lozinkaForma.valid">Potvrdi</button>
+            </div>
+        </div>
+      </fieldset>
+      </form>
+    </div>

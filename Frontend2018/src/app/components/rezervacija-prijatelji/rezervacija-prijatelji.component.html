@@ -1,0 +1,62 @@
+<div class="container">
+    <alert></alert>
+    <legend class="leg" align="center">Pozovite prijatelje</legend>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Pronadjite prijatelja" aria-label="kriterijumPrijatelji" aria-describedby="basic-addon2" [(ngModel)] = "searchPrijateljiText">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" (click) = "pretraziPrijatelje()">Pretrazi</button>
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" (click) = "osveziPrijatelje()">Osvezi</button>
+          </div>
+      </div>
+      <div >
+      <select id="izaberiMesto" class="form-control" (change)="izaberiMesto($event.target.value)" [disabled] = "sedista?.length === 1">
+          <option selected value="-1"></option>
+          <option *ngFor="let s of sedista" value="{{s}}">ID:{{s}}</option>
+       </select>
+      </div>
+      <div class="container">
+          <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Ime</th>
+                <th scope="col">Prezime</th>
+                <th scope="col">Grad</th>
+                <th scope="col">Telefon</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="prijateljiLista==null || prijateljiLista?.length === 0">Pronadjite projatelje koje zelite da pozovete</tr>
+                  <tr *ngFor="let prijatelj of prijateljiLista">
+                  <td>{{prijatelj.email}}</td>
+                  <td>{{prijatelj.ime}}</td>
+                  <td>{{prijatelj.prezime}}</td>
+                  <td>{{prijatelj.grad}}</td>
+                  <td>{{prijatelj.telefon}}</td>
+                  <td *ngIf="mozePozove(prijatelj.id)">
+                      <button type="button" class="btn btn-primary" (click) = "pozovi(prijatelj.id)" [disabled]="izabranoSediste==-1">Pozovi</button>
+                  </td>
+                  <td *ngIf="mozeOdustane(prijatelj.id)">
+                      <button type="button" class="btn btn-primary" (click) = "odustani(prijatelj.id)">Odustani</button>
+                  </td>
+                  </tr>    
+             </tbody>
+          </table>
+          <div>
+            <button class="btn btn-info right-items" (click)="nextPrijatelji(this.prijateljiStranica)">&#x21E8;</button>
+            <button class="btn btn-info right-items">{{prijateljiStranica}}</button>
+            <button class="btn btn-info right-items" (click)="prevPrijatelji(this.prijateljiStranica)">&#x21E6;</button>
+          </div>
+          </div>
+  </div>
+  <br>
+  <div class="col-md-4 mx-auto">
+      <button class="btn btn-primary btn-md btn-block" name="potvrdiRez" (click) = "potvrdiRezervaciju()">Potvrdi Rezervaciju</button>
+      <button class="btn btn-primary btn-md btn-block" name="nazadPrijatelji" (click)="nazadPrijatelji()">Nazad</button>
+      <button class="btn btn-primary btn-md btn-block" name="odustaniPrijatelji" (click) = "odustaniPrijatelji()">Odustani</button>
+  </div>
+
+</div>

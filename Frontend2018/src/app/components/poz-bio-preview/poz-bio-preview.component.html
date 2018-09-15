@@ -1,0 +1,78 @@
+<div>
+  <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+              <div class="center-items gap-top">
+                <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]='20'>
+
+                </agm-map>
+                <p class="orangeText">Adresa: {{pozBio.adresa}}</p>
+              </div>
+            </div>
+            <div class="card card-block bg-faded pozadina3 col-lg-6">
+              <div class="col-lg-11">
+                <div>
+                  <h2 class="naslov set-center">{{pozBio.naziv}}</h2>
+                  <h4 class="set-center orangeText">Rejting : {{ocena}}</h4>
+                  <p class="blueText">{{pozBio.opis}}</p>
+                </div>
+                <div *ngIf = "uloga==='AU'">
+                  <button class="btn btn-md btn-info" (click)="izmeniPozBio()">Izmeni...</button>
+                </div>
+
+              </div>
+ 
+            </div>
+        </div>
+
+        <div class="row card card-block bg-faded pozadina3 gap-top">
+          <div class="gap-left gap-top">
+            <app-projekcija-preview [pozBio]="pozBio"></app-projekcija-preview>
+          </div>
+          <div>
+            <button *ngIf = "uloga==='RK'" class="btn btn-md btn-warning gap-left" (click)="brzaRezervacija()">Brza rezervacija</button>
+            <label class="col-lg-6"></label>
+            <button *ngIf = "uloga==='AU'" class="btn btn-md btn-info" (click)="dodajProjekciju()">Dodaj projekciju</button>
+          </div>
+        </div>
+
+        <div *ngIf="isProjekcija && uloga==='AU'" class="col-lg-6">
+            <app-dodaj-izmeni-projekciju [pozBio]="pozBio"></app-dodaj-izmeni-projekciju>
+        </div>
+
+        <div *ngIf="isBrza" class="col-lg-6">
+          <app-brza-rezervacija-rezervisi [pozBio]="pozBio"></app-brza-rezervacija-rezervisi>
+        </div>
+        
+        <div class="row card card-block bg-faded pozadina3 col-lg-8 gap-top" *ngIf = "uloga==='AU'">
+            <div>
+              <p class="blueText naslov set-center">Sale : </p>
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Naziv</th>
+                      <th scope="col">*</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tempSala of sale">
+                      <td><a (click)="pogledajSalu(tempSala.id)" >{{tempSala.naziv}}</a></td>
+                      <td>
+                        <button type="button" class="btn btn-info" (click)="izmeniSalu(tempSala.id)" >Izmeni</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                  <button type="button" class="btn btn-info form-control" (click)="dodaj()">Dodaj novu salu</button>
+              </div>
+              <div *ngIf="isDodavanje">
+                <app-dodaj-izmeni-salu [mode]="0" [idPozBio]="id"></app-dodaj-izmeni-salu>
+              </div>
+              <div *ngIf="isIzmena">
+                <app-dodaj-izmeni-salu [mode]="1" [idPozBio]="id" [idSala]="idSala"></app-dodaj-izmeni-salu>
+              </div>
+        </div>
+  </div>
+</div>

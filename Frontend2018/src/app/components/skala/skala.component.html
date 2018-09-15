@@ -1,0 +1,33 @@
+<div class="container">
+    <alert></alert>
+    <form [formGroup] = "skalaForma" (ngSubmit) = "posalji(skalaForma.value)">
+      <fieldset>
+        <legend class="leg" align="center">Unesite skalu</legend>
+       <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="text" class="form-control" name="naziv" id="naziv" placeholder="Naziv" formControlName="naziv">
+            <span class = "error-message" *ngIf="skalaForma.get('naziv').hasError('required') && skalaForma.get('naziv').dirty">Obavezno unesite naziv</span>
+            <span class = "error-message" *ngIf="skalaForma.get('naziv').hasError('pattern') && skalaForma.get('naziv').dirty">Unesite naziv u validnoj formi</span>
+            <span class = "error-message" *ngIf="skalaForma.get('naziv').hasError('maxlength') && skalaForma.get('naziv').dirty">Presli ste broj karaktera koji smete uneti</span>
+          </div>
+          </div>
+          <div class="form-group row">
+          <div class="col-md-4 mx-auto">
+            <input type="number" class="form-control" name="od" id="od" placeholder="Od" formControlName="od">
+            <span class = "error-message" *ngIf="skalaForma.get('od').hasError('pattern') && skalaForma.get('od').dirty">Unesite od u validnoj formi</span>
+          </div>
+          </div>
+          <div class="form-group row">
+              <div class="col-md-4 mx-auto">
+                <input type="number" class="form-control" name="doo" id="doo" placeholder="Do" formControlName="doo">
+                <span class = "error-message" *ngIf="skalaForma.get('doo').hasError('pattern') && skalaForma.get('doo').dirty">Unesite do u validnoj formi</span>
+              </div>
+              </div>
+          <div class="form-group row">
+            <div class="col-md-4 mx-auto">
+              <button type="submit" class="logregBtn btn btn-primary btn-md btn-block" name="regPrijava" [disabled] = "!skalaForma.valid">Posalji</button>
+            </div>
+          </div>
+    </fieldset>
+    </form>
+  </div>

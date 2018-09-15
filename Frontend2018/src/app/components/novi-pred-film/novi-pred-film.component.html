@@ -1,0 +1,53 @@
+<div class="col-lg-6 mx-auto">
+    <div class="card card-block bg-faded pozadina2 container">
+      <form [formGroup] = "noviPredFilmForma" (ngSubmit) = "potvrdi(noviPredFilmForma.value)">
+          <fieldset>
+            <legend class="forma-naslov" align="center">{{naslov}}</legend>
+            <div class="form-group row mx-auto">
+              <div class="col-lg-3"></div>
+                <div class="radio col-lg-3">
+                  <label class="forma-text"><input [attr.disabled]="izmena == true ? true : null" type="radio" name="tip" value="PRED" checked="checked" formControlName="tip"> Predstava</label>
+                </div>
+                <div class="radio col-lg-3">
+                  <label class="forma-text"><input [attr.disabled]="izmena == true ? true : null" type="radio" name="tip" value="FILM" formControlName="tip"> Film</label>
+                </div>
+            </div>
+            <div class="form-group row mx-auto">
+              <label for="naziv" class="forma-text col-lg-3">Naziv : </label>
+              <input type="text" name="naziv" id="naziv" class="form-control col-lg-9" formControlName="naziv">
+              <span *ngIf="noviPredFilmForma.get('naziv').hasError('required') && noviPredFilmForma.get('naziv').dirty">Polje je obavezno za unos.</span>
+              <span *ngIf="noviPredFilmForma.get('naziv').hasError('maxlength') && noviPredFilmForma.get('naziv').dirty">Presli ste broj karaktera koji smete uneti.</span>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="zanr" class="forma-text col-lg-3">Zanr : </label>
+                <input type="text" name="zanr" id="zanr" class="form-control col-lg-9" formControlName="zanr">
+                <span *ngIf="noviPredFilmForma.get('zanr').hasError('required') && noviPredFilmForma.get('zanr').dirty">Polje je obavezno za unos.</span>
+                <span *ngIf="noviPredFilmForma.get('zanr').hasError('maxlength') && noviPredFilmForma.get('zanr').dirty">Presli ste broj karaktera koji smete uneti.</span>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="reditelj" class="forma-text col-lg-3">Reditelj : </label>
+                <input type="text" name="reditelj" id="reditelj" class="form-control col-lg-9" formControlName="reditelj">
+                <span *ngIf="noviPredFilmForma.get('reditelj').hasError('maxlength') && noviPredFilmForma.get('reditelj').dirty">Presli ste broj karaktera koji smete uneti.</span>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="trajanje" class="forma-text col-lg-3">Trajanje (min): </label>
+                <input type="number" name="trajanje" id="trajanje" class="form-control col-lg-9" formControlName="trajanje">
+                <span *ngIf="noviPredFilmForma.get('trajanje').hasError('required') && noviPredFilmForma.get('trajanje').dirty">Polje je obavezno za unos.</span>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="glumci" class="forma-text col-lg-3">Spisak glumaca : </label>
+                <textarea class="form-control" rows="5" id="glumci" name="glumci" formControlName="glumci"></textarea>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="opis" class="forma-text col-lg-3">Opis : </label>
+                <textarea class="form-control" rows="5" id="opis" name="opis" formControlName="opis"></textarea>
+            </div>
+            
+            <div class="form-group row mx-auto right-items">
+              <button type="submit" class="btn btn-primary btn-md " [disabled] = "!noviPredFilmForma.valid">Potvrdi</button>
+            </div>
+          </fieldset>
+      </form>  
+    </div>
+    </div>
+    

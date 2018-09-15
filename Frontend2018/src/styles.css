@@ -1,0 +1,115 @@
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+.pozadina1{
+	background-color: #00264d;
+    border-color: #00264d;
+}
+
+.pozadina2{
+	background-color: #ff9900;
+    border-color: #d46611;
+}
+
+.pozadina3{
+	background-color: #A7CDC2;
+    border-color: #52615E;
+}
+
+.navbar, .dropdown-menu-right {
+    background-color: #A7CDC2;
+    border-color: #52615E;
+    color: #00264d;
+    font-family: Helvetica;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-text, .navbar-default a p, .nav-item .btn-link {
+    color: #00264d;
+    font-family: Helvetica;
+}
+
+.naslov {
+	font-family: Helvetica;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 700;
+	color: #00264d;
+}
+
+.naslov-nar {
+	font-family: Helvetica;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 700;
+	color: #ff9900;
+}
+
+
+.nav-link, .navbar-left {
+    color: #00264d;
+    font-family: Helvetica;
+}
+
+.navbar-right{
+    margin-top:20px; 
+}
+
+.orangeText {
+    font-size: large;
+    color: #d46611;
+    font-family: Helvetica;
+}
+
+.blueText{
+    font-size: large;
+    color: #00264d;
+    font-family: Helvetica;
+}
+
+.gap-top-sm{
+	margin-top:10px; 
+}
+
+.gap-top{
+	margin-top:50px; 
+}
+
+.center-items{
+    align-items: center;
+}
+
+.right-items{
+    float:right;
+}
+
+.set-center {
+    text-align: center;
+}
+
+.push-bottomn {
+    vertical-align: bottom;
+}
+
+.logregBtn{
+	background-color: #ff9900;
+}
+
+.leg{
+	color: white;
+}
+
+agm-map{
+    height: 400px;
+    width: 400px;
+}
+
+a:hover {
+    cursor:pointer;
+}
+
+span {
+    color : red;
+    font-weight: 600;
+    font-family: Helvetica;
+}

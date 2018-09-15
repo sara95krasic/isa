@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+      <div class="container">
+          <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link active" id="tab1" data-toggle="tab" href="#tudjioglasi" role="tab" aria-controls="tab1aria" aria-selected="true">Tudji oglasi</a></li>
+              <li class="nav-item"><a class="nav-link" id="tab2" data-toggle="tab" href="#mojioglasi" role="tab" aria-controls="tab2aria" aria-selected="false">Moji oglasi</a></li>
+              <li class="nav-item"><a class="nav-link" id="tab3" data-toggle="tab" href="#opstiOlgasi" role="tab" aria-controls="tab3aria" aria-selected="false">Opsti oglasi</a></li>  
+          </ul>
+          <div class="tab-content">
+              <div class="tab-pane active" id="tudjioglasi" role="tabpanel" aria-labelledby="tab1aria">
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Naziv</th>
+                          <th scope="col">Aktivno do</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let oglasi of tudjiOglasi" >
+                          <td>{{oglasi.naziv}}</td>
+                          <td>{{oglasi.aktivnoDo}}</td>
+                          <td>
+                            <button type="button" class="btn btn-primary" (click)='Pogledaj(oglasi.id)'>Pogledaj</button>
+                          </td>
+                          <td>
+                              <button type="button" *ngIf = "uloga==='AF'" class="btn btn-primary" (click)='Obrisi(oglasi.id)'>Obrisi</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+                  <div>
+                      <button class="btn btn-info right-items" (click)="next1(this.promeniStranicu)">&#x21E8;</button>
+                      <button class="btn btn-info right-items">{{stranica1}}</button>
+                      <button class="btn btn-info right-items" (click)="prev1(this.promeniStranicu)">&#x21E6;</button>
+                  </div>
+              </div>
+              <div class="tab-pane" id="mojioglasi" role="tabpanel" aria-labelledby="tab2aria">
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Naziv</th>
+                          <th scope="col">Aktivno do</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let oglasi of mojiOglasi" >
+                          <td>{{oglasi.naziv}}</td>
+                          <td>{{oglasi.aktivnoDo}}</td>
+                          <td>
+                            <button type="button" class="btn btn-primary" (click)='PogledajSvoje(oglasi.id)'>Pogledaj</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+                  <div>
+                      <button class="btn btn-info right-items" (click)="next2(this.promeniStranicu)">&#x21E8;</button>
+                      <button class="btn btn-info right-items">{{stranica2}}</button>
+                      <button class="btn btn-info right-items" (click)="prev2(this.promeniStranicu)">&#x21E6;</button>
+                  </div>
+              </div>
+              <div class="tab-pane" id="opstiOlgasi" role="tabpanel" aria-labelledby="tab3aria">
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Naziv</th>
+                          <th scope="col">Aktivno do</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let oglasi of opstiOglasi" >
+                          <td>{{oglasi.naziv}}</td>
+                          <td>{{oglasi.aktivnoDo}}</td>
+                          <td>
+                            <button type="button" class="btn btn-primary" (click)='PogledajOpsti(oglasi.id)'>Pogledaj</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+    </div>    
+</div>
+

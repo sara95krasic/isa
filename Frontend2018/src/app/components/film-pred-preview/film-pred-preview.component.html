@@ -1,0 +1,51 @@
+
+<div class="container">
+  <div class="card card-block bg-faded pozadina2">
+    <div class="col-lg-10">
+      <div>
+        <h2 class="naslov set-center">{{predFilm.naziv}}</h2>
+        <button class="btn btn-md btn-info" (click)="izmeniPredFilm()">Izmeni...</button>
+      </div>
+      <div>
+        <p class="blueText"><b>Opis</b> : {{predFilm.opis}}</p>
+        <p class="blueText"><b>Zanr</b> : {{predFilm.zanr}}</p>
+      </div>
+      <div>
+          <p class="blueText"><b>Reditelj</b> : {{predFilm.reditelj}}</p>    
+      </div>
+      <div>
+          <p class="blueText"><b>Spisak glumaca</b> : {{predFilm.glumci}}</p>    
+      </div>
+      <div>
+          <p class="blueText"><b>Prosecna ocena: </b> : {{ocena}}</p>    
+      </div>
+    </div>
+  </div> 
+  <div class="card card-block bg-faded pozadina3">
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">rbr</th>
+              <th scope="col">Vreme</th>
+              <th scope="col">Sala</th>
+              <th scope="col">U...</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tempProjekcija of projekcije; let i = index">
+              <td>{{i+1}}</td>
+              <td>{{konvertujDatume(tempProjekcija.datum)}}</td>
+              <td>{{tempProjekcija.sala.naziv}}</td>
+              <td>{{tempProjekcija.sala.pozBio.naziv}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div>
+            <button class="btn btn-info right-items" (click)="next(this.promeniStranicu)">&#x21E8;</button>
+            <button class="btn btn-info right-items">{{stranica}}</button>
+            <button class="btn btn-info right-items" (click)="prev(this.promeniStranicu)">&#x21E6;</button>
+          </div>
+  </div>     
+</div>
+
+          

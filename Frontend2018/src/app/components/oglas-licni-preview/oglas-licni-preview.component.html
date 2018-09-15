@@ -1,0 +1,64 @@
+<div>
+    <div class="container">
+          <div class="row">
+              <div class="col-lg-6">
+                <div class="center-items gap-top">
+                  <img width="350" height="350" [src] = "'data:image/png;base64,'+ oglas.path">
+                  <p class="orangeText">Slika</p>
+                </div>
+              </div>
+              <div class="card card-block bg-faded pozadina3 col-lg-6">
+                <div class="col-lg-11">
+                  <div>
+                    <h2 class="naslov set-center"></h2>
+                    <p class="blueText"></p>
+                  </div>
+                  <div>
+                    <table class="table" border="0">
+                      <thead>
+                      </thead>
+                      <tbody>
+                          <tr>
+                            <td>Naziv oglasa: </td>
+                            <td>{{oglas.naziv}}</td>
+                          </tr>
+                          <tr>
+                              <td>Opis oglasa: </td>
+                          </tr>
+                          <tr>
+                              <td>{{oglas.opis}}</td>
+                          </tr>
+                          <tr>
+                              <td>Aktivan do: </td>
+                              <td>{{oglas.aktivnoDo}}</td>
+                          </tr>
+                      </tbody> 
+                    </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <p class="orangeText">Ponudjeni oglasi</p>
+          <div class="row">
+              <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Oznaka ponude:</th>
+                          <th scope="col">Iznos:</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let pon of ponude" >
+                          <td>{{pon.id}}</td>
+                          <td>{{pon.iznos}}</td>
+                          <td>
+                            <button type="button" class="btn btn-primary" *ngIf = "uloga==='RK'" (click)='Prihvati(pon.id)'>Prihvati</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+    </div>
+  </div>
