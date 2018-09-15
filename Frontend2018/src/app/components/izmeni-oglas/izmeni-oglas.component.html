@@ -1,0 +1,33 @@
+<div class="col-lg-6 mx-auto">
+    <div class="card card-block bg-faded pozadina2 container">
+      <form [formGroup] = "izmeniOglasForma" (ngSubmit) = "posalji(izmeniOglasForma.value)">
+          <fieldset>
+            <legend class="forma-naslov" align="center">Izmeni oglas:</legend>
+            <div class="form-group row mx-auto">
+              <label for="naziv" class="forma-text col-lg-2">Naziv : </label>
+              <input type="text" name="naziv" id="naziv" class="form-control col-lg-10" formControlName="naziv" (change)="promena($event)">
+              <span *ngIf="izmeniOglasForma.get('naziv').hasError('required') && izmeniOglasForma.get('naziv').dirty">Polje je obavezno za unos.</span>
+              <span *ngIf="izmeniOglasForma.get('naziv').hasError('maxlength') && izmeniOglasForma.get('naziv').dirty">Presli ste broj karaktera koji smete uneti.</span>
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="opis" class="forma-text col-lg-2">Opis : </label>
+                <textarea class="form-control" rows="5" id="opis" name="opis" formControlName="opis" (change)="promena($event)"></textarea>
+              </div>
+            <div class="form-group row mx-auto">
+              <label for="opis" class="forma-text col-lg-2">Vazi do : </label>
+              <input type="date" name="aktivnoDo" id="aktivnoDo" class="form-control col-lg-10" formControlName="aktivnoDo" (change)="promena($event)">
+            </div>
+            <div class="form-group row mx-auto">
+                <label for="opis" class="forma-text col-lg-2">Slika : </label>
+                <input type="file" name="putanja" id="putanja" class="form-control col-lg-10" (change)="onFileChange($event)" formControlName="putanja" #file>
+              </div>
+              <div class="form-group row mx-auto" align="center">
+                  <img width="350" height="350" [src] = "'data:image/png;base64,'+ oglas.path">
+              </div>    
+            <div class="form-group row mx-auto right-items">
+              <button type="submit" class="btn btn-primary btn-md " [disabled] = "!izmeniOglasForma.valid">Potvrdi</button>
+            </div>
+          </fieldset>
+      </form>
+  </div>
+</div>

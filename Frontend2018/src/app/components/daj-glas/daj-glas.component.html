@@ -1,0 +1,18 @@
+<div class="container col-lg-4 col-md-offset-8">
+  <div class=" card card-block bg-faded pozadina3">
+
+    <div class="row form-group gap-left">
+      <label><b>Unesite ocenu {{cega}}: &nbsp;</b></label>
+      <select id="ocena" mane="ocena" [(ngModel)]="ocena">
+          <option [value]="1">1</option>
+          <option [value]="2">2</option>
+          <option [value]="3">3</option>
+          <option [value]="4">4</option>
+          <option [value]="5">5</option>
+      </select>
+      &nbsp;&nbsp;
+      <button class="btn btn-primary btn-md " [disabled] = "(ocena < 1) || (ocena > 5) || (ocena == undefined)" (click)="potvrdi()">Potvrdi</button>
+    </div>
+  </div>
+
+</div>>

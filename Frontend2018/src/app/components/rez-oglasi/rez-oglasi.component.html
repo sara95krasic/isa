@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="container">	
+        <div class="row">
+            <div class="col-*-*"></div>
+          </div>
+          <div class="container">
+                            <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+                            <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">Naziv</th>
+                                      <th scope="col">Aktivno do</th>
+                                    </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngIf="oglasi==null || oglasi?.length === 0">Nema rezervisanih rekvizita</tr>
+                                    <tr *ngFor="let oglas of oglasi">
+                                        <td>{{oglas.naziv}}</td>
+                                        <td>{{oglas.aktivnoDo}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" (click) = "obrisi(oglas.id)">Obrisi</button>
+                                    </td>
+                                    </tr>    
+                               </tbody>
+                            </table> 
+                          </div>
+      </div>
+    </div>
+</div>
+

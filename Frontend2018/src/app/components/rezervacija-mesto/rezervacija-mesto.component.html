@@ -1,0 +1,40 @@
+<div class="container" *ngIf="segmenti!=null">
+  <legend class="leg" align="center">{{segmenti[0].sala.naziv}}</legend>
+    <div class="col-md-4 mx-auto">
+      <select id="izaberiSegment" class="form-control" (change)="ucitajSedista($event.target.value)">
+        <option selected value="-1"></option>
+        <option *ngFor="let s of segmenti" value="{{s.id}}">{{s.tip.naziv}}</option>
+     </select>
+     <div *ngIf ="cenaKarte!=-1" >
+      <legend class="leg" align="center">Cena svake karte je: {{cenaKarte | currency : 'RSD'}}</legend>
+     </div>
+    </div>
+</div>
+<div class="plane" *ngIf = "sedista!=null">
+    <div class="cockpit">
+      <h1 class="leg">Izaberite sediste</h1>
+    </div>
+    <ol class="cabin fuselage">
+      <li class="row" *ngFor="let in of counter(brRedova); let i = index">
+        <ol class="seats">
+          <li class="seat" *ngFor="let jn of counter(10); let j = index">
+            <input type="checkbox" id="{{izracunajId(i,j)}}"  [checked] = "otkaci(sedista[izracunajIndex(i,j)].sediste.id)" (click)="cekiraj(sedista[izracunajIndex(i,j)].sediste.id)" [disabled] = "sedista[izracunajIndex(i,j)].zauzeto"/>
+            <label for="{{izracunajId(i,j)}}">{{izracunajLabelu(i,j)}}</label>
+          </li>
+        </ol>
+      </li>
+      <li class="row" *ngIf="poslednjiRed!=0">
+          <ol class="seats">
+              <li class="seat" *ngFor="let kn of counter(poslednjiRed); let k = index">
+                <input style="width: 20px;" type="checkbox" id="{{izracunajId(brRedova,k)}}" [checked] = "otkaci(sedista[izracunajIndex(brRedova,k)].sediste.id)" (click)="cekiraj(sedista[izracunajIndex(brRedova,k)].sediste.id)" [disabled] = "sedista[izracunajIndex(brRedova,k)].zauzeto"/>
+                <label for="{{izracunajId(brRedova,k)}}">{{izracunajLabelu(brRedova,k)}}</label>
+              </li>
+            </ol>
+      </li>
+    </ol>
+  </div>
+  <br>
+  <div class="col-md-2 mx-auto">
+      <button class="btn btn-primary btn-md btn-block" name="mestaDalje" [disabled] = "checkedSedista?.length === 0" (click) = "birajPrijatelji()">Dalje</button>
+      <button class="btn btn-primary btn-md btn-block" name="odustaniMesta" (click) = "odustaniMesta()">Odustani</button>
+  </div>

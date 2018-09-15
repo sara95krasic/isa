@@ -1,0 +1,144 @@
+<div class="container">
+    <div class="container">	
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item"><a class="nav-link active" id="tab1" data-toggle="pill" href="#prijatelji" role="tab" aria-controls="tab1aria" aria-selected="true" (click) = "ucitajPrijatelje()">Moji prijatelji</a></li>
+            <li class="nav-item"><a class="nav-link" id="tab2" data-toggle="pill" href="#zahtevi" role="tab" aria-controls="tab2aria" aria-selected="false" (click) = "ucitajPosiljaoce()">Zahtevi za prijateljstvo</a></li>
+            <li class="nav-item"><a class="nav-link" id="tab3" data-toggle="pill" href="#korisnici" role="tab" aria-controls="tab3aria" aria-selected="false" (click) = "ucitajKorisnike()">Dodaj nove prijatelje</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="prijatelji" role="tabpanel" aria-labelledby="tab1aria">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Pronadjite prijatelja" aria-label="kriterijumPrijatelji" aria-describedby="basic-addon2" [(ngModel)] = "searchPrijateljiText">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button" (click) = "pretraziPrijatelje()">Pretrazi</button>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click) = "osveziPrijatelje()">Osvezi</button>
+                      </div>
+                  </div>
+                    <div class="container">
+                            <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Ime</th>
+                                  <th scope="col">Prezime</th>
+                                  <th scope="col">Grad</th>
+                                  <th scope="col">Telefon</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngIf="prijateljiLista==null || prijateljiLista?.length === 0">Nema prijatelja da se pokaze</tr>
+                                    <tr *ngFor="let prijatelj of prijateljiLista">
+                                    <td>{{prijatelj.email}}</td>
+                                    <td>{{prijatelj.ime}}</td>
+                                    <td>{{prijatelj.prezime}}</td>
+                                    <td>{{prijatelj.grad}}</td>
+                                    <td>{{prijatelj.telefon}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" (click) = "obrisiPrijatelja(prijatelj,'P')">Izbrisi</button>
+                                    </td>
+                                    </tr>    
+                               </tbody>
+                            </table>
+                            <div>
+                              <button class="btn btn-info right-items" (click)="nextPrijatelji(this.prijateljiStranica)">&#x21E8;</button>
+                              <button class="btn btn-info right-items">{{prijateljiStranica}}</button>
+                              <button class="btn btn-info right-items" (click)="prevPrijatelji(this.prijateljiStranica)">&#x21E6;</button>
+                            </div>
+                            </div>
+                    </div>
+            </div>
+            <div class="tab-pane" id="zahtevi" role="tabpanel" aria-labelledby="tab2aria">
+                            <div class="container">
+                                    <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+                                    <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Email</th>
+                                          <th scope="col">Ime</th>
+                                          <th scope="col">Prezime</th>
+                                          <th scope="col">Grad</th>
+                                          <th scope="col">Telefon</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngIf="zahteviLista==null || zahteviLista?.length === 0">Nema zahteva da se pokaze</tr>
+                                        <tr *ngFor="let posiljalac of zahteviLista">
+                                          <td>{{posiljalac.email}}</td>
+                                          <td>{{posiljalac.ime}}</td>
+                                          <td>{{posiljalac.prezime}}</td>
+                                          <td>{{posiljalac.grad}}</td>
+                                          <td>{{posiljalac.telefon}}</td>
+                                          <td>
+                                            <button type="button" class="btn btn-primary" (click) = "prihvatiZahtev(posiljalac,'Z')">Prihvati zahtev</button>
+                                         </td>
+                                          <td>
+                                            <button type="button" class="btn btn-primary" (click) = "obrisiZahtev(posiljalac,'Z')">Obrisi zahtev</button>
+                                          </td>
+                                        </tr>      
+                                       </tbody>
+                                    </table>
+                                    <div>
+                                      <button class="btn btn-info right-items" (click)="nextZahtevi(this.zahteviStranica)">&#x21E8;</button>
+                                      <button class="btn btn-info right-items">{{zahteviStranica}}</button>
+                                      <button class="btn btn-info right-items" (click)="prevZahtevi(this.zahteviStranica)">&#x21E6;</button>
+                                    </div>
+                                    </div>
+                                </div>
+                </div>
+                <div class="tab-pane" id="korisnici" role="tabpanel" aria-labelledby="tab3aria">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Pronadjite korisnike" aria-label="kriterijumKorisnici" aria-describedby="basic-addon2" [(ngModel)] = "searchKorisniciText">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="button" (click) = "pretraziKorisnike()">Pretrazi</button>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" (click) = "osveziKorisnike()">Osvezi</button>
+                          </div>
+                      </div>
+                        <div class="container">
+                                <div class="card card-block bg-faded pozadina2 col-lg-10 gap-top">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Email</th>
+                                      <th scope="col">Ime</th>
+                                      <th scope="col">Prezime</th>
+                                      <th scope="col">Grad</th>
+                                      <th scope="col">Telefon</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngIf="korisniciLista==null || korisniciLista?.length === 0">Nema korisnika da se pokaze</tr>
+                                    <tr *ngFor="let korisnik of korisniciLista; let i = index">
+                                      <td>{{korisnik.email}}</td>
+                                      <td>{{korisnik.ime}}</td>
+                                      <td>{{korisnik.prezime}}</td>
+                                      <td>{{korisnik.grad}}</td>
+                                      <td>{{korisnik.telefon}}</td>
+                                      <td *ngIf="korisniciTipovi">
+                                        <button type="button" class="btn btn-primary" *ngIf = "korisniciTipovi[i]==='N'" (click) = "posaljiZahtev(korisnik,'K')">Posalji zahtev</button>
+                                        <button type="button" class="btn btn-primary" *ngIf = "korisniciTipovi[i]==='P'" (click) = "obrisiPrijatelja(korisnik,'K')">Izbrisi</button>
+                                        <button type="button" class="btn btn-primary" *ngIf = "korisniciTipovi[i]==='M'" (click) = "prihvatiZahtev(korisnik,'K')">Prihvati zahtev</button>
+                                        <button type="button" class="btn btn-primary" *ngIf = "korisniciTipovi[i]==='J'" (click) = "obrisiZahtev(korisnik,'K')">Obrisi zahtev</button>
+                                      </td>
+                                      <td *ngIf="korisniciTipovi">
+                                        <button type="button" class="btn btn-primary" *ngIf = "korisniciTipovi[i]==='M'" (click) = "obrisiZahtev(korisnik,'K')">Obrisi zahtev</button>
+                                      </td>
+                                    </tr>      
+                                   </tbody>
+                                </table>
+                                <div>
+                                  <button class="btn btn-info right-items" (click)="nextKorisnici(this.korisniciStranica)">&#x21E8;</button>
+                                  <button class="btn btn-info right-items">{{korisniciStranica}}</button>
+                                  <button class="btn btn-info right-items" (click)="prevKorisnici(this.korisniciStranica)">&#x21E6;</button>
+                                </div>
+                                </div>
+                              </div>
+                </div>
+        </div>
+    </div>
+</div>

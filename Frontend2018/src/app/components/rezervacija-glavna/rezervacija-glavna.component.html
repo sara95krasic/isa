@@ -1,0 +1,8 @@
+<div>
+  <div *ngIf="izborSedista">
+    <app-rezervacija-mesto [projId]="projekcijaId" (ucitavacSedista) = "izaberiSedista($event)" [checkedSedista] = "izabranaSedista"></app-rezervacija-mesto>
+  </div>
+  <div *ngIf="pozivPrijatelja">
+    <app-rezervacija-prijatelji [sedista]="izabranaSedista" [projId]="projekcijaId" (nazPrijatelji) = "odustaniPrijatelji()"></app-rezervacija-prijatelji>
+  </div>
+</div>

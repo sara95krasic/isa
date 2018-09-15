@@ -1,0 +1,41 @@
+<div class="card card-block bg-faded pozadina2 container gap-top">
+
+    <div>
+        <h4>Izmenite organizaciju sedista:</h4>
+        <br>
+        <div class="form-group row mx-auto">
+            <div class="col-lg-3"></div>
+            <div class="radio col-lg-4">
+                <label class="forma-text"><input type="radio" name="mode" value="0" checked="checked" [(ngModel)]="mode" >Dodavanje</label>
+            </div>
+            <div class="radio col-lg-4">
+                <label class="forma-text"><input type="radio" name="mode" value="1" [(ngModel)]="mode">Brisanje</label>
+            </div>
+        </div>
+
+        <div *ngIf="mode == 0 ? true : null">
+            <div class="form-group row mx-auto">
+                <label for="brojSedista" class="forma-text col-lg-4">Dodati sedista : </label>
+                <input type="number" name="brojSedista" id="brojSedista" class="form-control col-lg-8" [formControl]="brojSedista" pattern="^\d+$">
+                <span *ngIf="brojSedista.errors?.pattern && brojSedista.dirty">Unesite ceo broj sedista.</span>
+                <span *ngIf="brojSedista.errors?.required && brojSedista.dirty">Polje je obavezno za unos.</span>
+            </div>
+            <div class="form-group row mx-auto right-items">
+                <button class="btn btn-primary btn-md " [disabled] = "!brojSedista.valid" (click)="potvrdiDodavanje()">Potvrdi</button>
+            </div>
+        </div>
+
+        <div *ngIf="mode == 1 ? true : null">
+                <div>
+                    <label *ngFor="let sediste of sedista; let i=index">
+                        <input class="gap-left" type="checkbox" value="{{sediste.id}}" name="{{sediste.id}}" [(ngModel)]="sediste.isChecked"/>{{i+1}}
+                    </label>
+                </div>
+                <div>
+                    <button class="btn btn-primary btn-md" (click)="potvrdiBrisanje()">Potvrdi</button>
+                </div>
+        </div>
+         
+      </div>
+
+</div>

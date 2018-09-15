@@ -1,0 +1,55 @@
+<div>
+  
+  <div class="card card-block bg-faded pozadina3 col-lg-10">
+    <div class="row">
+      <div class="col-lg-8">
+        <p class="naslov set-center">{{sala.naziv}}</p>
+      </div>
+      <div class="gap-top-sm col-lg-4">
+          <button class="btn btn-primary btn-sm right-items gap-left" (click)="dodajTipSegmenta()">Novi tip</button>
+          <button class="btn btn-primary btn-sm right-items gap-left" (click)="dodajSegment()">Dodaj segment</button>
+          <button class="btn btn-primary btn-sm right-items" (click)="izmeni()">Izmeni</button>
+      </div>
+    </div>
+  </div>
+  <div >
+      <div class="col-lg-8" *ngIf="isIzmena">
+          <app-dodaj-izmeni-salu [mode]="1" [idSala]="idSala"></app-dodaj-izmeni-salu>
+      </div>
+
+      <div class="col-lg-8" *ngIf="isDodavanjeSegmenta">
+          <app-dodaj-izmeni-segment [mode]="0" [idSala]="idSala"></app-dodaj-izmeni-segment>
+      </div>
+
+      <div class="col-lg-8" *ngIf="isTipSegmenta">
+          <app-tip-segmenta [mode]="0"></app-tip-segmenta>
+      </div>
+  </div>
+  <div class="gap-top col-lg-8 card card-block bg-faded pozadina2">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">*</th>
+            <th scope="col">Broj sedista</th>
+            <th scope="col">Tip</th>
+            <th scope="col">Cena karte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tempSegment of segmenti; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{tempSegment.brojSedista}}</td>
+            <td>{{tempSegment.segment.tip.naziv}}</td>
+            <td>{{tempSegment.segment.tip.cena}}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="izmeniSegment(tempSegment.segment)">Izmeni</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  <div class="col-lg-8" *ngIf="isIzmenaSegmenta">
+    <app-dodaj-izbrisi-sedista [segment]="zaIzmenu"></app-dodaj-izbrisi-sedista>
+  </div>
+ 
+</div>

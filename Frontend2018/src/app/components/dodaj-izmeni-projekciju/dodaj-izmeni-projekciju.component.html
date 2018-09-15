@@ -1,0 +1,35 @@
+<div class="gap-top-sm">
+
+  <div>
+      <div class="card card-block bg-faded pozadina2 container">
+        <form [formGroup] = "projekcijaForma" (ngSubmit) = "potvrdi(projekcijaForma.value)">
+            <fieldset>
+              <legend class="forma-naslov" align="center">{{naslov}}</legend>
+
+              <div class="form-group row mx-auto">
+                <label for="predFilm" class="forma-text col-lg-4">Projekcija za : </label>
+                <select class="col-lg-6" id="predFilm" formControlName="predFilm">
+                      <option *ngFor="let tempPredFilm of predFilmovi" [value]="tempPredFilm.id"  >{{tempPredFilm.naziv}}</option>
+                </select>
+              </div>
+
+              <div class="form-group row mx-auto">
+                <label for="sala" class="forma-text col-lg-4">Izaberite salu : </label>
+                <select class="col-lg-6" id="sala" formControlName="sala">
+                      <option *ngFor="let tempSala of sale" [value]="tempSala.id" >{{tempSala.naziv}}</option>
+                </select>    
+              </div>
+              <div class="form-group row mx-auto">
+                <label for="sala" class="forma-text col-lg-4">Datum i vreme : </label>
+                <input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Izaberite datum i vreme..." formControlName="datum" readonly>
+                <owl-date-time #dt1></owl-date-time>
+              </div>
+              <div class="form-group row mx-auto right-items">
+                <button type="submit" class="btn btn-primary btn-md " [disabled] = "!projekcijaForma.valid">Potvrdi</button>
+              </div>
+            </fieldset>
+        </form> 
+      </div>
+    </div>
+      
+</div>

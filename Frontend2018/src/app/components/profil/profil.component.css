@@ -1,0 +1,11 @@
+hr{
+    background-color: white
+}
+
+.error-message{
+	color : red;
+}
+
+.success-message{
+	color :#98fb98;
+}

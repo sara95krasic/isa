@@ -1,0 +1,29 @@
+<div class="gap-top-sm">
+
+        <div>
+            <div class="card card-block bg-faded pozadina2 container">
+              <form [formGroup] = "segmentForma" (ngSubmit) = "potvrdi(segmentForma.value)">
+                  <fieldset>
+                    <legend class="forma-naslov" align="center">{{naslov}}</legend>
+                    <div class="form-group row mx-auto">
+                      <label for="brojSedista" class="forma-text col-lg-4">Broj sedista : </label>
+                      <input type="number" name="brojSedista" id="brojSedista" class="form-control col-lg-8" formControlName="brojSedista">
+                      <span *ngIf="segmentForma.get('brojSedista').hasError('required') && segmentForma.get('brojSedista').dirty">Polje je obavezno za unos.</span>
+                      <span *ngIf="segmentForma.get('brojSedista').hasError('pattern') && segmentForma.get('brojSedista').dirty">Unesite ceo broj sedista</span>
+                    </div>
+                    <div class="form-group row mx-auto">
+                      <label for="tip" class="forma-text col-lg-4">Izaberite tip : </label>
+                      <select id="tip" formControlName="tip">
+                            <option *ngFor="let tempTip of tipovi" [value]="tempTip.id"  >{{tempTip.naziv}}</option>
+                      </select>
+                           
+                    </div>
+                    <div class="form-group row mx-auto right-items">
+                      <button type="submit" class="btn btn-primary btn-md " [disabled] = "!segmentForma.valid">Potvrdi</button>
+                    </div>
+                  </fieldset>
+              </form>  
+            </div>
+          </div>
+            
+    </div>
